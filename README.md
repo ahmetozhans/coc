@@ -37,7 +37,7 @@ python3 tests/browser.py
 
 ## Publish genuine layouts
 
-The initial `catalog.json` is intentionally empty. No example layout is represented as a verified, usable game layout.
+`catalog.json` contains an editor-selected collection from public source pages. See [CATALOG_SOURCES.md](CATALOG_SOURCES.md) for origins and dates. These are sourced game links, not claims of in-game testing. Source credit and publication dates are displayed on each card and preserved by Studio import/export and edits. Some entries have preview images; those without an individual image link to the original source instead of showing an unrelated layout.
 
 1. Open `admin.html`. If a published catalog already exists, import it in the publishing section before making changes. Importing merges by official layout URL; imported records replace matching local drafts.
 2. Add an official `https://link.clashofclans.com/...` link with `action=OpenLayout` and an `id`, a title, Town Hall level and category. Use an HTTPS screenshot URL only when you have permission to publish that image.

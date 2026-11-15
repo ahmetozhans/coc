@@ -33,7 +33,7 @@ with sync_playwright() as p:
  page=ctx.new_page();page.goto(base+'upgrade.html');page.locator('#language').select_option('tr');page.locator('#builders').select_option('2');page.locator('#upgradeName').fill('Okçu Kraliçe');page.locator('#days').fill('4');page.locator('#cost').fill('2500000');page.locator('#upgradeForm button').click();assert page.locator('#builders').input_value()=='2';assert page.locator('#totalCount').inner_text()=='1';page.reload();assert page.locator('#builders').input_value()=='2';assert page.locator('#totalCount').inner_text()=='1'
  page.goto(base+'clan.html');page.locator('#clanTag').fill('#2PP');page.locator('#clanForm button').click();assert 'OpenClanProfile' in page.locator('#clanResult a').get_attribute('href')
  page.goto(base+'admin.html');page.locator('[data-studio="layouts"]').click();page.locator('#layoutTitle').fill('QA düzeni');page.locator('#layoutUrl').fill('https://link.clashofclans.com/en?action=OpenLayout&id=qa');page.locator('#layoutReady').check();page.locator('#adminLayoutForm button[type=submit]').click();assert page.locator('#metricTotal').inner_text()=='1';assert page.locator('[data-edit]').count()==1
- page.goto(base+'bases.html');assert page.locator('#publicCount').inner_text().startswith('0');assert page.locator('#baseForm').count()==0
+ page.goto(base+'bases.html');assert page.locator('#publicGallery').get_by_text('QA düzeni',exact=True).count()==0;assert page.locator('#baseForm').count()==0
  ctx.close();browser.close()
 print(json.dumps({'viewports_checked':len(checks),'interactions':'planner persistence, language switch, clan link, admin creation, public isolation','errors':errors},ensure_ascii=False,indent=2))
 assert not errors

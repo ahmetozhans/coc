@@ -21,3 +21,7 @@
 .layout-visual .fallback .icon{width:68px;height:68px;color:#a788cc;filter:drop-shadow(0 0 20px #b77bff33)}
 
 .brand{min-height:44px}.footer-links a{display:inline-flex;align-items:center;min-height:44px}.layout-actions .button,.studio-entry-actions .button{min-height:46px}@media(max-width:480px){.tool-card{min-height:250px}.card-link{min-height:30px;font-size:.56rem!important}}
+
+.source-meta{display:grid;gap:5px;margin-top:17px;padding-top:13px;border-top:1px solid #33415e;font-size:.69rem;line-height:1.65;color:#aebcd2}.source-meta a{color:#d3b6ff;text-decoration:underline;text-underline-offset:3px;min-height:44px;display:flex;align-items:center;overflow-wrap:anywhere}.source-meta span{overflow-wrap:anywhere}
+
+.preview-source{position:absolute;bottom:20px;left:16px;right:16px;text-align:center;color:#d3b6ff;font-size:.78rem;min-height:44px;display:flex;align-items:center;justify-content:center;text-decoration:underline;text-underline-offset:4px}

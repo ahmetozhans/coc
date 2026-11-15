@@ -320,6 +320,8 @@ Object.assign(dictionary, {
   "A good attack starts here. | Mahanpro": "İyi bir saldırı burada başlar. | Mahanpro"
 });
 Object.assign(dictionary, {"Explore tool": "Aracı keşfet", "Overview": "Genel bakış", "Base layouts": "Köy düzenleri", "Publishing": "Yayınlama", "Settings": "Ayarlar"});
+Object.assign(dictionary, {"Source: {name}": "Kaynak: {name}", "Creator: {name}": "Hazırlayan: {name}", "Source updated: {date}": "Kaynak tarihi: {date}"});
+Object.assign(dictionary, {"Preview on source": "Görseli kaynakta incele", "Dates refer to the source publication. Open the link in game to check availability.": "Tarihler kaynak yayına aittir. Kullanılabilirliği kontrol etmek için bağlantıyı oyunda aç."});
 const reverse = Object.fromEntries(Object.entries(dictionary).map(([en,tr])=>[tr,en]));
 let language = 'en';
 try { const saved=localStorage.getItem('vf-language'); language=['en','tr'].includes(saved)?saved:(navigator.language||'en').startsWith('tr')?'tr':'en'; } catch {}
