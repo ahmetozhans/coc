@@ -322,6 +322,9 @@ Object.assign(dictionary, {
 Object.assign(dictionary, {"Explore tool": "Aracı keşfet", "Overview": "Genel bakış", "Base layouts": "Köy düzenleri", "Publishing": "Yayınlama", "Settings": "Ayarlar"});
 Object.assign(dictionary, {"Source: {name}": "Kaynak: {name}", "Creator: {name}": "Hazırlayan: {name}", "Source updated: {date}": "Kaynak tarihi: {date}"});
 Object.assign(dictionary, {"Preview on source": "Görseli kaynakta incele", "Dates refer to the source publication. Open the link in game to check availability.": "Tarihler kaynak yayına aittir. Kullanılabilirliği kontrol etmek için bağlantıyı oyunda aç."});
+Object.assign(dictionary, {"Views": "Görüntülenme", "Downloads": "İndirilme", "Favorites": "Favorilenme", "Shared counters are temporarily unavailable. Your game links still work.": "Ortak sayaçlar şu anda yüklenemiyor. Oyun bağlantılarını kullanmaya devam edebilirsin."});
+Object.assign(dictionary, {'Counts game-open and successful link-copy actions, not confirmed in-game saves.':'Oyuna açma ve başarılı bağlantı kopyalama işlemleridir; oyunda kaydedildiğini doğrulamaz.'});
+Object.assign(dictionary, {'Enlarge layout':'Düzeni büyüt','Close preview':'Önizlemeyi kapat'});
 const reverse = Object.fromEntries(Object.entries(dictionary).map(([en,tr])=>[tr,en]));
 let language = 'en';
 try { const saved=localStorage.getItem('vf-language'); language=['en','tr'].includes(saved)?saved:(navigator.language||'en').startsWith('tr')?'tr':'en'; } catch {}

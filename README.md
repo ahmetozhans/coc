@@ -37,7 +37,7 @@ python3 tests/browser.py
 
 ## Publish genuine layouts
 
-`catalog.json` contains an editor-selected collection from public source pages. See [CATALOG_SOURCES.md](CATALOG_SOURCES.md) for origins and dates. These are sourced game links, not claims of in-game testing. Source credit and publication dates are displayed on each card and preserved by Studio import/export and edits. Some entries have preview images; those without an individual image link to the original source instead of showing an unrelated layout.
+`catalog.json` contains an editor-selected collection from public source pages. See [CATALOG_SOURCES.md](CATALOG_SOURCES.md) for origins and dates. These are sourced game links, not claims of in-game testing. Every published entry has a matching local preview image. The public gallery omits external source labels and links; provenance remains in the internal catalog audit and is preserved by Studio import/export and edits. Image previews open in a full-size dialog. Shared views, copy actions and active favorites are stored in the live D1 service described in [services/layout-stats/README.md](services/layout-stats/README.md).
 
 1. Open `admin.html`. If a published catalog already exists, import it in the publishing section before making changes. Importing merges by official layout URL; imported records replace matching local drafts.
 2. Add an official `https://link.clashofclans.com/...` link with `action=OpenLayout` and an `id`, a title, Town Hall level and category. Use an HTTPS screenshot URL only when you have permission to publish that image.
@@ -63,3 +63,11 @@ This content is not affiliated with, endorsed, sponsored, or specifically approv
 ## Artwork
 
 `assets/night-village.webp` is original AI-generated decorative artwork, not a game screenshot or a playable layout. It is not included as an entry in the layout catalog. Custom inline SVG icons and `favicon.svg` are part of the Night Village theme.
+
+## Gallery counters
+
+`metrics.js` reads persistent shared totals from the Mahanpro statistics service. No local or invented totals are substituted when the service is unavailable. View events are emitted after one second with at least half of a card visible (or opening its image preview). The backend deduplicates views per browser per UTC day and copy actions per browser per hour. Favorites count current active browser favorites and decrease when removed.
+
+“Downloads” means game-open or successful link-copy actions, not verified saves inside Clash of Clans. Counts start when tracking is enabled; historical activity is not fabricated. Anonymous browser IDs are random and stored as hashes server-side.
+
+With the local server running, `python3 tests/shared-statistics.py` verifies real cross-browser persistence and deduplication using isolated random `qa-` IDs that never appear in the public catalog.
