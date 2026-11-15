@@ -64,3 +64,19 @@ $('importUpgrades')?.addEventListener('click',()=>$('importUpgradesFile').click(
 $('importUpgradesFile')?.addEventListener('change',async e=>{try{const f=e.target.files?.[0];if(!f||f.size>1000000)throw Error('File too large');const data=JSON.parse(await f.text());if(data.type!=='villageforge-upgrades'||!Array.isArray(data.items)||data.items.length>1000)throw Error('Invalid backup');const valid=data.items.filter(x=>String(x.name).length<=70&&Number(x.days)>0&&Number(x.days)<=999&&Number.isSafeInteger(Number(x.cost))&&Number(x.cost)>=0&&['Gold','Elixir','Dark Elixir'].includes(x.resource)).map(x=>({id:String(Date.now()+Math.random()),name:String(x.name),days:Number(x.days),cost:Number(x.cost),resource:x.resource}));upgrades.push(...valid);store('vf-upgrades-v3',upgrades);if(Number(data.builders)>=1&&Number(data.builders)<=6)$('builders').value=String(data.builders);renderUpgrades();alert(valid.length+' upgrades imported')}catch(err){alert(err.message)}e.target.value=''});
 $('clearUpgrades')?.addEventListener('click',()=>{if(confirm('Clear all saved upgrades?')){upgrades=[];store('vf-upgrades-v3',upgrades);renderUpgrades()}});
 }
+
+
+/* Published catalogue is read-only for visitors and is deployed via catalog.json. */
+if(page==='bases'&&$('publishedGallery')){
+let publicLayouts=[],publicTh='all';
+function renderPublic(){
+const shown=publicLayouts.filter(x=>publicTh==='all'||String(x.th)===publicTh);
+$('publishedCount').textContent=shown.length+' published';
+$('publishedGallery').innerHTML=shown.length?shown.map(x=>{
+const img=x.image?'<img loading="lazy" alt="'+escapeHTML(x.title)+' screenshot" src="'+escapeHTML(x.image)+'">':'<div class="gallery-placeholder"><span>🏰</span><small>COMMUNITY LAYOUT</small></div>';
+return '<article class="saved-card gallery-card"><div class="gallery-image">'+img+'<span class="gallery-th">TH '+x.th+'</span></div><div class="gallery-card-body"><span class="tag">'+escapeHTML(x.type)+'</span><h3>'+escapeHTML(x.title)+'</h3><p class="muted">'+escapeHTML(x.description||'')+'</p><div class="card-actions"><a class="btn small primary" href="'+escapeHTML(x.url)+'" target="_blank" rel="noopener noreferrer">OPEN IN CLASH ↗</a><button class="btn small" data-public-copy="'+escapeHTML(x.id)+'">COPY LINK</button></div></div></article>'}).join(''):'<div class="notice gallery-empty">No published layouts for this Town Hall yet. Browse the external community sources below or save your own layouts.</div>';
+$('publishedGallery').querySelectorAll('[data-public-copy]').forEach(b=>b.onclick=async()=>{const x=publicLayouts.find(x=>x.id===b.dataset.publicCopy);if(!x)return;try{await navigator.clipboard.writeText(x.url);b.textContent='COPIED ✓'}catch{prompt('Copy link:',x.url)}});
+}
+document.querySelectorAll('[data-public-th]').forEach(b=>b.addEventListener('click',()=>{publicTh=b.dataset.publicTh;document.querySelectorAll('[data-public-th]').forEach(y=>y.classList.toggle('active',y===b));renderPublic()}));
+fetch('catalog.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Catalog unavailable');return r.json()}).then(data=>{publicLayouts=Array.isArray(data.layouts)?data.layouts.filter(x=>x&&typeof x.title==='string'&&x.title.length<=70&&Number(x.th)>=3&&Number(x.th)<=18&&['War','Farming','Trophy','Hybrid'].includes(x.type)&&vfValidBase({name:x.title,url:x.url,th:x.th,type:x.type})&&(!x.image||(/^https:\/\//.test(x.image)&&!/[<>"']/.test(x.image)))).slice(0,1000).map(x=>({id:String(x.id),title:x.title,th:Number(x.th),type:x.type,url:x.url,image:String(x.image||''),description:String(x.description||'').slice(0,160)})):[];renderPublic()}).catch(()=>{$('publishedGallery').innerHTML='<div class="notice gallery-empty">Published layouts could not be loaded. Please try again later.</div>'});
+}
