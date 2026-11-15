@@ -1,6 +1,6 @@
 # VillageForge — Clash of Clans tools
 
-Independent, unofficial Clash of Clans fan toolkit. Responsive HTML/CSS/JavaScript with no build step or frontend dependencies.
+Independent, unofficial Clash of Clans fan toolkit. Responsive HTML/CSS/JavaScript with no build step or frontend dependencies. All six pages use the Night Village design: a midnight palette, purple and gold accents, original fantasy village artwork, custom SVG icons and a completely replaced stylesheet. The mobile layout includes safe-area-aware bottom navigation, at least 44 px primary touch controls, 16 px form fields, responsive cards and a horizontally scrollable Town Hall filter row. System fonts avoid external font requests; the hero illustration is locally hosted WebP (~211 KiB).
 
 ## Features
 
@@ -23,7 +23,17 @@ Run the regression checks with Node.js 18 or newer:
 node tests/regression.cjs
 ```
 
-These tests use a lightweight DOM harness for tool behavior and translation logic. They do not replace real browser checks on desktop and mobile.
+These regression tests use a lightweight DOM harness for tool behavior and translation logic.
+
+For real browser checks, use an environment with Python Playwright and Chromium installed. Start the site on port 8765, then run:
+
+```sh
+python3 -m http.server 8765 --bind 127.0.0.1
+# In another terminal:
+python3 tests/browser.py
+```
+
+`BROWSER_BIN`, `VILLAGEFORGE_QA_URL` and `VILLAGEFORGE_QA_SCREENSHOTS` can override the browser executable, server URL and screenshot directory. The browser suite checks all six pages in Turkish and English at 360, 390, 430, 768, 1024 and 1440 px, including all Studio sections, horizontal overflow, JavaScript errors and core tool interactions. It writes screenshots to `/tmp/villageforge-qa` by default. Browser-local fixtures are confined to disposable test contexts.
 
 ## Publish genuine layouts
 
@@ -49,3 +59,7 @@ Not included: accounts, automatic publishing, live clan statistics in the UI, of
 ## Disclaimer
 
 This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it. Clash of Clans and related trademarks belong to Supercell.
+
+## Artwork
+
+`assets/night-village.webp` is original AI-generated decorative artwork, not a game screenshot or a playable layout. It is not included as an entry in the layout catalog. Custom inline SVG icons and `favicon.svg` are part of the Night Village theme.
