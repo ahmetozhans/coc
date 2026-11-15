@@ -1,5 +1,5 @@
 'use strict';
-const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const get=k=>{try{return JSON.parse(localStorage.getItem(k))||[]}catch{return []}},put=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch{alert('Browser storage is full. Export a backup and remove old entries.');return false}};
 const valid=u=>{try{const x=new URL(u);return x.protocol==='https:'&&x.hostname==='link.clashofclans.com'&&x.searchParams.get('action')==='OpenLayout'&&!!x.searchParams.get('id')}catch{return false}};
 const dl=(name,data)=>{const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)};
