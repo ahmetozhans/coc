@@ -1,29 +1,65 @@
-# Clash Tools Hub — Free static MVP
+# VillageForge — Clash of Clans tools
 
-Independent, unofficial Clash of Clans fan toolkit. Static, mobile-responsive HTML/CSS/JS; no dependencies or build step.
+Independent, unofficial Clash of Clans fan toolkit. Responsive HTML/CSS/JavaScript with no build step or frontend dependencies. All six pages use the Night Village design: a midnight palette, purple and gold accents, original fantasy village artwork, custom SVG icons and a completely replaced stylesheet. The mobile layout includes safe-area-aware bottom navigation, at least 44 px primary touch controls, 16 px form fields, responsive cards and a horizontally scrollable Town Hall filter row. System fonts avoid external font requests; the hero illustration is locally hosted WebP (~211 KiB).
 
-## Included
-- Four language selectors (English, Turkish, Spanish, Portuguese; English fallback for untranslated strings)
-- Clan tag validation and opening an in-game clan profile
-- Local-only saved base layout links (not a public gallery)
-- Starter attack strategy tips
-- Editable simplified upgrade calculator with local browser persistence
+## Features
 
-## Not yet included
-- Live Supercell API statistics (requires a server-side integration and approved API key)
-- Verified, public base layout catalog
-- Up-to-date official upgrade values
-- Full professional translations for Spanish and Portuguese
-- Accounts, analytics, advertisements
+- Turkish and English interface, including Content Studio. Language choice persists when browser storage is available. User-entered titles and descriptions are preserved as written.
+- Public layout gallery with Town Hall and category filters, search and browser-local favorites.
+- Visitors can browse, copy official game links and favorite published layouts. Layout creation, editing, approval and catalog import/export are available only in Content Studio; there is no visitor upload or personal-layout import form.
+- Builder planner with persistent builder count, parallel scheduling, approximate finish date and resource totals. Costs and durations are entered by the user; boosts and resource waiting time are excluded.
+- Official in-game clan profile links and basic attack guides.
+- Content Studio with local drafts, duplicate link checks, optional in-game check date, catalog import and export.
 
-## Free deploy with Cloudflare Pages
-1. Open https://dash.cloudflare.com/ and sign up / sign in.
-2. Go to Workers & Pages > Create > Pages > Upload assets (labels may change).
-3. Upload the folder or the provided ZIP, and choose a unique project name.
-4. Your site will get a free `your-project.pages.dev` address after deployment.
-5. Test all sections on desktop and mobile.
+Saving, deleting and approving records update the interface only after browser storage succeeds. Invalid locally stored records are ignored. Existing storage keys are retained; no migration or clearing is required. Legacy personal layouts are left in browser storage but are never read or displayed by the public gallery.
 
-No secrets/API keys should ever be put in `index.html`.
+## Try locally
+
+From the project directory, run `python3 -m http.server 8000`, then open `http://localhost:8000`. A local HTTP server does not execute the optional Cloudflare Pages Function.
+
+Run the regression checks with Node.js 18 or newer:
+
+```sh
+node tests/regression.cjs
+```
+
+These regression tests use a lightweight DOM harness for tool behavior and translation logic.
+
+For real browser checks, use an environment with Python Playwright and Chromium installed. Start the site on port 8765, then run:
+
+```sh
+python3 -m http.server 8765 --bind 127.0.0.1
+# In another terminal:
+python3 tests/browser.py
+```
+
+`BROWSER_BIN`, `VILLAGEFORGE_QA_URL` and `VILLAGEFORGE_QA_SCREENSHOTS` can override the browser executable, server URL and screenshot directory. The browser suite checks all six pages in Turkish and English at 360, 390, 430, 768, 1024 and 1440 px, including all Studio sections, horizontal overflow, JavaScript errors and core tool interactions. It writes screenshots to `/tmp/villageforge-qa` by default. Browser-local fixtures are confined to disposable test contexts.
+
+## Publish genuine layouts
+
+The initial `catalog.json` is intentionally empty. No example layout is represented as a verified, usable game layout.
+
+1. Open `admin.html`. If a published catalog already exists, import it in the publishing section before making changes. Importing merges by official layout URL; imported records replace matching local drafts.
+2. Add an official `https://link.clashofclans.com/...` link with `action=OpenLayout` and an `id`, a title, Town Hall level and category. Use an HTTPS screenshot URL only when you have permission to publish that image.
+3. Optionally enter a description and the date you actually checked the layout in game.
+4. Approve the records to publish and download `catalog.json`.
+5. Replace the repository's root `catalog.json`, commit and let your hosting provider deploy it.
+6. Export a separate draft backup regularly. Catalog exports include only approved layouts. Local drafts, favorites and planner entries stay in the current browser; there is no account sync.
+
+Public pages do not link to Content Studio; the owner can open `admin.html` directly. Content Studio is a local editor, not an authenticated server admin panel. Its URL is not an access-control mechanism. Only someone with GitHub repository write permission can publish a changed catalog; no public endpoint accepts layout writes. Visiting it does not grant repository write access. Never enter GitHub tokens or API secrets into the page.
+
+## Hosting and optional API
+
+The frontend works on GitHub Pages or another static HTTP host. Keep all HTML, JS, CSS, `favicon.svg` and `catalog.json` at the same relative paths. Canonical URLs and sitemap currently target `https://ahmetozhans.github.io/coc/`; update them if the hosting address changes.
+
+The optional `functions/api/clan.js` requires Cloudflare Pages Functions, a server-side `CLASH_API_TOKEN` secret and an approved outbound IP configuration; see [API_SETUP.md](API_SETUP.md). It is not connected to the current frontend. GitHub Pages cannot run this function.
+
+Not included: accounts, automatic publishing, live clan statistics in the UI, official upgrade datasets, or guaranteed three-star attack strategies.
 
 ## Disclaimer
+
 This content is not affiliated with, endorsed, sponsored, or specifically approved by Supercell and Supercell is not responsible for it. Clash of Clans and related trademarks belong to Supercell.
+
+## Artwork
+
+`assets/night-village.webp` is original AI-generated decorative artwork, not a game screenshot or a playable layout. It is not included as an entry in the layout catalog. Custom inline SVG icons and `favicon.svg` are part of the Night Village theme.
