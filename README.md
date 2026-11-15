@@ -1,4 +1,4 @@
-# VillageForge — Clash of Clans tools
+# Mahanpro — Clash of Clans tools
 
 Independent, unofficial Clash of Clans fan toolkit. Responsive HTML/CSS/JavaScript with no build step or frontend dependencies. All six pages use the Night Village design: a midnight palette, purple and gold accents, original fantasy village artwork, custom SVG icons and a completely replaced stylesheet. The mobile layout includes safe-area-aware bottom navigation, at least 44 px primary touch controls, 16 px form fields, responsive cards and a horizontally scrollable Town Hall filter row. System fonts avoid external font requests; the hero illustration is locally hosted WebP (~211 KiB).
 
