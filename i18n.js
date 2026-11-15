@@ -325,6 +325,8 @@ Object.assign(dictionary, {"Preview on source": "Görseli kaynakta incele", "Dat
 Object.assign(dictionary, {"Views": "Görüntülenme", "Downloads": "İndirilme", "Favorites": "Favorilenme", "Shared counters are temporarily unavailable. Your game links still work.": "Ortak sayaçlar şu anda yüklenemiyor. Oyun bağlantılarını kullanmaya devam edebilirsin."});
 Object.assign(dictionary, {'Counts game-open and successful link-copy actions, not confirmed in-game saves.':'Oyuna açma ve başarılı bağlantı kopyalama işlemleridir; oyunda kaydedildiğini doğrulamaz.'});
 Object.assign(dictionary, {'Enlarge layout':'Düzeni büyüt','Close preview':'Önizlemeyi kapat'});
+Object.assign(dictionary, {'No guides match these filters.':'Bu filtrelere uygun rehber bulunamadı.'});
+Object.assign(dictionary, {'Content suggestions':'İçerik önerileri','Review content suggestions':'İçerik önerilerini incele'});
 const reverse = Object.fromEntries(Object.entries(dictionary).map(([en,tr])=>[tr,en]));
 let language = 'en';
 try { const saved=localStorage.getItem('vf-language'); language=['en','tr'].includes(saved)?saved:(navigator.language||'en').startsWith('tr')?'tr':'en'; } catch {}

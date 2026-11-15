@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "lastDiscovery": "2026-11-15",
+  "proposals": [
+    {
+      "id": "base-6d279f0a-8163-4e76-af02-795af28e1ac7",
+      "kind": "layout",
+      "createdAt": "2026-11-15",
+      "imageSha256": "bf00a9c82f08bfdf5ad1ecaf73a7b1072917028bea72af48686587bf8773393c",
+      "payload": {
+        "id": "loot-6d279f0a-8163-4e76-af02-795af28e1ac7",
+        "title": "TH18 · Kupa Düzeni #4",
+        "th": 18,
+        "type": "Trophy",
+        "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH18%3AWB%3AAAAAVQAAAAH-kcyTZkLpzIcPYLJV8Y_A",
+        "image": "https://assets.clashloot.gg/base-screens/ca269f3d-a9db-44a4-a7e4-3327e14c2859.webp",
+        "description": "",
+        "checked": "",
+        "sourceName": "Clash Loot",
+        "sourceUrl": "https://clashloot.gg/coc/bases/th-18",
+        "sourceDate": "2026-10-27",
+        "retrieved": "2026-11-15",
+        "creator": ""
+      },
+      "fingerprint": "22b8c42fe0152425b6c783938d63d873cdc67f605bb6304bd5414513934d7160"
+    },
+    {
+      "id": "base-4f8ea188-22db-4f87-a72e-39887853b4c0",
+      "kind": "layout",
+      "createdAt": "2026-11-15",
+      "imageSha256": "3172f9ebc0a2c65f24ac8493e74301546caf2a34e69600f4805bd7fc7b59e430",
+      "payload": {
+        "id": "loot-4f8ea188-22db-4f87-a72e-39887853b4c0",
+        "title": "TH18 · Savaş Düzeni #2",
+        "th": 18,
+        "type": "War",
+        "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH18%3AWB%3AAAAALgAAAAKgHc3pKvymBckBnNhqVrwU",
+        "image": "https://assets.clashloot.gg/base-screens/18ec8d42-f29f-4e08-b9d8-22336020e606.webp",
+        "description": "",
+        "checked": "",
+        "sourceName": "Clash Loot",
+        "sourceUrl": "https://clashloot.gg/coc/bases/th-18",
+        "sourceDate": "2026-11-08",
+        "retrieved": "2026-11-15",
+        "creator": ""
+      },
+      "fingerprint": "5f8d70b9b69d14a961cb20822d7ae7bcb25577b10309e6da2283a7b842626144"
+    },
+    {
+      "id": "guide-war-readiness-checklist",
+      "kind": "guide",
+      "createdAt": "2026-11-15",
+      "imageSha256": "",
+      "payload": {
+        "id": "war-readiness-checklist",
+        "category": "War",
+        "townHalls": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "title": {
+          "tr": "Savaştan önce dört kontrol",
+          "en": "Four checks before a war attack"
+        },
+        "summary": {
+          "tr": "Saldırıya girmeden önce ordunu, hedefini ve giriş planını kontrol et. Bu genel kontrol listesi, planlama hatalarını azaltmaya yardımcı olur.",
+          "en": "Check your army, target and entry plan before attacking. This general checklist helps reduce preparation mistakes."
+        },
+        "steps": {
+          "tr": [
+            "Ordunun, büyülerinin ve kullanacağın kahramanların hazır olduğunu kontrol et.",
+            "Hedef köyde belediye binasını, klan kalesini ve önemli savunmaları belirle.",
+            "Ana ordunun merkeze yönelmesi için temizleyeceğin iki kenarı seç.",
+            "Büyüleri ve kahraman yeteneklerini hangi durumda kullanacağını önceden planla."
+          ],
+          "en": [
+            "Check that your army, spells and planned heroes are ready.",
+            "Locate the Town Hall, Clan Castle and important defenses in the target village.",
+            "Choose the sides to clear so the main army moves toward the center.",
+            "Plan the situations in which you will use spells and hero abilities."
+          ]
+        },
+        "updated": "2026-11-15",
+        "kind": "general",
+        "sourceUrls": []
+      },
+      "fingerprint": "060c11f2d807c4538b40f9a130a053603f6cc59ba8a607cb51db8020c59a98e9"
+    }
+  ]
+}

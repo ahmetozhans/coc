@@ -1,3 +1,4 @@
+import { REVIEW_HTML } from './review-page.js';
 const PUBLIC_ORIGIN='https://ahmetozhans.github.io';
 const ID=/^[a-zA-Z0-9_-]{1,100}$/;
 const VISITOR=/^[a-f0-9-]{36}$/i;
@@ -6,9 +7,45 @@ function respond(value,status=200,origin){return new Response(JSON.stringify(val
 async function hash(value){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('mahanpro-v1:'+value));return [...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,'0')).join('');}
 function statsStatement(db,ids){const placeholders=ids.map(()=>'?').join(',');return db.prepare(`WITH keys AS (SELECT layout_id FROM layout_events WHERE layout_id IN (${placeholders}) UNION SELECT layout_id FROM layout_favorites WHERE layout_id IN (${placeholders})), events AS (SELECT layout_id, SUM(CASE WHEN kind='view' THEN 1 ELSE 0 END) AS views, SUM(CASE WHEN kind='copy' THEN 1 ELSE 0 END) AS downloads FROM layout_events WHERE layout_id IN (${placeholders}) GROUP BY layout_id), favorites AS (SELECT layout_id,SUM(active) AS favorites FROM layout_favorites WHERE layout_id IN (${placeholders}) GROUP BY layout_id) SELECT keys.layout_id AS id,COALESCE(events.views,0) AS views,COALESCE(events.downloads,0) AS downloads,COALESCE(favorites.favorites,0) AS favorites FROM keys LEFT JOIN events USING(layout_id) LEFT JOIN favorites USING(layout_id)`).bind(...ids,...ids,...ids,...ids);}
 function resultMap(ids,rows){const result=Object.fromEntries(ids.map(id=>[id,{views:0,downloads:0,favorites:0}]));for(const row of rows||[])result[row.id]={views:Number(row.views),downloads:Number(row.downloads),favorites:Number(row.favorites)};return result;}
+
+const CONTENT_ORIGIN='https://raw.githubusercontent.com/ahmetozhans/coc/main/';
+const canonical=value=>Array.isArray(value)?'['+value.map(canonical).join(',')+']':value&&typeof value==='object'?'{'+Object.keys(value).sort().map(k=>JSON.stringify(k)+':'+canonical(value[k])).join(',')+'}':JSON.stringify(value);
+async function proposalHash(p){const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(canonical({kind:p.kind,payload:p.payload,imageSha256:p.imageSha256||''})));return [...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,'0')).join('');}
+async function publishedFile(name){const r=await fetch(CONTENT_ORIGIN+name,{headers:{Accept:'application/json'},cache:'no-store'});if(!r.ok)throw Error('Content unavailable');const text=await r.text();if(text.length>1000000)throw Error('Content too large');return JSON.parse(text);}
+async function inbox(){const x=await publishedFile('content-inbox.json');if(x.version!==1||!Array.isArray(x.proposals)||x.proposals.length>100)throw Error('Invalid inbox');const result=[];for(const p of x.proposals){if(!p||!ID.test(p.id)||!['layout','guide'].includes(p.kind)||!p.payload||!/^[a-f0-9]{64}$/.test(p.fingerprint)||await proposalHash(p)!==p.fingerprint)continue;result.push(p);}return result;}
+function ownerIdentity(request,env){const id=request.headers.get('oai-authenticated-user-id'),email=request.headers.get('oai-authenticated-user-email');return id&&email&&env.ADMIN_EMAIL&&email.toLowerCase()===env.ADMIN_EMAIL.toLowerCase()?id:null;}
+function htmlResponse(html,status=200){return new Response(html,{status,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin'}});}
+async function reviewRoute(request,env,url){
+ const user=ownerIdentity(request,env);
+ if(url.pathname==='/admin'){
+  if(!user){if(request.headers.get('oai-authenticated-user-id'))return htmlResponse('<!doctype html><meta charset="utf-8"><p>Bu hesap yönetici olarak yetkilendirilmemiş.</p>',403);return htmlResponse('<!doctype html><html lang="tr"><meta name="viewport" content="width=device-width,initial-scale=1"><meta charset="utf-8"><title>Mahanpro Yönetici Girişi</title><body style="background:#080f22;color:#f6f3ff;font:17px system-ui;padding:35px;line-height:1.8"><h1>Mahanpro · İçerik önerileri</h1><p>Önerileri incelemek ve karar vermek için yönetici hesabınla giriş yap.</p><a target="_top" style="color:#d6b0ff" href="/signin-with-chatgpt?return_to=%2Fadmin">ChatGPT ile yönetici girişi</a></body></html>');}
+  return htmlResponse(REVIEW_HTML);
+ }
+ if(!user)return respond({error:'Administrator sign-in required'},401);
+ if(!env.DB)return respond({error:'Review storage unavailable'},503);
+ try{
+  if(url.pathname==='/api/reviews'&&request.method==='GET'){
+   const proposals=await inbox();const reviews=await env.DB.prepare('SELECT proposal_id,fingerprint,decision,reviewed_at FROM content_reviews').all();const byId=new Map((reviews.results||[]).map(x=>[x.proposal_id,x]));
+   const [catalog,guides]=await Promise.all([publishedFile('catalog.json'),publishedFile('guides.json')]);const published=new Map([...(catalog.layouts||[]),...(guides.guides||[])].map(x=>[x.id,x]));
+   return respond({proposals:proposals.map(p=>{const r=byId.get(p.id);return {...p,status:p.publication?.status==='published'&&p.publication?.fingerprint===p.fingerprint?'published':r?.fingerprint===p.fingerprint?r.decision:'pending',reviewedAt:r?.fingerprint===p.fingerprint?r.reviewed_at:null};})});
+  }
+  if(url.pathname==='/api/reviews'&&request.method==='POST'){
+   if(request.headers.get('Origin')!==url.origin||!request.headers.get('Content-Type')?.startsWith('application/json'))return respond({error:'Invalid request origin'},403);
+   const text=await request.text();if(text.length>4096)return respond({error:'Request too large'},413);let body;try{body=JSON.parse(text);}catch{return respond({error:'Invalid JSON'},400);}
+   if(!ID.test(body.id)||!['approved','rejected'].includes(body.decision)||!/^[a-f0-9]{64}$/.test(body.fingerprint||''))return respond({error:'Invalid decision'},400);
+   const p=(await inbox()).find(x=>x.id===body.id);if(!p||p.fingerprint!==body.fingerprint)return respond({error:'Suggestion changed; reload and review it again'},409);
+   const catalog=await publishedFile(p.kind==='layout'?'catalog.json':'guides.json');if((catalog.layouts||catalog.guides||[]).some(x=>x.id===p.payload.id&&x.approvalFingerprint===p.fingerprint))return respond({error:'This version is already being published'},409);
+   await env.DB.prepare('INSERT INTO content_reviews (proposal_id,fingerprint,decision,reviewer_id,reviewed_at) VALUES (?,?,?,?,?) ON CONFLICT(proposal_id) DO UPDATE SET fingerprint=excluded.fingerprint,decision=excluded.decision,reviewer_id=excluded.reviewer_id,reviewed_at=excluded.reviewed_at').bind(p.id,p.fingerprint,body.decision,user,new Date().toISOString()).run();
+   return respond({ok:true,id:p.id,decision:body.decision});
+  }
+  return respond({error:'Not found'},404);
+ }catch(error){console.error('Content review failed',error.message);return respond({error:'Suggestions could not be loaded. Please try again.'},503);}
+}
+
 export default {
  async fetch(request,env){
   const origin=request.headers.get('Origin');const url=new URL(request.url);
+  if(url.pathname==='/admin'||url.pathname==='/api/reviews')return reviewRoute(request,env,url);
   if(origin&&origin!==PUBLIC_ORIGIN&&!/^http:\/\/127\.0\.0\.1:\d+$/.test(origin))return respond({error:'Origin not allowed'},403,origin);
   if(request.method==='OPTIONS')return new Response(null,{status:204,headers:headers(origin)});
   if(url.pathname==='/')return respond({service:'Mahanpro shared layout statistics',status:'ok'},200,origin);

@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "updated": "2026-11-15",
+  "guides": [
+    {
+      "id": "dragon-funnel",
+      "category": "Air",
+      "townHalls": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "title": {
+        "en": "Dragon funnel",
+        "tr": "Ejderha yönlendirme"
+      },
+      "summary": {
+        "en": "Guide dragons into the core instead of letting them circle the outside.",
+        "tr": "Ejderhaları köyün çevresinde dolaşmak yerine merkeze yönlendir."
+      },
+      "steps": {
+        "en": [
+          "Scout air defenses and sweepers.",
+          "Clear both sides to shape a funnel.",
+          "Send your main army toward the center.",
+          "Time spells around heavy defenses."
+        ],
+        "tr": [
+          "Hava savunmalarını ve hava patlatıcılarını incele.",
+          "Yönlendirme oluşturmak için iki yanı temizle.",
+          "Ana ordunu merkeze gönder.",
+          "Büyüleri güçlü savunmalara göre zamanla."
+        ]
+      },
+      "updated": "2026-11-15",
+      "kind": "general",
+      "sourceUrls": []
+    },
+    {
+      "id": "core-push",
+      "category": "Ground",
+      "townHalls": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "title": {
+        "en": "Core push",
+        "tr": "Merkeze ilerleme"
+      },
+      "summary": {
+        "en": "Reliable pathing matters more than deploying every troop at once.",
+        "tr": "Güvenilir bir rota, bütün birlikleri aynı anda göndermekten daha önemlidir."
+      },
+      "steps": {
+        "en": [
+          "Identify high-value defenses.",
+          "Clear the outer buildings.",
+          "Open a path toward the core.",
+          "Support the push with spells."
+        ],
+        "tr": [
+          "Önemli savunmaları belirle.",
+          "Dış binaları temizle.",
+          "Merkeze doğru bir yol aç.",
+          "İlerlemeyi büyülerle destekle."
+        ]
+      },
+      "updated": "2026-11-15",
+      "kind": "general",
+      "sourceUrls": []
+    },
+    {
+      "id": "scout-first",
+      "category": "War",
+      "townHalls": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "title": {
+        "en": "Scout first",
+        "tr": "Önce keşfet"
+      },
+      "summary": {
+        "en": "Plan around the layout, enemy heroes and possible traps.",
+        "tr": "Düzene, rakip kahramanlara ve olası tuzaklara göre plan yap."
+      },
+      "steps": {
+        "en": [
+          "Inspect the enemy base.",
+          "Choose a realistic attack route.",
+          "Plan hero abilities and spell timing.",
+          "Practice your entry and funnel."
+        ],
+        "tr": [
+          "Rakip köyü incele.",
+          "Gerçekçi bir saldırı rotası seç.",
+          "Kahraman yeteneklerini ve büyü zamanlamasını planla.",
+          "Girişini ve yönlendirmeni çalış."
+        ]
+      },
+      "updated": "2026-11-15",
+      "kind": "general",
+      "sourceUrls": []
+    }
+  ]
+}

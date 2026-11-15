@@ -71,3 +71,9 @@ This content is not affiliated with, endorsed, sponsored, or specifically approv
 “Downloads” means game-open or successful link-copy actions, not verified saves inside Clash of Clans. Counts start when tracking is enabled; historical activity is not fabricated. Anonymous browser IDs are random and stored as hashes server-side.
 
 With the local server running, `python3 tests/shared-statistics.py` verifies real cross-browser persistence and deduplication using isolated random `qa-` IDs that never appear in the public catalog.
+
+## Approval-first content suggestions
+
+The automated content task researches base layouts and original bilingual attack guides. New material stays in `content-inbox.json` until the owner approves its exact version in the secure **İçerik önerileri** admin page. Rejections and approvals persist in D1. Approved items publish on the next successful hourly task run. See [CONTENT_AUTOMATION.md](CONTENT_AUTOMATION.md) for the complete publication gate and recovery rules.
+
+`guides.json` supplies the guide page and supports Town Hall/category filtering. Its initial three entries preserve the previously published general-principle guides. The initial inbox contains two new layout suggestions and one new guide, all awaiting owner decisions.
