@@ -257,6 +257,12 @@ const dictionary = {
   "Explore curated Clash of Clans layouts by Town Hall and save your own official game links.": "Belediye binası seviyene göre seçilmiş Clash of Clans düzenlerini keşfet, kendi resmî oyun bağlantılarını kaydet."
 };
 
+Object.assign(dictionary, {
+  'Browse admin-published layouts by Town Hall and save your favorites.':'Yöneticinin yayınladığı düzenleri belediye binasına göre keşfet ve favorilerini kaydet.',
+  'Explore admin-published Clash of Clans layouts by Town Hall.':'Yöneticinin yayınladığı Clash of Clans düzenlerini belediye binası seviyesine göre keşfet.',
+  'Browse admin-published layouts and save your favorites.':'Yöneticinin yayınladığı düzenleri keşfet ve favorilerini kaydet.',
+  'CURATED COLLECTION':'SEÇİLMİŞ DÜZENLER'
+});
 const reverse = Object.fromEntries(Object.entries(dictionary).map(([en,tr])=>[tr,en]));
 let language = 'en';
 try { const saved=localStorage.getItem('vf-language'); language=['en','tr'].includes(saved)?saved:(navigator.language||'en').startsWith('tr')?'tr':'en'; } catch {}

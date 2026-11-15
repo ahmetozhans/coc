@@ -6,12 +6,12 @@ Independent, unofficial Clash of Clans fan toolkit. Responsive HTML/CSS/JavaScri
 
 - Turkish and English interface, including Content Studio. Language choice persists when browser storage is available. User-entered titles and descriptions are preserved as written.
 - Public layout gallery with Town Hall and category filters, search and browser-local favorites.
-- Personal layout collection with compressed screenshots, official game links and JSON import/export.
+- Visitors can browse, copy official game links and favorite published layouts. Layout creation, editing, approval and catalog import/export are available only in Content Studio; there is no visitor upload or personal-layout import form.
 - Builder planner with persistent builder count, parallel scheduling, approximate finish date and resource totals. Costs and durations are entered by the user; boosts and resource waiting time are excluded.
 - Official in-game clan profile links and basic attack guides.
 - Content Studio with local drafts, duplicate link checks, optional in-game check date, catalog import and export.
 
-Saving, deleting and approving records update the interface only after browser storage succeeds. Invalid locally stored records are ignored. Existing storage keys are retained; no migration or clearing is required.
+Saving, deleting and approving records update the interface only after browser storage succeeds. Invalid locally stored records are ignored. Existing storage keys are retained; no migration or clearing is required. Legacy personal layouts are left in browser storage but are never read or displayed by the public gallery.
 
 ## Try locally
 
@@ -34,9 +34,9 @@ The initial `catalog.json` is intentionally empty. No example layout is represen
 3. Optionally enter a description and the date you actually checked the layout in game.
 4. Approve the records to publish and download `catalog.json`.
 5. Replace the repository's root `catalog.json`, commit and let your hosting provider deploy it.
-6. Export a separate draft backup regularly. Catalog exports include only approved layouts. Local drafts, personal layouts, favorites and planner entries stay in the current browser; there is no account sync.
+6. Export a separate draft backup regularly. Catalog exports include only approved layouts. Local drafts, favorites and planner entries stay in the current browser; there is no account sync.
 
-Content Studio is a local editor, not an authenticated server admin panel. Visiting it does not grant repository write access. Never enter GitHub tokens or API secrets into the page.
+Public pages do not link to Content Studio; the owner can open `admin.html` directly. Content Studio is a local editor, not an authenticated server admin panel. Its URL is not an access-control mechanism. Only someone with GitHub repository write permission can publish a changed catalog; no public endpoint accepts layout writes. Visiting it does not grant repository write access. Never enter GitHub tokens or API secrets into the page.
 
 ## Hosting and optional API
 
