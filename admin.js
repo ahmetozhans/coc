@@ -1,7 +1,7 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const KEY='vf-admin-drafts-v1';
-const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;':'&quot;',"'":'&#39;'}[c]));
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const read=()=>{try{const a=JSON.parse(localStorage.getItem(KEY));return Array.isArray(a)?a:[]}catch{return []}};
 let entries=read(),filter='all',query='';
 function validUrl(s){try{const u=new URL(s);return u.protocol==='https:'&&u.hostname==='link.clashofclans.com'&&u.searchParams.get('action')==='OpenLayout'&&!!u.searchParams.get('id')}catch{return false}}
