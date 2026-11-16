@@ -1,0 +1,60 @@
+import { cp, mkdir, mkdtemp, readFile, rename, rm, rmdir, writeFile } from 'node:fs/promises';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const [destination, ...extra] = process.argv.slice(2);
+if (!destination || extra.length) throw new Error('Usage: node scripts/build-cpanel-php.mjs NEW_DIRECTORY');
+const source = fileURLToPath(new URL('../', import.meta.url));
+const output = resolve(destination);
+await mkdir(dirname(output), { recursive: true });
+await mkdir(output);
+let stage;
+try {
+  stage = await mkdtemp(join(dirname(output), '.mahanpro-php-'));
+  const web = join(stage, 'public_html');
+  const privateDir = join(stage, 'mahanpro-private');
+  await cp(join(source, 'cpanel/public'), web, { recursive: true });
+  await cp(join(source, 'cpanel/private'), privateDir, { recursive: true });
+  await cp(join(source, 'cpanel/database/schema.sql'), join(privateDir, 'schema.sql'));
+  await cp(join(source, 'assets'), join(web, 'assets'), { recursive: true });
+  for (const file of ['favicon.svg', 'mahanpro-night.css', 'i18n.js']) {
+    await cp(join(source, file), join(web, file));
+  }
+  for (const file of ['catalog.json', 'guides.json']) {
+    await cp(join(source, file), join(privateDir, file));
+  }
+  const app = await readFile(join(source, 'app.js'), 'utf8');
+  await writeFile(join(web, 'app.js'), app.replaceAll('attacks.html#guide-', '/attacks#guide-'));
+  const content = await readFile(join(source, 'site-content.js'), 'utf8');
+  await writeFile(join(web, 'site-content.js'), content.replace(
+    'https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site/api/content', '/api/content'
+  ));
+  await mkdir(join(privateDir, 'templates'));
+  for (const name of ['index', 'bases', 'clan', 'attacks', 'armies', 'upgrade']) {
+    let html = await readFile(join(source, name + '.html'), 'utf8');
+    html = html
+      .replace(/href="(index|bases|clan|attacks|armies|upgrade)\.html(?=["?#])/g,
+        (_, page) => 'href="/' + (page === 'index' ? '' : page))
+      .replace(/<script src="metrics\.js[^"]*" defer><\/script>/g, '');
+    if (name === 'bases') {
+      html = html.replace(/(<div\b[^>]*\bid="publicGallery"[^>]*>)<div class="empty">.*?<\/div>/s,
+        '$1<!-- MAHANPRO_CONTENT -->');
+    }
+    if (name === 'attacks' || name === 'armies') {
+      html = html.replace(/(<div class="guide-grid" id="guideGallery">).*?(<\/div>(?:<section class="panel practice-panel">|<\/div><\/main>))/s,
+        '$1<!-- MAHANPRO_CONTENT -->$2');
+    }
+    if (['bases', 'attacks', 'armies'].includes(name) && !html.includes('<!-- MAHANPRO_CONTENT -->')) {
+      throw new Error('Content region missing in ' + name);
+    }
+    await writeFile(join(privateDir, 'templates', name + '.html'), html);
+  }
+  await rename(stage, output);
+  stage = undefined;
+} catch (error) {
+  await rmdir(output);
+  throw error;
+} finally {
+  if (stage) await rm(stage, { recursive: true, force: true });
+}
+console.log('Built public_html and mahanpro-private under ' + output);
