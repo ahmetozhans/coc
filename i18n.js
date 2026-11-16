@@ -1,6 +1,13 @@
 'use strict';
 const I18n = (() => {
 const dictionary = {
+  "Armies": "Ordular",
+  "Army Layouts": "Ordu Düzenleri",
+  "Army Layouts | Mahanpro": "Ordu Düzenleri | Mahanpro",
+  "Browse Clash of Clans army layouts by Town Hall and copy them into the game.": "Clash of Clans ordu düzenlerini belediye seviyesine göre incele ve oyuna kopyala.",
+  "Read attack guide": "Saldırı rehberini oku",
+  "No armies match these filters.": "Bu filtrelere uygun ordu bulunamadı.",
+  "No army layouts have been published yet.": "Henüz yayımlanmış ordu düzeni yok.",
   "Copy army to game ↗": "Orduyu oyuna kopyala ↗",
   "Copy army link": "Ordu bağlantısını kopyala",
   "Your Town Hall, unlocked troops and army capacity are checked in game.": "Belediye binan, açılmış birliklerin ve ordu kapasiten oyunda kontrol edilir.",
