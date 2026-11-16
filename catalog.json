@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updated": "2026-11-15",
+  "updated": "2026-11-16",
   "layouts": [
     {
       "id": "loot-d152a6ba-06f3-4d66-a96f-968ff04d20cc",
@@ -61,6 +61,38 @@
       "sourceDate": "2026-11-09",
       "retrieved": "2026-11-15",
       "creator": ""
+    },
+    {
+      "id": "loot-6d279f0a-8163-4e76-af02-795af28e1ac7",
+      "title": "TH18 · Kupa Düzeni #4",
+      "th": 18,
+      "type": "Trophy",
+      "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH18%3AWB%3AAAAAVQAAAAH-kcyTZkLpzIcPYLJV8Y_A",
+      "image": "https://ahmetozhans.github.io/coc/assets/layouts/loot-6d279f0a-8163-4e76-af02-795af28e1ac7.webp",
+      "description": "",
+      "checked": "",
+      "sourceName": "Clash Loot",
+      "sourceUrl": "https://clashloot.gg/coc/bases/th-18",
+      "sourceDate": "2026-10-27",
+      "retrieved": "2026-11-15",
+      "creator": "",
+      "approvalFingerprint": "22b8c42fe0152425b6c783938d63d873cdc67f605bb6304bd5414513934d7160"
+    },
+    {
+      "id": "loot-4f8ea188-22db-4f87-a72e-39887853b4c0",
+      "title": "TH18 · Savaş Düzeni #2",
+      "th": 18,
+      "type": "War",
+      "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH18%3AWB%3AAAAALgAAAAKgHc3pKvymBckBnNhqVrwU",
+      "image": "https://ahmetozhans.github.io/coc/assets/layouts/loot-4f8ea188-22db-4f87-a72e-39887853b4c0.webp",
+      "description": "",
+      "checked": "",
+      "sourceName": "Clash Loot",
+      "sourceUrl": "https://clashloot.gg/coc/bases/th-18",
+      "sourceDate": "2026-11-08",
+      "retrieved": "2026-11-15",
+      "creator": "",
+      "approvalFingerprint": "5f8d70b9b69d14a961cb20822d7ae7bcb25577b10309e6da2283a7b842626144"
     },
     {
       "id": "loot-5ac0b570-e487-43c5-a70b-e34ce4ae3dc8",
