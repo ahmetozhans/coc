@@ -36,3 +36,8 @@ The public site now loads `GET https://mahanpro-layout-stats.aerialmandrill32.ch
 The scheduled task uses the owner's connected GitHub and Sites tools; no GitHub token, Site bypass token, admin email, credentials or session cookies belong in the task prompt, repository or browser code. On missing/revoked access, stop publication and report the concrete block. Do not create alternative storage/admin services or bypass platform approval failures.
 
 If the source site changes its HTML or an image fails validation, leave existing published content untouched and report the source failure. Pending and rejected content must never be moved to the public catalogs as a recovery shortcut.
+
+
+## Army copy links on guides
+
+Guides can include optional `armyUrl`, an actual HTTPS `https://link.clashofclans.com/...` share URL with `action=CopyArmy` and one nonempty `army` payload. When an original guide has a publicly available matching army share link, include it in the proposal and internal provenance. The reviewer must be shown that exact army link, and it is covered by the existing payload fingerprint. Never fabricate unit IDs, guess an army URL or attach a sample/testing army to published content. If no verified matching share link is available, omit this field. Manual CMS edits and backup restores preserve it. The game handles import compatibility and army capacity; don't claim successful in-game import without gameplay evidence.

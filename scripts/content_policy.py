@@ -31,3 +31,11 @@ def valid_guide(x):
         assert isinstance(x['steps'][lang],list) and 2<=len(x['steps'][lang])<=8
         assert all(isinstance(v,str) and 0<len(v.strip())<=350 for v in x['steps'][lang])
     assert len(x['steps']['tr'])==len(x['steps']['en'])
+
+    if 'armyUrl' in x:
+        assert isinstance(x['armyUrl'],str) and len(x['armyUrl'])<=3000
+    if x.get('armyUrl'):
+        army_url=urlparse(x['armyUrl']);army_query=parse_qs(army_url.query,keep_blank_values=True)
+        assert army_url.scheme=='https' and army_url.hostname=='link.clashofclans.com' and army_url.port in (None,443) and not army_url.username and not army_url.password and not army_url.fragment
+        assert army_query.get('action')==['CopyArmy'] and len(army_query.get('army',[]))==1
+        assert 0<len(army_query['army'][0])<=2000 and re.fullmatch(r'[A-Za-z0-9:-]+',army_query['army'][0])

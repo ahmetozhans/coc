@@ -1,6 +1,9 @@
 'use strict';
 const I18n = (() => {
 const dictionary = {
+  "Copy army to game ↗": "Orduyu oyuna kopyala ↗",
+  "Copy army link": "Ordu bağlantısını kopyala",
+  "Your Town Hall, unlocked troops and army capacity are checked in game.": "Belediye binan, açılmış birliklerin ve ordu kapasiten oyunda kontrol edilir.",
   "Loading guides…": "Rehberler yükleniyor…",
   "The guides could not be loaded. Please reload.": "Rehberler yüklenemedi. Lütfen sayfayı yenile.",
   "Home": "Ana sayfa",

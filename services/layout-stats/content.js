@@ -11,10 +11,12 @@ function checkLayout(x){
  requireValue(u&&httpsURL(x.url)&&u.hostname==='link.clashofclans.com'&&u.searchParams.get('action')==='OpenLayout'&&u.searchParams.get('id')?.startsWith('TH'+x.th+':'),'Belediye binasıyla eşleşen resmi düzen bağlantısı gerekiyor.');
  requireValue((!x.image||httpsURL(x.image))&&shortText(x.description||'',160)&&typeof x.hidden==='boolean','Görsel veya açıklama geçersiz.');
 }
+function armyURL(value){try{if(typeof value!=='string'||value.length>3000)return false;const u=new URL(value),army=u.searchParams.get('army');return u.protocol==='https:'&&u.hostname==='link.clashofclans.com'&&!u.port&&!u.username&&!u.password&&!u.hash&&u.searchParams.getAll('action').length===1&&u.searchParams.get('action')==='CopyArmy'&&u.searchParams.getAll('army').length===1&&!!army&&army.length<=2000&&/^[A-Za-z0-9:-]+$/.test(army);}catch{return false;}}
 function checkGuide(x){
  requireValue(x&&CMS_ID.test(x.id)&&['Air','Ground','War'].includes(x.category)&&Array.isArray(x.townHalls)&&x.townHalls.length>0&&x.townHalls.length<=16&&x.townHalls.every(n=>Number.isInteger(n)&&n>=3&&n<=18)&&typeof x.hidden==='boolean','Rehber bilgileri geçersiz.');
  for(const lang of ['tr','en'])requireValue(shortText(x.title?.[lang],100)&&x.title[lang].trim()&&shortText(x.summary?.[lang],500)&&Array.isArray(x.steps?.[lang])&&x.steps[lang].length>=2&&x.steps[lang].length<=8&&x.steps[lang].every(t=>shortText(t,350)&&t.trim()),'Her iki dilde başlık, özet ve 2–8 adım gerekiyor.');
  requireValue(x.steps.tr.length===x.steps.en.length,'İki dilde adım sayısı eşit olmalı.');
+ if(x.armyUrl!==undefined)requireValue(typeof x.armyUrl==='string'&&(!x.armyUrl||armyURL(x.armyUrl)),"Clash of Clans'ın resmi CopyArmy paylaşım bağlantısı gerekiyor.");
 }
 function checkSite(s){
  requireValue(s&&typeof s==='object'&&!Array.isArray(s),'Site ayarları geçersiz.');

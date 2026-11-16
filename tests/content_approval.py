@@ -12,4 +12,6 @@ class ApprovalGate(unittest.TestCase):
   changed=copy.deepcopy(self.inbox);changed['proposals'][0]['payload']['title']='Changed title';self.assertEqual(approved_proposals(changed,[self.decision()]),[])
  def test_published_version_is_not_republished(self):
   self.p['publication']={'status':'published','fingerprint':self.p['fingerprint']};self.assertEqual(approved_proposals(self.inbox,[self.decision()]),[])
+ def test_changed_army_link_requires_new_approval(self):
+  changed=copy.deepcopy(self.inbox);guide=next(p for p in changed['proposals'] if p['kind']=='guide');decision={'proposal_id':guide['id'],'decision':'approved','fingerprint':guide['fingerprint']};guide['payload']['armyUrl']='https://link.clashofclans.com/en?action=CopyArmy&army=u1x0';self.assertEqual(approved_proposals(changed,[decision]),[])
 if __name__=='__main__':unittest.main()
