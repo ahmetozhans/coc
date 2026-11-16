@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastDiscovery": "2026-11-15",
+  "lastDiscovery": "2026-11-16",
   "proposals": [
     {
       "id": "base-6d279f0a-8163-4e76-af02-795af28e1ac7",
@@ -93,6 +93,167 @@
         "sourceUrls": []
       },
       "fingerprint": "060c11f2d807c4538b40f9a130a053603f6cc59ba8a607cb51db8020c59a98e9"
+    },
+    {
+      "id": "base-3f40c698-1fb0-4e84-bd9b-9bca08767363",
+      "kind": "layout",
+      "createdAt": "2026-11-16",
+      "imageSha256": "bd1323c399e0e10a4d6749a0d6ecf2b8643a14a60b23405ae17bc07c58ebc8d8",
+      "payload": {
+        "id": "loot-3f40c698-1fb0-4e84-bd9b-9bca08767363",
+        "title": "TH10 · Kupa Düzeni #1",
+        "th": 10,
+        "type": "Trophy",
+        "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH10%3AHV%3AAAAATgAAAAIIdu1DC33HfURXTwMWvTlf",
+        "image": "https://assets.clashloot.gg/base-screens/c28ef109-2f54-444d-b76a-78b166703779.webp",
+        "description": "",
+        "checked": "",
+        "sourceName": "Clash Loot",
+        "sourceUrl": "https://clashloot.gg/coc/bases/th10-ranked-anti-2-star-best-th10-ranked-base-2026-anti-2-star-town-hall-10-layout-3f40c698-1fb0-4e84-bd9b-9bca08767363",
+        "retrieved": "2026-11-16",
+        "creator": ""
+      },
+      "fingerprint": "dbbbe567d064cd0119cb0ad25268f5cc734f2e40c26e921c16a189234e51aa58"
+    },
+    {
+      "id": "base-3ebe5869-966e-4665-9139-ffb603d9416e",
+      "kind": "layout",
+      "createdAt": "2026-11-16",
+      "imageSha256": "eed0d82b3eeb3b4985e64e2b10cb5a728f81c7d873167b8ded0f93fabfd41eb5",
+      "payload": {
+        "id": "loot-3ebe5869-966e-4665-9139-ffb603d9416e",
+        "title": "TH9 · Kupa Düzeni #1",
+        "th": 9,
+        "type": "Trophy",
+        "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH9%3AWB%3AAAAAPAAAAAJTAowRpx1u0CbCMsjfndjX",
+        "image": "https://assets.clashloot.gg/base-screens/62023f65-d637-4d06-bcdf-2e7a7d758062.webp",
+        "description": "",
+        "checked": "",
+        "sourceName": "Clash Loot",
+        "sourceUrl": "https://clashloot.gg/coc/bases/th9-ranked-anti-3-star-th9-ranked-base-anti-3-star-compact-trophy-push-layout-3ebe5869-966e-4665-9139-ffb603d9416e",
+        "retrieved": "2026-11-16",
+        "creator": ""
+      },
+      "fingerprint": "06731301edc3091b30c8385de33e67eb0f46e74609757f9eaca64cddbbccd1a9"
+    },
+    {
+      "id": "base-3db59db3-5474-4d2b-9e20-afd62ae08639",
+      "kind": "layout",
+      "createdAt": "2026-11-16",
+      "imageSha256": "8cc16ffa642a45f872aa9c315d2fc8b5cba440ea0d7b2855ed4245fc5cd60983",
+      "payload": {
+        "id": "loot-3db59db3-5474-4d2b-9e20-afd62ae08639",
+        "title": "TH6 · Kaynak Düzeni #1",
+        "th": 6,
+        "type": "Farming",
+        "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH6%3AHV%3AAAAAPQAAAAJk91AX3x_2gxplI9hWhgIk",
+        "image": "https://assets.clashloot.gg/base-screens/2f9f35dc-7c30-4d4f-b8ce-d4fa25d76f2f.webp",
+        "description": "",
+        "checked": "",
+        "sourceName": "Clash Loot",
+        "sourceUrl": "https://clashloot.gg/coc/bases/th6-farming-th6-farming-base-2026-strong-town-hall-6-loot-protection-layout-3db59db3-5474-4d2b-9e20-afd62ae08639",
+        "retrieved": "2026-11-16",
+        "creator": ""
+      },
+      "fingerprint": "6b50c144a2617e9247752891e063f94a718f997958c22663f5097b5fc49db312"
+    },
+    {
+      "id": "base-26eed208-aeda-4583-bd11-4ef798f03acf",
+      "kind": "layout",
+      "createdAt": "2026-11-16",
+      "imageSha256": "ebb7af9ab54dcae087d813df9afeefb960f4a145e7e766dd6a33326804fc9233",
+      "payload": {
+        "id": "loot-26eed208-aeda-4583-bd11-4ef798f03acf",
+        "title": "TH5 · Kaynak Düzeni #1",
+        "th": 5,
+        "type": "Farming",
+        "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH5%3AWB%3AAAAAAgAAAAJ-yqEMOb0xwqlZHEbuGEW_",
+        "image": "https://assets.clashloot.gg/base-screens/29e1d5ab-9078-4e6d-bef5-c6f5f3f6f0a0.webp",
+        "description": "",
+        "checked": "",
+        "sourceName": "Clash Loot",
+        "sourceUrl": "https://clashloot.gg/coc/bases/th5-farming-best-th5-farming-base-town-hall-5-loot-protection-layout-2026-26eed208-aeda-4583-bd11-4ef798f03acf",
+        "retrieved": "2026-11-16",
+        "creator": ""
+      },
+      "fingerprint": "05ed303d54a99421817dfdcc249c633703a42c224fe0140c8491b61ca045c3fe"
+    },
+    {
+      "id": "base-9172f27a-da6e-412c-8c4c-55b232a4edcd",
+      "kind": "layout",
+      "createdAt": "2026-11-16",
+      "imageSha256": "ab4e0f2843953a12611cd867a371d5880d7aef3645515cd605f14c2aba638647",
+      "payload": {
+        "id": "loot-9172f27a-da6e-412c-8c4c-55b232a4edcd",
+        "title": "TH4 · Kaynak Düzeni #1",
+        "th": 4,
+        "type": "Farming",
+        "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH4%3AHV%3AAAAASgAAAAIikuvDsBJu7CAKWP2zMMt-",
+        "image": "https://assets.clashloot.gg/base-screens/b977be4a-0c10-4d8a-8f2b-5121933c666f.webp",
+        "description": "",
+        "checked": "",
+        "sourceName": "Clash Loot",
+        "sourceUrl": "https://clashloot.gg/coc/bases/th4-farming-best-th4-farm-base-town-hall-4-resource-protection-layout-9172f27a-da6e-412c-8c4c-55b232a4edcd",
+        "retrieved": "2026-11-16",
+        "creator": ""
+      },
+      "fingerprint": "c9e3ee95296e4481402bf0fc85789d5de7d01397385b7febd6149e4db60ea958"
+    },
+    {
+      "id": "guide-friendly-challenge-practice-loop",
+      "kind": "guide",
+      "createdAt": "2026-11-16",
+      "imageSha256": "",
+      "payload": {
+        "id": "friendly-challenge-practice-loop",
+        "category": "War",
+        "townHalls": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ],
+        "title": {
+          "tr": "Dostluk Mücadelesiyle saldırı provası",
+          "en": "Attack practice with Friendly Challenges"
+        },
+        "summary": {
+          "tr": "Kupa veya kaynak kaybetmeden girişini, yönlendirmeyi ve zamanlamayı tekrar ederek saldırı planını geliştir.",
+          "en": "Improve your attack plan by repeating the entry, funnel and timing without risking trophies or resources."
+        },
+        "steps": {
+          "tr": [
+            "Klan arkadaşından hedef düzene uygun bir Dostluk Mücadelesi paylaşmasını iste.",
+            "Saldırıdan önce kullanacağın orduyu normal eğitim ekranında eksiksiz hazırla.",
+            "İlk denemede giriş ve yönlendirmeye odaklan; birliklerin rotadan nerede saptığını not et.",
+            "Aynı planı küçük zamanlama değişiklikleriyle tekrar dene ve en tutarlı yaklaşımı seç."
+          ],
+          "en": [
+            "Ask a clanmate to share a Friendly Challenge with a suitable target layout.",
+            "Prepare the complete army you plan to use in the normal training screen before attacking.",
+            "Focus on the entry and funnel in the first attempt; note where troops leave the intended path.",
+            "Repeat the same plan with small timing changes and choose the most consistent approach."
+          ]
+        },
+        "updated": "2026-11-16",
+        "kind": "general",
+        "sourceUrls": [
+          "https://support.supercell.com/clash-of-clans/en/articles/friendly-challenges-3.html"
+        ]
+      },
+      "fingerprint": "a2607d38a6c0d127ab1d07fc9158376959eb3dc087c79cd4a457a8841735a395"
     }
   ]
 }
