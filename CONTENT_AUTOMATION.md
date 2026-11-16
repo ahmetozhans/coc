@@ -13,6 +13,10 @@ Suggestions are stored in `content-inbox.json`. They are not entries in `catalog
 
 The content task checks decisions hourly. It researches new suggestions at most once per UTC day. Thus an approved suggestion is published on the next successful hourly run; it is not published immediately by the button itself. If a required check fails, it remains unpublished and the task reports the problem.
 
+## Shared CMS overrides
+
+The public site now loads `GET https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site/api/content`. Static catalogs are merged with manual overrides stored in the Site's D1 `admin_content` table. Read the database overview first and inspect its current document when checking possible duplicates and coverage. Never replace or clear manual layout/guide overrides, unpublication choices, site settings or history. New approved IDs added to the static catalogs automatically join the public merged content. If an approved proposal would update an ID with a manual override, hold it and report the editorial conflict instead of silently overwriting or claiming publication. Verify the merged public endpoint after publishing, as well as GitHub Pages.
+
 ## Durable rules for the scheduled task
 
 1. Load the current `main` revision of `ahmetozhans/coc`, this policy, `catalog.json`, `guides.json` and `content-inbox.json`. Never overwrite a newer revision with a workspace snapshot.

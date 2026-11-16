@@ -1,6 +1,8 @@
 'use strict';
 const I18n = (() => {
 const dictionary = {
+  "Loading guides…": "Rehberler yükleniyor…",
+  "The guides could not be loaded. Please reload.": "Rehberler yüklenemedi. Lütfen sayfayı yenile.",
   "Home": "Ana sayfa",
   "Bases": "Köyler",
   "Clans": "Klanlar",
@@ -349,6 +351,7 @@ function translate() {
   if(next!==node.nodeValue)node.nodeValue=next;
  }
  document.querySelectorAll('[placeholder],[aria-label],meta[name="description"]').forEach(el=>{
+  if(el.closest('[data-no-i18n]'))return;
   if(!attributes.has(el))attributes.set(el,Object.fromEntries(['placeholder','aria-label','content'].filter(k=>el.hasAttribute(k)).map(k=>[k,el.getAttribute(k)])));
   for(const [key,value] of Object.entries(attributes.get(el)))if(el.getAttribute(key)!==text(value))el.setAttribute(key,text(value));
  });

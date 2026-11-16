@@ -21,3 +21,10 @@ The service is public for anonymous gallery visitors. Origin checks, input limit
 
 
 Review decisions now use `/api/reviews` without sign-in, explicitly requested by the owner. The UI is embedded in `admin.html#suggestions`; `/admin` redirects there. ChatGPT identity and ADMIN_EMAIL are not used. Dedicated admin login is planned for later. The scheduled publisher still requires a matching approved fingerprint.
+
+
+## Site management
+
+`GET /api/content` merges static catalogs with D1 editor overrides and returns visitor-visible layouts, guides and site settings. `GET /api/admin/content` returns both live and unpublished records, actual shared counters, defaults and the latest 30 changes. `POST /api/admin/content` saves a layout, bilingual guide, site settings or validated backup. Writes use an expected revision and SQLite compare-and-swap; stale tabs return 409. Stable content IDs preserve favorites and counters. Unpublishing keeps records for later restoration. GitHub-generated content remains the baseline, so new approved automated additions still appear alongside manual changes. The panel intentionally has no login at the owner's request.
+
+Panel backups include the merged content and settings; they do not reset counters or review decisions. Existing local drafts are retained in browser storage and included separately in the downloaded backup.

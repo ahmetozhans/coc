@@ -1,0 +1,1 @@
+{"name":"mahanpro","private":true,"type":"module","scripts":{"test":"node tests/regression.cjs && node tests/admin-content.mjs && node tests/admin-ui.cjs"},"devDependencies":{"jsdom":"26.1.0"}}

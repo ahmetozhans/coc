@@ -1,0 +1,347 @@
+{
+  "name": "Mahanpro",
+  "tagline": "NIGHT VILLAGE",
+  "accent": "#ad7bff",
+  "pages": {
+    "home": {
+      "label": "Ana sayfa",
+      "file": "index.html",
+      "seoTitle": "Night Village | Mahanpro",
+      "seoDescription": "Free unofficial Clash of Clans base layouts, clan tools, attack guides and builder planner.",
+      "texts": [
+        {
+          "id": "home-0",
+          "label": "Metin · WELCOME TO THE NIGHT VILLAGE",
+          "en": "WELCOME TO THE NIGHT VILLAGE",
+          "tr": "WELCOME TO THE NIGHT VILLAGE"
+        },
+        {
+          "id": "home-1",
+          "label": "Başlık · Your village.Your strategy.Your next victory.",
+          "en": "Your village.Your strategy.Your next victory.",
+          "tr": "Your village.Your strategy.Your next victory."
+        },
+        {
+          "id": "home-2",
+          "label": "Metin · A little moonlight. A better battle plan. Find y",
+          "en": "A little moonlight. A better battle plan. Find your next base, sharpen your attacks and keep your builders moving.",
+          "tr": "A little moonlight. A better battle plan. Find your next base, sharpen your attacks and keep your builders moving."
+        },
+        {
+          "id": "home-3",
+          "label": "Metin · PREPARE. BUILD. CONQUER.",
+          "en": "PREPARE. BUILD. CONQUER.",
+          "tr": "PREPARE. BUILD. CONQUER."
+        },
+        {
+          "id": "home-4",
+          "label": "Başlık · Every great villagestarts with a plan.",
+          "en": "Every great villagestarts with a plan.",
+          "tr": "Every great villagestarts with a plan."
+        },
+        {
+          "id": "home-5",
+          "label": "Metin · Four simple tools. One place to make your next m",
+          "en": "Four simple tools. One place to make your next move count.",
+          "tr": "Four simple tools. One place to make your next move count."
+        },
+        {
+          "id": "home-6",
+          "label": "Başlık · Base Gallery",
+          "en": "Base Gallery",
+          "tr": "Köy Galerisi"
+        },
+        {
+          "id": "home-7",
+          "label": "Metin · Browse admin-published layouts by Town Hall and ",
+          "en": "Browse admin-published layouts by Town Hall and save your favorites.",
+          "tr": "Browse admin-published layouts by Town Hall and save your favorites."
+        },
+        {
+          "id": "home-8",
+          "label": "Başlık · Clan Explorer",
+          "en": "Clan Explorer",
+          "tr": "Klan Gezgini"
+        },
+        {
+          "id": "home-9",
+          "label": "Metin · Generate official in-game clan links.",
+          "en": "Generate official in-game clan links.",
+          "tr": "Resmî oyun içi klan bağlantıları oluştur."
+        },
+        {
+          "id": "home-10",
+          "label": "Başlık · Attack Academy",
+          "en": "Attack Academy",
+          "tr": "Saldırı Akademisi"
+        },
+        {
+          "id": "home-11",
+          "label": "Metin · Learn the essentials of smarter war attacks.",
+          "en": "Learn the essentials of smarter war attacks.",
+          "tr": "Daha iyi savaş saldırılarının temellerini öğren."
+        },
+        {
+          "id": "home-12",
+          "label": "Başlık · Upgrade Lab",
+          "en": "Upgrade Lab",
+          "tr": "Yükseltme Atölyesi"
+        },
+        {
+          "id": "home-13",
+          "label": "Metin · Plan your builders and calculate resource costs.",
+          "en": "Plan your builders and calculate resource costs.",
+          "tr": "İnşaatçılarını planla ve kaynak maliyetlerini hesapla."
+        },
+        {
+          "id": "home-14",
+          "label": "Metin · FIND YOUR PLAYSTYLE",
+          "en": "FIND YOUR PLAYSTYLE",
+          "tr": "FIND YOUR PLAYSTYLE"
+        },
+        {
+          "id": "home-15",
+          "label": "Başlık · A stronger defense.A smarter starting point.",
+          "en": "A stronger defense.A smarter starting point.",
+          "tr": "A stronger defense.A smarter starting point."
+        },
+        {
+          "id": "home-16",
+          "label": "Metin · Choose your goal and explore the published base ",
+          "en": "Choose your goal and explore the published base collection.",
+          "tr": "Choose your goal and explore the published base collection."
+        },
+        {
+          "id": "home-17",
+          "label": "Metin · THE VILLAGE NEVER SLEEPS",
+          "en": "THE VILLAGE NEVER SLEEPS",
+          "tr": "THE VILLAGE NEVER SLEEPS"
+        },
+        {
+          "id": "home-18",
+          "label": "Başlık · Make your next move a good one.",
+          "en": "Make your next move a good one.",
+          "tr": "Make your next move a good one."
+        }
+      ]
+    },
+    "bases": {
+      "label": "Köyler",
+      "file": "bases.html",
+      "seoTitle": "Find your next fortress. | Mahanpro",
+      "seoDescription": "Browse admin-published layouts and save your favorites.",
+      "texts": [
+        {
+          "id": "bases-0",
+          "label": "Metin · THE LAYOUT ARCHIVE",
+          "en": "THE LAYOUT ARCHIVE",
+          "tr": "THE LAYOUT ARCHIVE"
+        },
+        {
+          "id": "bases-1",
+          "label": "Başlık · Find your next fortress.",
+          "en": "Find your next fortress.",
+          "tr": "Find your next fortress."
+        },
+        {
+          "id": "bases-2",
+          "label": "Metin · Browse admin-published layouts and save your fav",
+          "en": "Browse admin-published layouts and save your favorites.",
+          "tr": "Browse admin-published layouts and save your favorites."
+        },
+        {
+          "id": "bases-3",
+          "label": "Metin · CURATED COLLECTION",
+          "en": "CURATED COLLECTION",
+          "tr": "CURATED COLLECTION"
+        },
+        {
+          "id": "bases-4",
+          "label": "Başlık · Published layouts",
+          "en": "Published layouts",
+          "tr": "Yayınlanan düzenler"
+        },
+        {
+          "id": "bases-5",
+          "label": "Metin · Layouts curated and published through Mahanpro C",
+          "en": "Layouts curated and published through Mahanpro Content Studio.",
+          "tr": "Mahanpro İçerik Stüdyosu ile seçilen ve yayınlanan düzenler."
+        }
+      ]
+    },
+    "clan": {
+      "label": "Klanlar",
+      "file": "clan.html",
+      "seoTitle": "Every clan has a story. | Mahanpro",
+      "seoDescription": "Create an official in-game clan profile link.",
+      "texts": [
+        {
+          "id": "clan-0",
+          "label": "Metin · THE CLAN OUTPOST",
+          "en": "THE CLAN OUTPOST",
+          "tr": "THE CLAN OUTPOST"
+        },
+        {
+          "id": "clan-1",
+          "label": "Başlık · Every clan has a story.",
+          "en": "Every clan has a story.",
+          "tr": "Every clan has a story."
+        },
+        {
+          "id": "clan-2",
+          "label": "Metin · Create an official in-game clan profile link.",
+          "en": "Create an official in-game clan profile link.",
+          "tr": "Resmî oyun içi klan profili bağlantısı oluştur."
+        },
+        {
+          "id": "clan-3",
+          "label": "Metin · OFFICIAL GAME LINK",
+          "en": "OFFICIAL GAME LINK",
+          "tr": "RESMÎ OYUN BAĞLANTISI"
+        },
+        {
+          "id": "clan-4",
+          "label": "Başlık · Find a clan profile",
+          "en": "Find a clan profile",
+          "tr": "Bir klan profili bul"
+        },
+        {
+          "id": "clan-5",
+          "label": "Metin · Enter a clan tag to open the official in-game pr",
+          "en": "Enter a clan tag to open the official in-game profile. Live statistics are not connected.",
+          "tr": "Resmî oyun içi profili açmak için klan etiketini gir. Canlı istatistikler henüz bağlı değil."
+        },
+        {
+          "id": "clan-6",
+          "label": "Metin · YOUR CLAN, ONE LINK AWAY",
+          "en": "YOUR CLAN, ONE LINK AWAY",
+          "tr": "YOUR CLAN, ONE LINK AWAY"
+        },
+        {
+          "id": "clan-7",
+          "label": "Başlık · How it works",
+          "en": "How it works",
+          "tr": "Nasıl çalışır?"
+        },
+        {
+          "id": "clan-8",
+          "label": "Metin · Copy your clan tag from Clash of Clans, paste it",
+          "en": "Copy your clan tag from Clash of Clans, paste it above, and open the generated official link on your device.",
+          "tr": "Clash of Clans klan etiketini kopyala, yukarıya yapıştır ve oluşturulan resmî bağlantıyı cihazında aç."
+        }
+      ]
+    },
+    "attacks": {
+      "label": "Rehberler",
+      "file": "attacks.html",
+      "seoTitle": "A good attack starts here. | Mahanpro",
+      "seoDescription": "Practical guides to improve your battle planning.",
+      "texts": [
+        {
+          "id": "attacks-0",
+          "label": "Metin · THE BATTLE LIBRARY",
+          "en": "THE BATTLE LIBRARY",
+          "tr": "THE BATTLE LIBRARY"
+        },
+        {
+          "id": "attacks-1",
+          "label": "Başlık · A good attack starts here.",
+          "en": "A good attack starts here.",
+          "tr": "A good attack starts here."
+        },
+        {
+          "id": "attacks-2",
+          "label": "Metin · Practical guides to improve your battle planning",
+          "en": "Practical guides to improve your battle planning.",
+          "tr": "Savaş planlamanı geliştirmek için pratik rehberler."
+        },
+        {
+          "id": "attacks-3",
+          "label": "Başlık · Keep practicing",
+          "en": "Keep practicing",
+          "tr": "Pratik yapmaya devam et"
+        },
+        {
+          "id": "attacks-4",
+          "label": "Metin · These are general guides, not guaranteed three-s",
+          "en": "These are general guides, not guaranteed three-star strategies. Adapt each attack to your Town Hall and available troops.",
+          "tr": "Bunlar genel rehberlerdir; üç yıldız garantisi vermez. Her saldırıyı belediye binana ve mevcut birliklerine göre uyarla."
+        }
+      ]
+    },
+    "upgrade": {
+      "label": "Yükseltmeler",
+      "file": "upgrade.html",
+      "seoTitle": "Keep your village growing. | Mahanpro",
+      "seoDescription": "Estimate builder time and resources with your own values.",
+      "texts": [
+        {
+          "id": "upgrade-0",
+          "label": "Metin · THE BUILDER WORKSHOP",
+          "en": "THE BUILDER WORKSHOP",
+          "tr": "THE BUILDER WORKSHOP"
+        },
+        {
+          "id": "upgrade-1",
+          "label": "Başlık · Keep your village growing.",
+          "en": "Keep your village growing.",
+          "tr": "Keep your village growing."
+        },
+        {
+          "id": "upgrade-2",
+          "label": "Metin · Estimate builder time and resources with your ow",
+          "en": "Estimate builder time and resources with your own values.",
+          "tr": "Kendi değerlerinle inşaatçı süresini ve kaynakları hesapla."
+        },
+        {
+          "id": "upgrade-3",
+          "label": "Metin · BUILDER PLANNER",
+          "en": "BUILDER PLANNER",
+          "tr": "İNŞAATÇI PLANLAYICI"
+        },
+        {
+          "id": "upgrade-4",
+          "label": "Başlık · Create your upgrade queue",
+          "en": "Create your upgrade queue",
+          "tr": "Yükseltme sıranı oluştur"
+        },
+        {
+          "id": "upgrade-5",
+          "label": "Metin · Enter actual costs and times from your game. Est",
+          "en": "Enter actual costs and times from your game. Estimates exclude boosts.",
+          "tr": "Oyundaki gerçek maliyetleri ve süreleri gir. Hesaplama hızlandırmaları içermez."
+        },
+        {
+          "id": "upgrade-6",
+          "label": "Başlık · Upgrade overview",
+          "en": "Upgrade overview",
+          "tr": "Yükseltmelere genel bakış"
+        },
+        {
+          "id": "upgrade-7",
+          "label": "Metin · Approximate completion from today, excluding boo",
+          "en": "Approximate completion from today, excluding boosts and resource waiting time.",
+          "tr": "Bugünden itibaren yaklaşık bitiş; hızlandırmalar ve kaynak bekleme süresi hariçtir."
+        },
+        {
+          "id": "upgrade-8",
+          "label": "Metin · Estimated finish: —",
+          "en": "Estimated finish: —",
+          "tr": "Estimated finish: —"
+        },
+        {
+          "id": "upgrade-9",
+          "label": "Başlık · Builder timeline",
+          "en": "Builder timeline",
+          "tr": "İnşaatçı zaman çizelgesi"
+        },
+        {
+          "id": "upgrade-10",
+          "label": "Başlık · Queued upgrades",
+          "en": "Queued upgrades",
+          "tr": "Sıradaki yükseltmeler"
+        }
+      ]
+    }
+  }
+}

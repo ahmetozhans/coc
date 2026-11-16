@@ -1,3 +1,4 @@
+import {contentRoute} from './content.js';
 const PUBLIC_ORIGIN='https://ahmetozhans.github.io';
 const ID=/^[a-zA-Z0-9_-]{1,100}$/;
 const VISITOR=/^[a-f0-9-]{36}$/i;
@@ -40,6 +41,7 @@ export default {
   const origin=request.headers.get('Origin');const url=new URL(request.url);
   if(origin&&origin!==PUBLIC_ORIGIN&&!/^http:\/\/127\.0\.0\.1:\d+$/.test(origin))return respond({error:'Origin not allowed'},403,origin);
   if(request.method==='OPTIONS')return new Response(null,{status:204,headers:headers(origin)});
+  if(url.pathname==='/api/content'||url.pathname==='/api/admin/content')return contentRoute(request,env,url);
   if(url.pathname==='/admin'||url.pathname==='/api/reviews')return reviewRoute(request,env,url);
   if(url.pathname==='/')return respond({service:'Mahanpro shared layout statistics',status:'ok'},200,origin);
   if(!env.DB)return respond({error:'Database unavailable'},503,origin);
@@ -64,3 +66,5 @@ export default {
   }catch(error){console.error('Statistics request failed',error.message);return respond({error:'Statistics temporarily unavailable'},503,origin);}
  }
 };
+
+export {respond,publishedFile,statsStatement,resultMap};
