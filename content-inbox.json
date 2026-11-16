@@ -3,50 +3,6 @@
   "lastDiscovery": "2026-11-16",
   "proposals": [
     {
-      "id": "base-6d279f0a-8163-4e76-af02-795af28e1ac7",
-      "kind": "layout",
-      "createdAt": "2026-11-15",
-      "imageSha256": "bf00a9c82f08bfdf5ad1ecaf73a7b1072917028bea72af48686587bf8773393c",
-      "payload": {
-        "id": "loot-6d279f0a-8163-4e76-af02-795af28e1ac7",
-        "title": "TH18 · Kupa Düzeni #4",
-        "th": 18,
-        "type": "Trophy",
-        "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH18%3AWB%3AAAAAVQAAAAH-kcyTZkLpzIcPYLJV8Y_A",
-        "image": "https://assets.clashloot.gg/base-screens/ca269f3d-a9db-44a4-a7e4-3327e14c2859.webp",
-        "description": "",
-        "checked": "",
-        "sourceName": "Clash Loot",
-        "sourceUrl": "https://clashloot.gg/coc/bases/th-18",
-        "sourceDate": "2026-10-27",
-        "retrieved": "2026-11-15",
-        "creator": ""
-      },
-      "fingerprint": "22b8c42fe0152425b6c783938d63d873cdc67f605bb6304bd5414513934d7160"
-    },
-    {
-      "id": "base-4f8ea188-22db-4f87-a72e-39887853b4c0",
-      "kind": "layout",
-      "createdAt": "2026-11-15",
-      "imageSha256": "3172f9ebc0a2c65f24ac8493e74301546caf2a34e69600f4805bd7fc7b59e430",
-      "payload": {
-        "id": "loot-4f8ea188-22db-4f87-a72e-39887853b4c0",
-        "title": "TH18 · Savaş Düzeni #2",
-        "th": 18,
-        "type": "War",
-        "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH18%3AWB%3AAAAALgAAAAKgHc3pKvymBckBnNhqVrwU",
-        "image": "https://assets.clashloot.gg/base-screens/18ec8d42-f29f-4e08-b9d8-22336020e606.webp",
-        "description": "",
-        "checked": "",
-        "sourceName": "Clash Loot",
-        "sourceUrl": "https://clashloot.gg/coc/bases/th-18",
-        "sourceDate": "2026-11-08",
-        "retrieved": "2026-11-15",
-        "creator": ""
-      },
-      "fingerprint": "5f8d70b9b69d14a961cb20822d7ae7bcb25577b10309e6da2283a7b842626144"
-    },
-    {
       "id": "guide-war-readiness-checklist",
       "kind": "guide",
       "createdAt": "2026-11-15",
@@ -254,6 +210,62 @@
         ]
       },
       "fingerprint": "a2607d38a6c0d127ab1d07fc9158376959eb3dc087c79cd4a457a8841735a395"
+    },
+    {
+      "id": "base-6d279f0a-8163-4e76-af02-795af28e1ac7",
+      "kind": "layout",
+      "createdAt": "2026-11-15",
+      "imageSha256": "bf00a9c82f08bfdf5ad1ecaf73a7b1072917028bea72af48686587bf8773393c",
+      "payload": {
+        "id": "loot-6d279f0a-8163-4e76-af02-795af28e1ac7",
+        "title": "TH18 · Kupa Düzeni #4",
+        "th": 18,
+        "type": "Trophy",
+        "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH18%3AWB%3AAAAAVQAAAAH-kcyTZkLpzIcPYLJV8Y_A",
+        "image": "https://assets.clashloot.gg/base-screens/ca269f3d-a9db-44a4-a7e4-3327e14c2859.webp",
+        "description": "",
+        "checked": "",
+        "sourceName": "Clash Loot",
+        "sourceUrl": "https://clashloot.gg/coc/bases/th-18",
+        "sourceDate": "2026-10-27",
+        "retrieved": "2026-11-15",
+        "creator": ""
+      },
+      "fingerprint": "22b8c42fe0152425b6c783938d63d873cdc67f605bb6304bd5414513934d7160",
+      "publication": {
+        "status": "published",
+        "fingerprint": "22b8c42fe0152425b6c783938d63d873cdc67f605bb6304bd5414513934d7160",
+        "commit": "0060ce1e6601338c44edcbb626fb88bbf2f6b97c",
+        "publishedAt": "2026-11-16T12:02:07Z"
+      }
+    },
+    {
+      "id": "base-4f8ea188-22db-4f87-a72e-39887853b4c0",
+      "kind": "layout",
+      "createdAt": "2026-11-15",
+      "imageSha256": "3172f9ebc0a2c65f24ac8493e74301546caf2a34e69600f4805bd7fc7b59e430",
+      "payload": {
+        "id": "loot-4f8ea188-22db-4f87-a72e-39887853b4c0",
+        "title": "TH18 · Savaş Düzeni #2",
+        "th": 18,
+        "type": "War",
+        "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH18%3AWB%3AAAAALgAAAAKgHc3pKvymBckBnNhqVrwU",
+        "image": "https://assets.clashloot.gg/base-screens/18ec8d42-f29f-4e08-b9d8-22336020e606.webp",
+        "description": "",
+        "checked": "",
+        "sourceName": "Clash Loot",
+        "sourceUrl": "https://clashloot.gg/coc/bases/th-18",
+        "sourceDate": "2026-11-08",
+        "retrieved": "2026-11-15",
+        "creator": ""
+      },
+      "fingerprint": "5f8d70b9b69d14a961cb20822d7ae7bcb25577b10309e6da2283a7b842626144",
+      "publication": {
+        "status": "published",
+        "fingerprint": "5f8d70b9b69d14a961cb20822d7ae7bcb25577b10309e6da2283a7b842626144",
+        "commit": "0060ce1e6601338c44edcbb626fb88bbf2f6b97c",
+        "publishedAt": "2026-11-16T12:02:07Z"
+      }
     }
   ]
 }
