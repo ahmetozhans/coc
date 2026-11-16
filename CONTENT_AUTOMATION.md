@@ -4,10 +4,10 @@ The user requires both base layouts and attack guides to be proposed automatical
 
 ## Review
 
-Open `admin.html` and choose **İçerik önerileri**, or open:
-https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site/admin
+Open `admin.html#suggestions` on the existing site:
+https://ahmetozhans.github.io/coc/admin.html#suggestions
 
-Sign in with the ChatGPT account that owns the statistics Site. Anonymous visitors and other accounts cannot approve suggestions. The verified owner email is configured only in the Site runtime, never in frontend code.
+By the owner's explicit instruction, review currently requires no login or access protection. The buttons directly save decisions in D1 with reviewer_id `public-admin`. Do not require ChatGPT identity or an ADMIN_EMAIL match. A dedicated admin login is planned later; it is not implemented in this version.
 
 Suggestions are stored in `content-inbox.json`. They are not entries in `catalog.json` or `guides.json`. The owner sees each complete layout or bilingual guide and chooses Approve or Reject. Decisions persist in the Site's D1 `content_reviews` table. Approval is bound to the exact proposal fingerprint; modified text or images require another review.
 
@@ -16,7 +16,7 @@ The content task checks decisions hourly. It researches new suggestions at most 
 ## Durable rules for the scheduled task
 
 1. Load the current `main` revision of `ahmetozhans/coc`, this policy, `catalog.json`, `guides.json` and `content-inbox.json`. Never overwrite a newer revision with a workspace snapshot.
-2. Read the owner-authorized Site database using Sites tools. First inspect the database overview for project `appgprj_6afa25fb74448191a658f788ca14a329`; use the exact returned binding/table identifiers. Read all required `content_reviews` rows using only returned pagination offsets. Never approve or reject anything yourself, impersonate the owner, or alter review records or auth settings.
+2. Read the Site database using Sites tools. First inspect the database overview for project `appgprj_6afa25fb74448191a658f788ca14a329`; use the exact returned binding/table identifiers. Read all required `content_reviews` rows using only returned pagination offsets. Never approve or reject anything yourself or alter review records. Read decisions made through the panel, including reviewer_id `public-admin`.
 3. Apply `scripts/content_policy.py:approved_proposals`. Publish only records with an `approved` decision whose fingerprint matches both the inbox fingerprint and a fresh SHA-256 calculation. Never publish pending, rejected, modified or already-published versions. No legacy approval inferred from views, favorites, source claims, email or an open browser session is valid.
 4. Before publishing an approved layout, verify its official HTTPS OpenLayout URL, decoded TH identifier and exact preview image bytes against `imageSha256`. A working web landing page is not proof the link imports in game. Download the matching image into `assets/layouts/`, keep creator marks intact, and use the site's own absolute image URL in the published catalog. Preserve stable layout IDs, favorites and statistics. Do not claim gameplay testing or invent success rates. If source/image verification fails or the image changes, hold the item; a changed proposal requires fresh approval.
 5. Publish an approved guide using its exact reviewed bilingual title, summary and steps. Never replace reviewed text with a newly generated version during publication. New revisions of an existing guide use the same guide ID and require a new fingerprint and approval. Add `approvalFingerprint` to each newly published record.

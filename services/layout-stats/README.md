@@ -18,3 +18,6 @@ The service is public for anonymous gallery visitors. Origin checks, input limit
 ## Owner review
 
 `/admin` requires the Site owner's ChatGPT sign-in. `/api/reviews` requires a verified platform identity matching the runtime `ADMIN_EMAIL` allowlist. Public visitors cannot approve content. POST decisions additionally require same-origin JSON and an exact current proposal fingerprint. `content_reviews` stores decisions by proposal/version; the scheduled task reads them through owner-authorized Sites database tools. It never writes decisions. See `CONTENT_AUTOMATION.md` at the repository root.
+
+
+Review decisions now use `/api/reviews` without sign-in, explicitly requested by the owner. The UI is embedded in `admin.html#suggestions`; `/admin` redirects there. ChatGPT identity and ADMIN_EMAIL are not used. Dedicated admin login is planned for later. The scheduled publisher still requires a matching approved fingerprint.

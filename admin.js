@@ -24,7 +24,7 @@ $('downloadCatalog').onclick=()=>download('catalog.json',{version:1,updated:new 
 $('exportDrafts').onclick=()=>download('villageforge-admin-backup.json',{type:'vf-admin-backup',version:1,entries});
 $('importDrafts').onclick=()=>$('importDraftsFile').click();
 $('importDraftsFile').onchange=async e=>{try{const file=e.target.files?.[0];if(!file||file.size>2000000)throw Error('Dosya en fazla 2 MB olabilir.');const obj=JSON.parse(await file.text());if(obj.type!=='vf-admin-backup'||!Array.isArray(obj.entries)||obj.entries.length>1000)throw Error('Geçersiz yedek dosyası.');const valid=obj.entries.map(normalize).filter(Boolean).map(x=>({...x,id:crypto.randomUUID()}));if(!confirm(I18n.t('Import {count} valid drafts?',{count:valid.length})))return;const previous=entries.slice();entries=[...valid,...entries].filter((x,i,a)=>a.findIndex(y=>y.url===x.url)===i);if(entries.length>1000){entries=previous;throw Error(I18n.t('Maximum 1000 entries. Export a backup first.'))}if(!save())entries=previous;render()}catch(err){alert(I18n.t(err.message))}finally{e.target.value=''}};
-entries=read();const initial=location.hash.slice(1);section(['overview','layouts','publish','settings'].includes(initial)?initial:'overview');render();
+entries=read();const initial=location.hash.slice(1);section(['overview','layouts','publish','settings','suggestions'].includes(initial)?initial:'overview');render();
 
 
 document.addEventListener('languagechange',render);

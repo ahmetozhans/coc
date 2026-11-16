@@ -74,6 +74,6 @@ With the local server running, `python3 tests/shared-statistics.py` verifies rea
 
 ## Approval-first content suggestions
 
-The automated content task researches base layouts and original bilingual attack guides. New material stays in `content-inbox.json` until the owner approves its exact version in the secure **İçerik önerileri** admin page. Rejections and approvals persist in D1. Approved items publish on the next successful hourly task run. See [CONTENT_AUTOMATION.md](CONTENT_AUTOMATION.md) for the complete publication gate and recovery rules.
+The automated content task researches base layouts and original bilingual attack guides. New material stays in `content-inbox.json` until the owner approves its exact version in the **İçerik önerileri** section of `admin.html#suggestions` (currently no login, as requested; dedicated admin authentication is planned). Rejections and approvals persist in D1. Approved items publish on the next successful hourly task run. See [CONTENT_AUTOMATION.md](CONTENT_AUTOMATION.md) for the complete publication gate and recovery rules.
 
 `guides.json` supplies the guide page and supports Town Hall/category filtering. Its initial three entries preserve the previously published general-principle guides. The initial inbox contains two new layout suggestions and one new guide, all awaiting owner decisions.
