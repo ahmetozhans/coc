@@ -50,6 +50,14 @@ Public pages do not link to Content Studio; the owner can open `admin.html` dire
 
 ## Hosting and optional API
 
+### Prepare a static server release
+
+Run `node scripts/build-static.mjs https://example.com/ /path/to/new-release` from the repository. Use the actual HTTPS address, including any subdirectory such as `https://example.com/coc/`. The destination must be new. Upload the generated directory's contents to that address. The script copies public files only and updates canonical URLs, the sitemap and robots.txt in the release. For a subdirectory install, serve the generated robots.txt directives from the domain's root robots.txt if you control it.
+
+This prepares the frontend. The Sites Worker and D1 still serve the catalog, admin panel, review decisions and counters. The Worker currently authorizes the existing GitHub Pages origin. Before switching traffic, configure the exact new HTTPS origin in the existing Worker and verify the public API, review panel and counter requests from the new site. Keep the current D1 binding and existing IDs. The Worker and scheduled publication still read or verify files from GitHub Pages. Keep that deployment active until the new release has an equivalent update pipeline and the automation's publication checks target it.
+
+Favorites and builder plans stored in the browser are tied to the old site's origin. Export the builder backup on the old site and import it on the new site if needed. Shared counter history stays in D1.
+
 The frontend works on GitHub Pages or another static HTTP host. Keep all HTML, JS, CSS, `favicon.svg` and `catalog.json` at the same relative paths. Canonical URLs and sitemap currently target `https://ahmetozhans.github.io/coc/`; update them if the hosting address changes.
 
 The optional `functions/api/clan.js` requires Cloudflare Pages Functions, a server-side `CLASH_API_TOKEN` secret and an approved outbound IP configuration; see [API_SETUP.md](API_SETUP.md). It is not connected to the current frontend. GitHub Pages cannot run this function.
