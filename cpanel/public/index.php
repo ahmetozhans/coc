@@ -4,6 +4,7 @@ declare(strict_types=1);
 require dirname(__DIR__) . '/mahanpro-private/content.php';
 require dirname(__DIR__) . '/mahanpro-private/stats.php';
 require dirname(__DIR__) . '/mahanpro-private/reviews.php';
+require dirname(__DIR__) . '/mahanpro-private/cms.php';
 
 const PAGES = [
     '/' => ['index', 'Mahanpro | Clash of Clans Tools', 'Browse Clash of Clans village layouts, army builds and attack guides.'],
@@ -64,8 +65,18 @@ if (isset(PAGES[$normalized]) && $path !== $normalized) {
 
 try {
     $base = config()['base_url'];
+    if ($path === '/admin.html') {
+        header('Location: /admin', true, 301);
+        exit;
+    }
     if ($path === '/admin') {
         admin_route();
+    }
+    if ($path === '/studio') {
+        studio_route();
+    }
+    if ($path === '/api/admin/content') {
+        cms_route();
     }
     if (in_array($path, ['/api/stats', '/api/events'], true)) {
         stats_route($path);
@@ -91,11 +102,14 @@ try {
             exit;
         }
         $pdo = db();
+        $state = cms_state($pdo);
+        $doc = $state['document'];
         $data = json_encode([
             'version' => 1,
-            'site' => (object) [],
-            'layouts' => content($pdo, 'layout'),
-            'guides' => content($pdo, 'guide'),
+            'revision' => $state['revision'],
+            'site' => $doc->site,
+            'layouts' => content($pdo, 'layout', $doc),
+            'guides' => content($pdo, 'guide', $doc),
         ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
         header('Content-Type: application/json; charset=UTF-8');
         echo $data;
@@ -107,23 +121,41 @@ try {
         exit;
     }
     [$file, $title, $description] = PAGES[$path];
+    $pdo = db();
+    $doc = cms_state($pdo)['document'];
+    $settings = $doc->site->pages->{ $file === 'index' ? 'home' : $file } ?? null;
+    if (!empty($doc->site->maintenance) || ($settings->enabled ?? true) === false) {
+        http_response_code(!empty($doc->site->maintenance) ? 503 : 404);
+        header('X-Robots-Tag: noindex');
+        header('Content-Type: text/html; charset=UTF-8');
+        if (!empty($doc->site->maintenance)) {
+            header('Retry-After: 300');
+        }
+        echo '<!doctype html><html lang="tr"><meta charset="utf-8"><title>Mahanpro</title><h1>Sayfa geçici olarak kullanılamıyor.</h1><p>' . h($doc->site->maintenanceText->tr ?? '') . '</p>';
+        exit;
+    }
+    $title = ($settings->seoTitle ?? '') ?: $title;
+    $description = ($settings->seoDescription ?? '') ?: $description;
     $template = file_get_contents(dirname(__DIR__) . '/mahanpro-private/templates/' . $file . '.html');
     if ($template === false) {
         throw new RuntimeException('Page template is missing');
     }
-    $template = preg_replace('~<title>.*?</title>~s', '<title>' . h($title) . '</title>', $template, 1);
-    $template = preg_replace('~<meta name="description" content="[^"]*">~',
-        '<meta name="description" content="' . h($description) . '">', $template, 1);
+    $template = preg_replace_callback('~<title>.*?</title>~s', fn () => '<title>' . h($title) . '</title>', $template, 1);
+    $template = preg_replace_callback('~<meta name="description" content="[^"]*">~',
+        fn () => '<meta name="description" content="' . h($description) . '">', $template, 1);
     $template = preg_replace('~<link rel="canonical" href="[^"]*">~',
         '<link rel="canonical" href="' . h($base . ltrim($path, '/')) . '">', $template, 1);
     if (in_array($path, ['/bases', '/attacks', '/armies'], true)) {
-        $records = content(db(), $path === '/bases' ? 'layout' : 'guide');
+        $records = content($pdo, $path === '/bases' ? 'layout' : 'guide', $doc);
         $template = str_replace('<!-- MAHANPRO_CONTENT -->', cards($records, $path), $template);
     }
     header('Content-Type: text/html; charset=UTF-8');
     echo $template;
 } catch (Throwable $error) {
     error_log('Mahanpro: request failed (' . get_class($error) . ')');
+    if (str_starts_with($path, '/api/')) {
+        json_response(['error' => 'Hizmet geçici olarak kullanılamıyor.'], 503);
+    }
     http_response_code(503);
     header('Retry-After: 300');
     header('Content-Type: text/plain; charset=UTF-8');

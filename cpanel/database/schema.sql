@@ -32,3 +32,20 @@ CREATE TABLE IF NOT EXISTS content_reviews (
   reviewer_id VARCHAR(100) NOT NULL,
   reviewed_at VARCHAR(30) CHARACTER SET ascii NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS admin_content (
+  id TINYINT UNSIGNED PRIMARY KEY,
+  revision INT UNSIGNED NOT NULL,
+  document JSON NOT NULL,
+  updated_at VARCHAR(30) CHARACTER SET ascii NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT IGNORE INTO admin_content (id, revision, document) VALUES
+  (1, 0, '{"layoutOverrides":{},"guideOverrides":{},"site":{"texts":{},"pages":{}},"history":[]}');
+
+CREATE TABLE IF NOT EXISTS content_publications (
+  proposal_id VARCHAR(100) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  fingerprint CHAR(64) CHARACTER SET ascii NOT NULL,
+  published_at VARCHAR(30) CHARACTER SET ascii NOT NULL,
+  PRIMARY KEY (proposal_id, fingerprint)
+) ENGINE=InnoDB;

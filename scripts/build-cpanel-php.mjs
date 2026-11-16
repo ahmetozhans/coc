@@ -17,10 +17,10 @@ try {
   await cp(join(source, 'cpanel/private'), privateDir, { recursive: true });
   await cp(join(source, 'cpanel/database/schema.sql'), join(privateDir, 'schema.sql'));
   await cp(join(source, 'assets'), join(web, 'assets'), { recursive: true });
-  for (const file of ['favicon.svg', 'mahanpro-night.css', 'i18n.js']) {
+  for (const file of ['favicon.svg', 'mahanpro-night.css', 'i18n.js', 'admin-studio.css']) {
     await cp(join(source, file), join(web, file));
   }
-  for (const file of ['catalog.json', 'guides.json', 'content-inbox.json']) {
+  for (const file of ['catalog.json', 'guides.json', 'content-inbox.json', 'site-defaults.json']) {
     await cp(join(source, file), join(privateDir, file));
   }
   const app = await readFile(join(source, 'app.js'), 'utf8');
@@ -28,12 +28,23 @@ try {
   const content = await readFile(join(source, 'site-content.js'), 'utf8');
   await writeFile(join(web, 'site-content.js'), content.replace(
     'https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site/api/content', '/api/content'
-  ));
+  ).replace("a.getAttribute('href')===file", "a.getAttribute('href')===(key==='home'?'/':'/'+key)"));
   const metrics = await readFile(join(source, 'metrics.js'), 'utf8');
   await writeFile(join(web, 'metrics.js'), metrics.replace(
     'https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site', ''
   ));
   await mkdir(join(privateDir, 'templates'));
+  const studio = await readFile(join(source, 'admin.html'), 'utf8');
+  await writeFile(join(privateDir, 'templates', 'studio.html'), studio
+    .replace('</head>', '<!-- STUDIO_CSRF --></head>')
+    .replace(/<section data-panel="suggestions"[\s\S]*?<\/section>/,
+      '<section data-panel="suggestions" id="suggestions" hidden><h1>İçerik önerileri</h1><p><a class="button primary" href="/admin">Önerileri incele</a></p></section>')
+    .replace(/<script src="review-inbox\.js[^"]*" defer><\/script>/, '')
+    .replace(/href="index\.html"/g, 'href="/"'));
+  const admin = await readFile(join(source, 'admin.js'), 'utf8');
+  await writeFile(join(web, 'admin.js'), admin
+    .replace('https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site', '')
+    .replace("headers:{'Content-Type':'application/json'}", "headers:{'Content-Type':'application/json','X-Mahanpro-CSRF':document.querySelector('meta[name=mahanpro-csrf]').content}"));
   for (const name of ['index', 'bases', 'clan', 'attacks', 'armies', 'upgrade']) {
     let html = await readFile(join(source, name + '.html'), 'utf8');
     html = html

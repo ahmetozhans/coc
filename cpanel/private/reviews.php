@@ -68,21 +68,48 @@ function admin_page(string $body, int $status = 200): never
     exit;
 }
 
-function admin_route(): never
+function admin_session(): bool
 {
     $hash = config()['admin_password_hash'] ?? '';
     if (!is_string($hash) || !password_get_info($hash)['algo'] ||
         !in_array($_SERVER['HTTPS'] ?? '', ['on', '1'], true)) {
-        admin_page('<p>HTTPS ve yönetici hesabı ayarı gerekiyor.</p>', 503);
+        return false;
     }
     ini_set('session.use_strict_mode', '1');
     ini_set('session.use_only_cookies', '1');
     session_name('mahanpro_admin');
-    session_set_cookie_params(['lifetime' => 0, 'path' => '/admin', 'secure' => true, 'httponly' => true, 'samesite' => 'Strict']);
+    session_set_cookie_params(['lifetime' => 0, 'path' => '/', 'secure' => true, 'httponly' => true, 'samesite' => 'Strict']);
     session_start();
     $_SESSION['csrf'] ??= bin2hex(random_bytes(32));
+    return ($_SESSION['admin_until'] ?? 0) > time();
+}
+
+function studio_route(): never
+{
+    if (!admin_session()) {
+        header('Location: /admin', true, 303);
+        exit;
+    }
+    $template = file_get_contents(__DIR__ . '/templates/studio.html');
+    if ($template === false) {
+        throw new RuntimeException('Studio template missing');
+    }
+    header('Content-Type: text/html; charset=UTF-8');
+    header('Cache-Control: no-store');
+    header('X-Robots-Tag: noindex, nofollow');
+    header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
+    echo str_replace('<!-- STUDIO_CSRF -->', '<meta name="mahanpro-csrf" content="' . h($_SESSION['csrf']) . '">', $template);
+    exit;
+}
+
+function admin_route(): never
+{
+    $authenticated = admin_session();
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        admin_page('<p>HTTPS ve yönetici hesabı ayarı gerekiyor.</p>', 503);
+    }
+    $hash = config()['admin_password_hash'];
     $csrf = '<input type="hidden" name="csrf" value="' . h($_SESSION['csrf']) . '">';
-    $authenticated = ($_SESSION['admin_until'] ?? 0) > time();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (($_SERVER['HTTP_ORIGIN'] ?? '') !== rtrim(config()['base_url'], '/') ||
             !is_string($_POST['csrf'] ?? null) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
@@ -137,14 +164,19 @@ function admin_route(): never
         $failed = $_SERVER['REQUEST_METHOD'] === 'POST';
         admin_page(($failed ? '<p>Giriş bilgisi hatalı.</p>' : '') . '<form method="post">' . $csrf . '<input type="hidden" name="action" value="login"><label>Yönetici parolası <input type="password" name="password" maxlength="128" autocomplete="current-password" required></label> <button class="button primary">Giriş</button></form>', $failed ? 401 : 200);
     }
-    $body = '<form method="post">' . $csrf . '<button class="button" name="action" value="logout">Çıkış yap</button></form><h2>İçerik önerileri</h2>';
+    $body = '<p><a class="button primary" href="/studio">İçerik Stüdyosu</a></p><form method="post">' . $csrf . '<button class="button" name="action" value="logout">Çıkış yap</button></form><h2>İçerik önerileri</h2>';
     $decisions = [];
-    foreach (db()->query('SELECT proposal_id, fingerprint, decision FROM content_reviews') as $row) {
+    $db = db();
+    foreach ($db->query('SELECT proposal_id, fingerprint, decision FROM content_reviews') as $row) {
         $decisions[$row['proposal_id']] = $row;
+    }
+    $receipts = [];
+    foreach ($db->query('SELECT proposal_id, fingerprint FROM content_publications') as $row) {
+        $receipts[$row['proposal_id']][$row['fingerprint']] = true;
     }
     foreach (pending_inbox() as $id => $item) {
         $row = $decisions[$id] ?? [];
-        $published = was_published($item);
+        $published = was_published($item) || isset($receipts[$id][$item->fingerprint]);
         $state = $published ? 'Yayımlandı' : (($row['fingerprint'] ?? '') === $item->fingerprint
             ? ($row['decision'] === 'approved' ? 'Onaylandı' : 'Reddedildi') : 'Bekliyor');
         $payload = $item->payload;
@@ -155,7 +187,7 @@ function admin_route(): never
         }
         $body .= '<pre>' . h(json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)) . '</pre>';
         if (!$published) {
-            $body .= '<form method="post">' . $csrf . '<input type="hidden" name="id" value="' . h($id)
+            $body .= '<form method="post">' . $csrf . '<input type="hidden" name="id" value="' . h((string) $id)
                 . '"><input type="hidden" name="fingerprint" value="' . h($item->fingerprint)
                 . '"><button class="button primary" name="action" value="approved">Onayla</button> <button class="button" name="action" value="rejected">Reddet</button></form>';
         }

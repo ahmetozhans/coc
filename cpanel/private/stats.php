@@ -62,10 +62,16 @@ function stats_route(string $path): never
         json_response(['error' => 'Invalid event'], 400);
     }
     $db = db();
-    $layout = $db->prepare("SELECT payload FROM public_content WHERE kind = 'layout' AND id = ?");
-    $layout->execute([$id]);
-    $payload = $layout->fetchColumn();
-    if ($payload === false || !empty(json_decode($payload, true)['hidden'])) {
+    $doc = cms_state($db)['document'];
+    if (isset($doc->layoutOverrides->$id)) {
+        $visible = !$doc->layoutOverrides->$id->hidden;
+    } else {
+        $layout = $db->prepare("SELECT payload FROM public_content WHERE kind = 'layout' AND id = ?");
+        $layout->execute([$id]);
+        $payload = $layout->fetchColumn();
+        $visible = $payload !== false && empty(json_decode($payload, true)['hidden']);
+    }
+    if (!$visible) {
         json_response(['error' => 'Layout not found'], 404);
     }
     $hash = hash('sha256', 'mahanpro-v1:' . $visitor);

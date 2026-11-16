@@ -6,6 +6,7 @@ if (PHP_SAPI !== 'cli') {
 }
 require __DIR__ . '/content.php';
 require __DIR__ . '/stats.php';
+require __DIR__ . '/cms.php';
 if ($argc !== 2) {
     fwrite(STDERR, "Usage: php import-history.php private-d1-export.json\n");
     exit(1);
@@ -40,6 +41,22 @@ try {
     $data = json_decode($raw, true, 32, JSON_THROW_ON_ERROR);
     $pdo = db();
     $pdo->beginTransaction();
+    $current = cms_state($pdo, true);
+    $adminRows = $data['admin_content'] ?? null;
+    if (!is_array($adminRows) || !array_is_list($adminRows) || count($adminRows) > 1 || $current['revision'] !== 0) {
+        throw new RuntimeException('Missing source CMS table or target already configured');
+    }
+    foreach ($adminRows as $admin) {
+        $document = json_decode($admin['document'], false, 64, JSON_THROW_ON_ERROR);
+        if ($admin['id'] !== 1 || !is_int($admin['revision']) || $admin['revision'] < 1 ||
+            !valid_history_value('reviewed_at', $admin['updated_at'])) {
+            throw new RuntimeException('Invalid CMS revision');
+        }
+        check_document($document);
+        check_collection($pdo, $document);
+        $save = $pdo->prepare('UPDATE admin_content SET revision = ?, document = ?, updated_at = ? WHERE id = 1');
+        $save->execute([$admin['revision'], $admin['document'], $admin['updated_at']]);
+    }
     foreach ($columns as $table => $fields) {
         $rows = $data[$table] ?? null;
         if (!is_array($rows) || !array_is_list($rows) ||

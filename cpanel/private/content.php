@@ -24,14 +24,36 @@ function db(): PDO
     );
 }
 
-function content(PDO $db, string $kind): array
+function cms_state(PDO $db, bool $lock = false): array
+{
+    $row = $db->query('SELECT revision, document, updated_at FROM admin_content WHERE id = 1' . ($lock ? ' FOR UPDATE' : ''))->fetch(PDO::FETCH_ASSOC);
+    if (!$row) {
+        throw new RuntimeException('CMS schema not installed');
+    }
+    return [
+        'revision' => (int) $row['revision'],
+        'document' => json_decode($row['document'], false, 64, JSON_THROW_ON_ERROR),
+        'updatedAt' => $row['updated_at'],
+    ];
+}
+
+function content(PDO $db, string $kind, ?object $document = null, bool $includeHidden = false): array
 {
     $query = $db->prepare('SELECT payload FROM public_content WHERE kind = ? ORDER BY sort_order, id');
     $query->execute([$kind]);
-    $rows = [];
+    $records = [];
     foreach ($query->fetchAll(PDO::FETCH_COLUMN) as $payload) {
         $row = json_decode($payload, true, 64, JSON_THROW_ON_ERROR);
-        if (!empty($row['hidden'])) {
+        $records[$row['id']] = ['hidden' => false] + $row;
+    }
+    $document ??= cms_state($db)['document'];
+    $key = $kind === 'layout' ? 'layoutOverrides' : 'guideOverrides';
+    foreach ($document->$key as $id => $record) {
+        $records[$id] = json_decode(json_encode($record, JSON_THROW_ON_ERROR), true, 64, JSON_THROW_ON_ERROR);
+    }
+    $rows = [];
+    foreach ($records as $row) {
+        if (!$includeHidden && !empty($row['hidden'])) {
             continue;
         }
         if ($kind === 'layout' && isset($row['image'])) {
@@ -55,7 +77,7 @@ function h(string $value): string
 
 function https_link(mixed $url, ?string $host = null): string
 {
-    if (!is_string($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+    if (!is_string($url) || strlen($url) > 3000 || !filter_var($url, FILTER_VALIDATE_URL)) {
         return '';
     }
     $parts = parse_url($url);
