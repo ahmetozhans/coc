@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 require dirname(__DIR__) . '/mahanpro-private/content.php';
+require dirname(__DIR__) . '/mahanpro-private/stats.php';
+require dirname(__DIR__) . '/mahanpro-private/reviews.php';
 
 const PAGES = [
     '/' => ['index', 'Mahanpro | Clash of Clans Tools', 'Browse Clash of Clans village layouts, army builds and attack guides.'],
@@ -62,6 +64,12 @@ if (isset(PAGES[$normalized]) && $path !== $normalized) {
 
 try {
     $base = config()['base_url'];
+    if ($path === '/admin') {
+        admin_route();
+    }
+    if (in_array($path, ['/api/stats', '/api/events'], true)) {
+        stats_route($path);
+    }
     if ($path === '/robots.txt') {
         header('Content-Type: text/plain; charset=UTF-8');
         echo "User-agent: *\nAllow: /\nSitemap: " . $base . "sitemap.xml\n";

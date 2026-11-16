@@ -20,7 +20,7 @@ try {
   for (const file of ['favicon.svg', 'mahanpro-night.css', 'i18n.js']) {
     await cp(join(source, file), join(web, file));
   }
-  for (const file of ['catalog.json', 'guides.json']) {
+  for (const file of ['catalog.json', 'guides.json', 'content-inbox.json']) {
     await cp(join(source, file), join(privateDir, file));
   }
   const app = await readFile(join(source, 'app.js'), 'utf8');
@@ -29,13 +29,16 @@ try {
   await writeFile(join(web, 'site-content.js'), content.replace(
     'https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site/api/content', '/api/content'
   ));
+  const metrics = await readFile(join(source, 'metrics.js'), 'utf8');
+  await writeFile(join(web, 'metrics.js'), metrics.replace(
+    'https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site', ''
+  ));
   await mkdir(join(privateDir, 'templates'));
   for (const name of ['index', 'bases', 'clan', 'attacks', 'armies', 'upgrade']) {
     let html = await readFile(join(source, name + '.html'), 'utf8');
     html = html
       .replace(/href="(index|bases|clan|attacks|armies|upgrade)\.html(?=["?#])/g,
-        (_, page) => 'href="/' + (page === 'index' ? '' : page))
-      .replace(/<script src="metrics\.js[^"]*" defer><\/script>/g, '');
+        (_, page) => 'href="/' + (page === 'index' ? '' : page));
     if (name === 'bases') {
       html = html.replace(/(<div\b[^>]*\bid="publicGallery"[^>]*>)<div class="empty">.*?<\/div>/s,
         '$1<!-- MAHANPRO_CONTENT -->');

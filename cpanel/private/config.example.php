@@ -7,4 +7,5 @@ return [
     'db_name' => 'CPANEL_mahanpro',
     'db_user' => 'CPANEL_mahanpro',
     'db_password' => '',
+    'admin_password_hash' => '',
 ];
