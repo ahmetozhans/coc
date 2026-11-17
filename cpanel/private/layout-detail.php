@@ -75,7 +75,39 @@ function layout_meta_summary(string $description, string $fallback): string
     return preg_match('/^(.{157}).{4}/u', $text, $match) ? $match[1] . '…' : $text;
 }
 
-function render_layout_detail(string $segment, array $catalog, string $base, ?string $requestPath = null): never
+function layout_detail_shell(string $galleryTemplate): array
+{
+    $fragments = [];
+    foreach ([
+        'theme' => '~<link rel="stylesheet" href="/?mahanpro-night\.css(?:\?[^"<>]*)?">~',
+        'header' => '~<header class="site-header">.*?</header>~s',
+        'footer' => '~<footer class="site-footer">.*?</footer>~s',
+        'mobile' => '~<nav class="mobile-nav"[^>]*>.*?</nav>~s',
+    ] as $name => $pattern) {
+        if (preg_match($pattern, $galleryTemplate, $match) !== 1) {
+            throw new RuntimeException('Gallery template fragment is missing: ' . $name);
+        }
+        $fragments[$name] = $match[0];
+    }
+    $fragments['theme'] = str_replace('href="mahanpro-night.css', 'href="/mahanpro-night.css', $fragments['theme']);
+    // Detail pages are rendered in Turkish and do not use the gallery's language switcher.
+    $fragments['header'] = preg_replace('~<div class="header-actions">.*?</div>~s', '', $fragments['header']);
+    $translations = [
+        'Mahanpro home' => 'Mahanpro ana sayfa', 'Main navigation' => 'Ana menü', 'Mobile navigation' => 'Mobil menü',
+        '>Home<' => '>Ana sayfa<', '>Bases<' => '>Köyler<', '>Clans<' => '>Klanlar<',
+        '>Armies<' => '>Ordular<', '>Guides<' => '>Rehberler<', '>Upgrades<' => '>Yükseltmeler<',
+        '>Base Gallery<' => '>Köy düzenleri<', '>Attack Academy<' => '>Saldırı rehberleri<',
+        'YOUR NEXT ADVENTURE' => 'KEŞFET', 'Fan Content Policy' => 'Hayran İçeriği Politikası',
+        'Unofficial fan project. Not affiliated with Supercell.' => 'Supercell ile bağlantısı olmayan bir hayran projesi.',
+        '<span>Built for the love of the village.</span>' => '', 'aria-current="page"' => 'aria-current="location"',
+    ];
+    foreach (['header', 'footer', 'mobile'] as $name) {
+        $fragments[$name] = strtr($fragments[$name], $translations);
+    }
+    return $fragments;
+}
+
+function render_layout_detail(string $segment, array $catalog, string $base, ?string $requestPath = null, ?string $galleryTemplate = null): never
 {
     $selected = layout_detail_request($segment, $catalog);
     if ($selected === null) {
@@ -88,6 +120,7 @@ function render_layout_detail(string $segment, array $catalog, string $base, ?st
         header('Location: ' . $path, true, 301);
         exit;
     }
+    $shell = layout_detail_shell($galleryTemplate ?? (string) file_get_contents(__DIR__ . '/templates/bases.html'));
     $title = $layout['title'];
     $townHall = (int) $layout['th'];
     $category = layout_category_label($layout['type']);
@@ -113,7 +146,7 @@ function render_layout_detail(string $segment, array $catalog, string $base, ?st
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0a1020">
+  <meta name="theme-color" content="#080f22">
   <meta name="description" content="<?= h($summary) ?>">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mahanpro">
@@ -124,86 +157,94 @@ function render_layout_detail(string $segment, array $catalog, string $base, ?st
   <?php if ($image): ?><meta property="og:image" content="<?= h($image) ?>"><?php endif; ?>
   <link rel="canonical" href="<?= h($canonical) ?>">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/layout-detail.css?v=2">
+  <?= $shell['theme'] ?>
+  <link rel="stylesheet" href="/layout-detail.css?v=3">
   <script src="/metrics.js?v=detail-1" defer></script>
   <script src="/layout-detail.js?v=2" defer></script>
   <script type="application/ld+json"><?= json_encode($breadcrumbs, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
   <title><?= h($title) ?> | Clash of Clans Köy Düzenleri – Mahanpro</title>
 </head>
-<body>
-  <header class="site-top"><div class="shell top-inner"><a class="wordmark" href="/">Mahan<span>pro</span></a><a class="return-link" href="/bases">← Tüm köy düzenleri</a></div></header>
-  <main class="shell" id="layoutDetail" data-id="<?= h($id) ?>" data-game-url="<?= h($game) ?>">
-    <nav class="crumb" aria-label="Gezinme yolu"><a href="/">Ana sayfa</a><span aria-hidden="true">/</span><a href="/bases">Köy düzenleri</a><span aria-hidden="true">/</span><span aria-current="page">TH<?= $townHall ?></span></nav>
-    <div class="detail-heading">
-      <div class="chips"><span>TH<?= $townHall ?></span><span><?= h($category) ?></span></div>
-      <h1><?= h($title) ?></h1>
+<body class="layout-detail-page">
+  <a class="skip-link" href="#layoutDetail">İçeriğe geç</a>
+  <?= $shell['header'] ?>
+  <main id="layoutDetail" data-id="<?= h($id) ?>" data-game-url="<?= h($game) ?>">
+    <div class="page-banner">
+      <div class="container banner-content detail-heading">
+        <nav class="detail-crumb" aria-label="Gezinme yolu"><a href="/">Ana sayfa</a><span aria-hidden="true">/</span><a href="/bases">Köy düzenleri</a></nav>
+        <h1><?= h($title) ?></h1>
+        <div class="detail-chips"><span class="chip">TH<?= $townHall ?></span><span class="chip"><?= h($category) ?></span></div>
+      </div>
     </div>
-    <div class="detail-grid">
-      <div class="detail-main">
-        <figure class="hero layout-card" data-layout-id="<?= h($id) ?>">
-          <?php if ($image): ?>
-            <a href="<?= h($image) ?>" target="_blank" rel="noopener noreferrer" aria-label="Düzen görselini tam boy aç">
-              <img src="<?= h($image) ?>" alt="<?= h($title) ?>" fetchpriority="high">
-              <span class="zoom-label" aria-hidden="true">↗ Tam boy</span>
-            </a>
-          <?php else: ?>
-            <p class="hero-empty">Bu düzen için önizleme bulunmuyor.</p>
-          <?php endif; ?>
-        </figure>
-        <div class="action-row layout-controls">
+    <div class="container page-content">
+      <div class="detail-grid">
+        <div class="detail-main">
+          <figure class="detail-preview layout-card" data-layout-id="<?= h($id) ?>">
+            <?php if ($image): ?>
+              <a href="<?= h($image) ?>" target="_blank" rel="noopener noreferrer" aria-label="Düzen görselini tam boy aç">
+                <img src="<?= h($image) ?>" alt="<?= h($title) ?>" fetchpriority="high">
+                <span class="zoom-label chip" aria-hidden="true">↗ Tam boy</span>
+              </a>
+            <?php else: ?>
+              <p class="hero-empty">Bu düzen için önizleme bulunmuyor.</p>
+            <?php endif; ?>
+          </figure>
           <?php if ($game): ?>
-            <a class="button primary" data-game-open href="<?= h($game) ?>" target="_blank" rel="noopener noreferrer">Oyunda aç ↗</a>
-            <button class="button" type="button" data-copy="game" hidden>Bağlantıyı kopyala</button>
-            <button class="button" type="button" data-favorite data-favorite-url="<?= h($game) ?>" aria-pressed="false" hidden>♡ Favoriye ekle</button>
+            <div class="action-row layout-controls">
+              <a class="button primary" data-game-open href="<?= h($game) ?>" target="_blank" rel="noopener noreferrer">Oyunda aç ↗</a>
+              <button class="button" type="button" data-copy="game" hidden>Bağlantıyı kopyala</button>
+              <button class="button" type="button" data-favorite data-favorite-url="<?= h($game) ?>" aria-pressed="false" hidden>♡ Favoriye ekle</button>
+            </div>
+          <?php endif; ?>
+          <section class="panel layout-notes">
+            <h2>Düzen açıklaması</h2>
+            <p class="description"><?= h($description === '' ? $defaultDescription : $description) ?></p>
+            <h3>Savunma notları</h3>
+            <ul><?php foreach ($tips as $tip): ?><li><?= h($tip) ?></li><?php endforeach; ?></ul>
+          </section>
+          <section class="panel share">
+            <h2>Bu düzeni paylaş</h2>
+            <div class="action-row">
+              <a class="button" href="<?= h('https://wa.me/?text=' . rawurlencode($title . ' ' . $canonical)) ?>" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+              <button class="button" type="button" data-copy="page" hidden>Sayfa bağlantısını kopyala</button>
+            </div>
+            <input id="shareLink" class="share-link" aria-label="Bu düzenin sayfa bağlantısı" type="url" value="<?= h($canonical) ?>" readonly>
+          </section>
+          <p class="message" id="detailMessage" aria-live="polite"></p>
+          <?php if ($previous || $next): ?>
+            <nav class="directions" aria-label="Komşu düzenler">
+              <?php if ($previous): ?><a href="<?= h(layout_detail_url($previous)) ?>">← Önceki düzen</a><?php endif; ?>
+              <?php if ($next): ?><a class="next" href="<?= h(layout_detail_url($next)) ?>">Sonraki düzen →</a><?php endif; ?>
+            </nav>
           <?php endif; ?>
         </div>
-        <section class="panel layout-notes">
-          <h2>Düzen açıklaması</h2>
-          <p class="description"><?= h($description === '' ? $defaultDescription : $description) ?></p>
-          <h3>Savunma notları</h3>
-          <ul><?php foreach ($tips as $tip): ?><li><?= h($tip) ?></li><?php endforeach; ?></ul>
-        </section>
-        <section class="panel share">
-          <h2>Bu düzeni paylaş</h2>
-          <div class="action-row">
-            <a class="button" href="<?= h('https://wa.me/?text=' . rawurlencode($title . ' ' . $canonical)) ?>" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-            <button class="button" type="button" data-copy="page" hidden>Sayfa bağlantısını kopyala</button>
-          </div>
-          <input id="shareLink" class="share-link" aria-label="Bu düzenin sayfa bağlantısı" type="url" value="<?= h($canonical) ?>" readonly>
-        </section>
-        <p class="message" id="detailMessage" aria-live="polite"></p>
-        <?php if ($previous || $next): ?>
-          <nav class="directions" aria-label="Komşu düzenler">
-            <?php if ($previous): ?><a href="<?= h(layout_detail_url($previous)) ?>">← Önceki düzen</a><?php endif; ?>
-            <?php if ($next): ?><a href="<?= h(layout_detail_url($next)) ?>">Sonraki düzen →</a><?php endif; ?>
-          </nav>
-        <?php endif; ?>
+        <aside class="detail-side">
+          <section class="panel">
+            <h2>Düzen bilgileri</h2>
+            <dl class="specs" data-stat-layout="<?= h($id) ?>">
+              <div><dt>Belediye binası</dt><dd>TH<?= $townHall ?></dd></div>
+              <div><dt>Tür</dt><dd><?= h($category) ?></dd></div>
+              <div><dt>Görüntülenme</dt><dd data-stat="views">—</dd></div>
+              <div><dt>Oyuna açma / kopyalama</dt><dd data-stat="downloads">—</dd></div>
+              <div><dt>Aktif favori</dt><dd data-stat="favorites">—</dd></div>
+            </dl>
+            <p class="message" id="statsStatus" aria-live="polite"></p>
+          </section>
+          <?php if ($related): ?>
+            <section class="panel"><h2>Benzer köy düzenleri</h2><div class="related">
+              <?php foreach ($related as $item): $thumb = https_link($item['image'] ?? null); ?>
+                <a class="related-card layout-card" href="<?= h(layout_detail_url($item)) ?>">
+                  <?php if ($thumb): ?><img src="<?= h($thumb) ?>" alt="" loading="lazy" width="180" height="120"><?php endif; ?>
+                  <span class="chip">TH<?= (int) $item['th'] ?></span><strong><?= h($item['title']) ?></strong>
+                </a>
+              <?php endforeach; ?>
+            </div></section>
+          <?php endif; ?>
+        </aside>
       </div>
-      <aside class="detail-side">
-        <section class="panel">
-          <h2>Düzen bilgileri</h2>
-          <dl class="specs" data-stat-layout="<?= h($id) ?>">
-            <div><dt>Belediye binası</dt><dd>TH<?= $townHall ?></dd></div>
-            <div><dt>Tür</dt><dd><?= h($category) ?></dd></div>
-            <div><dt>Görüntülenme</dt><dd data-stat="views">—</dd></div>
-            <div><dt>Oyuna açma / kopyalama</dt><dd data-stat="downloads">—</dd></div>
-            <div><dt>Aktif favori</dt><dd data-stat="favorites">—</dd></div>
-          </dl>
-          <p class="message" id="statsStatus" aria-live="polite"></p>
-        </section>
-        <?php if ($related): ?>
-          <section class="panel"><h2>Benzer köy düzenleri</h2><div class="related">
-            <?php foreach ($related as $item): $thumb = https_link($item['image'] ?? null); ?>
-              <a class="related-card" href="<?= h(layout_detail_url($item)) ?>">
-                <?php if ($thumb): ?><img src="<?= h($thumb) ?>" alt="" loading="lazy" width="180" height="120"><?php endif; ?>
-                <span>TH<?= (int) $item['th'] ?></span><strong><?= h($item['title']) ?></strong>
-              </a>
-            <?php endforeach; ?>
-          </div></section>
-        <?php endif; ?>
-      </aside>
     </div>
   </main>
+  <?= $shell['footer'] ?>
+  <?= $shell['mobile'] ?>
 </body>
 </html>
     <?php

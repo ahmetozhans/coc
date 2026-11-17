@@ -38,4 +38,10 @@ confirm_detail(layout_detail_request(basename(layout_detail_url($catalog[0])), $
 confirm_detail(layout_meta_summary("Birinci satır.\nİkinci satır.", '') === 'Birinci satır. İkinci satır.');
 confirm_detail(str_ends_with(layout_meta_summary(str_repeat('köy düzeni ', 80), ''), '…'));
 confirm_detail(count(layout_notes('War', 19)[1]) === 2);
-render_layout_detail('test-layout', $catalog, 'https://mahanpro.fun/');
+$galleryTemplate = file_get_contents($argv[1] ?? dirname(__DIR__) . '/bases.html');
+$shell = layout_detail_shell($galleryTemplate);
+confirm_detail(str_contains($shell['theme'], 'href="/mahanpro-night.css'));
+confirm_detail(str_contains($shell['header'], 'class="top-nav"') && !str_contains($shell['header'], 'id="language"'));
+confirm_detail(str_contains($shell['mobile'], 'aria-current="location"'));
+confirm_detail(str_contains($shell['footer'], 'Hayran İçeriği Politikası'));
+render_layout_detail('test-layout', $catalog, 'https://mahanpro.fun/', galleryTemplate: $galleryTemplate);
