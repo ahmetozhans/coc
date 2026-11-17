@@ -15,7 +15,9 @@ try {
   const privateDir = join(stage, 'mahanpro-private');
   await cp(join(source, 'cpanel/public'), web, { recursive: true });
   await cp(join(source, 'cpanel/private'), privateDir, { recursive: true });
-  await cp(join(source, 'cpanel/database/schema.sql'), join(privateDir, 'schema.sql'));
+  const schema = await readFile(join(source, 'cpanel/database/schema.sql'), 'utf8');
+  const adminSchema = await readFile(join(source, 'cpanel/database/admin-login.sql'), 'utf8');
+  await writeFile(join(privateDir, 'schema.sql'), schema + '\n' + adminSchema);
   await cp(join(source, 'assets'), join(web, 'assets'), { recursive: true });
   for (const file of ['favicon.svg', 'mahanpro-night.css', 'i18n.js', 'admin-studio.css']) {
     await cp(join(source, file), join(web, file));

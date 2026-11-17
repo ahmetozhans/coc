@@ -10,7 +10,7 @@ Bu dal herkese açık sayfaları, sayaçları, İçerik Stüdyosu'nu ve öneri i
 
 ## Öneri paneli ve geçmiş
 
-- HTTPS üzerinden `/admin` sayfasını kullan. Uzun, rastgele ve benzersiz bir parola üret. Parolayı terminal komutuna veya Git'e yazmadan PHP `password_hash` ile özetle ve yalnızca özel `config.php` dosyasındaki `admin_password_hash` alanına özeti koy. Boş özetle panel kapalı kalır.
+- HTTPS üzerinden `/admin` sayfasını kullan. İlk kurulum için özel `config.php` dosyasındaki `admin_setup_code` alanına parola yöneticisiyle üretilmiş, en az 24 karakterli rastgele bir kod koy. Panelde bu kodla yeni parola belirle. Başarılı girişten sonra kurulum kodunu kaldır. Ayrıntılar için [yönetici kurulumu](ADMIN-UPDATE.md).
 - Panel, özel klasördeki `content-inbox.json` önerilerini okur. Kararlar tam öneri parmak izine bağlanır. Panelde onay vermek içeriği kendiliğinden yayımlamaz.
 - D1 geçmişi için `layout_events`, `layout_favorites`, `content_reviews` ve `admin_content` tablolarını tam olarak dışa aktar. Kökünde bu dört anahtarın yer aldığı ve değerleri satır listeleri olan özel bir JSON dosyası hazırla. Kullanılmamış bir tablo için boş liste kullan. Dosyayı web köküne koyma. Yeni hedef henüz trafik almıyorken `php import-history.php /private/export.json` çalıştır, kaynak ve hedef satır sayılarını ve CMS revizyonunu karşılaştır. Komut boş hedef tablolar ve değiştirilmemiş CMS ister. Tarayıcı favorileri alan adı değişince tarayıcıdan yeni adrese kendiliğinden taşınmaz.
 - Giriş yaptıktan sonra `/studio` üzerinden içerik, görünüm, SEO ayarları, sayaçlar ve panel yedekleri yönetilebilir.

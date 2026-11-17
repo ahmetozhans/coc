@@ -68,20 +68,53 @@ function admin_page(string $body, int $status = 200): never
     exit;
 }
 
+function admin_hash(): ?string
+{
+    static $loaded = false;
+    static $hash = null;
+    if (!$loaded) {
+        $stored = db()->query('SELECT password_hash FROM admin_credentials WHERE id = 1')->fetchColumn();
+        if ($stored === false) {
+            throw new RuntimeException('Admin credential schema not installed');
+        }
+        $candidate = $stored ?? (config()['admin_password_hash'] ?? '');
+        $hash = is_string($candidate) && password_get_info($candidate)['algo'] ? $candidate : null;
+        if ($stored !== null && $hash === null) {
+            throw new RuntimeException('Invalid stored admin credential');
+        }
+        $loaded = true;
+    }
+    return $hash;
+}
+
+function valid_admin_setup_code(mixed $code): bool
+{
+    return is_string($code) && preg_match('/^[A-Za-z0-9_-]{24,128}$/D', $code) === 1;
+}
+
+function initialize_admin_password(PDO $database, string $password): bool
+{
+    $write = $database->prepare('UPDATE admin_credentials SET password_hash = ? WHERE id = 1 AND password_hash IS NULL');
+    $write->execute([password_hash($password, PASSWORD_DEFAULT)]);
+    return $write->rowCount() === 1;
+}
+
 function admin_session(): bool
 {
-    $hash = config()['admin_password_hash'] ?? '';
-    if (!is_string($hash) || !password_get_info($hash)['algo'] ||
-        !in_array($_SERVER['HTTPS'] ?? '', ['on', '1'], true)) {
+    if (!in_array($_SERVER['HTTPS'] ?? '', ['on', '1'], true)) {
         return false;
     }
     ini_set('session.use_strict_mode', '1');
     ini_set('session.use_only_cookies', '1');
     session_name('mahanpro_admin');
     session_set_cookie_params(['lifetime' => 0, 'path' => '/', 'secure' => true, 'httponly' => true, 'samesite' => 'Strict']);
-    session_start();
+    if (!session_start()) {
+        return false;
+    }
     $_SESSION['csrf'] ??= bin2hex(random_bytes(32));
-    return ($_SESSION['admin_until'] ?? 0) > time();
+    $hash = admin_hash();
+    return $hash !== null && ($_SESSION['admin_until'] ?? 0) > time() &&
+        hash_equals(hash('sha256', $hash), $_SESSION['admin_proof'] ?? '');
 }
 
 function studio_route(): never
@@ -106,9 +139,11 @@ function admin_route(): never
 {
     $authenticated = admin_session();
     if (session_status() !== PHP_SESSION_ACTIVE) {
-        admin_page('<p>HTTPS ve yönetici hesabı ayarı gerekiyor.</p>', 503);
+        admin_page('<p>Yönetim paneli için HTTPS ve çalışan bir PHP oturumu gerekiyor.</p>', 503);
     }
-    $hash = config()['admin_password_hash'];
+    $hash = admin_hash();
+    $setupCode = config()['admin_setup_code'] ?? '';
+    $setupAllowed = $hash === null && valid_admin_setup_code($setupCode);
     $csrf = '<input type="hidden" name="csrf" value="' . h($_SESSION['csrf']) . '">';
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (($_SERVER['HTTP_ORIGIN'] ?? '') !== rtrim(config()['base_url'], '/') ||
@@ -116,7 +151,29 @@ function admin_route(): never
             admin_page('<p>Oturum doğrulanamadı.</p>', 403);
         }
         $action = $_POST['action'] ?? '';
-        if ($action === 'login' && !$authenticated) {
+        if ($action === 'setup' && $setupAllowed) {
+            if (($_SESSION['retry_at'] ?? 0) > time()) {
+                admin_page('<p>Birkaç saniye sonra tekrar dene.</p>', 429);
+            }
+            $_SESSION['retry_at'] = time() + 3;
+            $code = $_POST['setup_code'] ?? null;
+            if (!valid_admin_setup_code($code) || !hash_equals($setupCode, $code)) {
+                admin_page('<p>Kurulum kodu geçersiz.</p><p><a href="/admin">Tekrar dene</a></p>', 403);
+            }
+            $password = $_POST['password'] ?? null;
+            if (!is_string($password) || strlen($password) < 12 || strlen($password) > 72 ||
+                str_contains($password, "\0") || $password !== ($_POST['password_confirm'] ?? null) ||
+                $password === $code) {
+                admin_page('<p>12–72 bayt uzunluğunda ayrı bir parola seç ve iki alana aynı parolayı yaz.</p><p><a href="/admin">Tekrar dene</a></p>', 400);
+            }
+            if (!initialize_admin_password(db(), $password)) {
+                admin_page('<p>Yönetici parolası zaten oluşturuldu. Giriş sayfasını yenile.</p>', 409);
+            }
+            session_regenerate_id(true);
+            $_SESSION = ['csrf' => bin2hex(random_bytes(32))];
+            header('Location: /admin', true, 303);
+            exit;
+        } elseif ($action === 'login' && !$authenticated && $hash !== null) {
             if (($_SESSION['retry_at'] ?? 0) > time()) {
                 admin_page('<p>Birkaç saniye sonra tekrar dene.</p>', 429);
             }
@@ -124,7 +181,7 @@ function admin_route(): never
             $password = $_POST['password'] ?? '';
             if (is_string($password) && strlen($password) <= 128 && password_verify($password, $hash)) {
                 session_regenerate_id(true);
-                $_SESSION = ['admin_until' => time() + 3600, 'csrf' => bin2hex(random_bytes(32))];
+                $_SESSION = ['admin_until' => time() + 3600, 'csrf' => bin2hex(random_bytes(32)), 'admin_proof' => hash('sha256', $hash)];
                 header('Location: /admin', true, 303);
                 exit;
             }
@@ -161,6 +218,17 @@ function admin_route(): never
         admin_page('<p>İşlem geçersiz.</p>', 405);
     }
     if (!$authenticated) {
+        if ($setupAllowed) {
+            admin_page('<h2>Yönetici parolasını oluştur</h2><form method="post">' . $csrf .
+                '<input type="hidden" name="action" value="setup">' .
+                '<p><label>Tek kullanımlık kurulum kodu <input type="password" name="setup_code" maxlength="128" autocomplete="off" required></label></p>' .
+                '<p><label>Yeni parola <input type="password" name="password" minlength="12" maxlength="72" autocomplete="new-password" required></label></p>' .
+                '<p><label>Yeni parola tekrar <input type="password" name="password_confirm" minlength="12" maxlength="72" autocomplete="new-password" required></label></p>' .
+                '<button class="button primary">Parolayı oluştur</button></form>');
+        }
+        if ($hash === null) {
+            admin_page('<p>Yönetici hesabı henüz kurulmadı. Özel config.php dosyasına kurulum kodu ekle.</p>', 503);
+        }
         $failed = $_SERVER['REQUEST_METHOD'] === 'POST';
         admin_page(($failed ? '<p>Giriş bilgisi hatalı.</p>' : '') . '<form method="post">' . $csrf . '<input type="hidden" name="action" value="login"><label>Yönetici parolası <input type="password" name="password" maxlength="128" autocomplete="current-password" required></label> <button class="button primary">Giriş</button></form>', $failed ? 401 : 200);
     }
