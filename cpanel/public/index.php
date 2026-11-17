@@ -28,6 +28,7 @@ function cards(array $items, string $page): string
                 . ($image ? '<img src="' . h($image) . '" alt="' . $title . '" loading="lazy">' : '')
                 . '</div><div class="content-body"><h2>' . $title . '</h2><p>TH ' . $townHall
                 . ' · ' . h($item['type']) . '</p>'
+                . '<a href="/bases/' . h(rawurlencode($item['id'])) . '">Düzeni incele</a> '
                 . ($url ? '<a href="' . h($url) . '" class="button">Open in game</a>' : '')
                 . '</div></article>';
             continue;
@@ -55,7 +56,22 @@ function cards(array $items, string $page): string
     return $html ?: '<p class="empty">No published records are available yet.</p>';
 }
 
+function not_found(): never
+{
+    http_response_code(404);
+    header('Content-Type: text/html; charset=UTF-8');
+    header('X-Robots-Tag: noindex, follow');
+    $template = dirname(__DIR__) . '/mahanpro-private/page-not-found.html';
+    if (is_readable($template)) {
+        readfile($template);
+    } else {
+        echo 'Sayfa bulunamadı.';
+    }
+    exit;
+}
+
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$detailId = preg_match('~^/bases/([A-Za-z0-9_-]{1,100})$~D', $path, $matches) === 1 ? $matches[1] : null;
 $normalized = $path === '/index.php' || $path === '/index.html'
     ? '/' : preg_replace('~(?:\.html|/)$~', '', $path);
 if (isset(PAGES[$normalized]) && $path !== $normalized) {
@@ -119,22 +135,13 @@ try {
         echo $data;
         exit;
     }
-    if (!isset(PAGES[$path])) {
+    if (!isset(PAGES[$path]) && $detailId === null) {
         if ($path === '/api' || str_starts_with($path, '/api/')) {
             json_response(['error' => 'not_found'], 404);
         }
-        http_response_code(404);
-        header('Content-Type: text/html; charset=UTF-8');
-        header('X-Robots-Tag: noindex, follow');
-        $notFound = dirname(__DIR__) . '/mahanpro-private/page-not-found.html';
-        if (is_readable($notFound)) {
-            readfile($notFound);
-        } else {
-            echo 'Sayfa bulunamadı.';
-        }
-        exit;
+        not_found();
     }
-    [$file, $title, $description] = PAGES[$path];
+    [$file, $title, $description] = PAGES[$detailId === null ? $path : '/bases'];
     $pdo = db();
     $doc = cms_state($pdo)['document'];
     $settings = $doc->site->pages->{ $file === 'index' ? 'home' : $file } ?? null;
@@ -147,6 +154,10 @@ try {
         }
         echo '<!doctype html><html lang="tr"><meta charset="utf-8"><title>Mahanpro</title><h1>Sayfa geçici olarak kullanılamıyor.</h1><p>' . h($doc->site->maintenanceText->tr ?? '') . '</p>';
         exit;
+    }
+    if ($detailId !== null) {
+        require dirname(__DIR__) . '/mahanpro-private/layout-detail.php';
+        render_layout_detail($detailId, content($pdo, 'layout', $doc), $base);
     }
     $title = ($settings->seoTitle ?? '') ?: $title;
     $description = ($settings->seoDescription ?? '') ?: $description;

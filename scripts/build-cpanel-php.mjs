@@ -28,7 +28,8 @@ try {
   const app = await readFile(join(source, 'app.js'), 'utf8');
   await writeFile(join(web, 'app.js'), app
     .replaceAll('attacks.html#guide-', '/attacks#guide-')
-    .replace('Number(x.th)>18', 'Number(x.th)>19'));
+    .replace('Number(x.th)>18', 'Number(x.th)>19')
+    .replace('<div class="layout-actions">', '<div class="layout-actions"><a class="button small" href="/bases/\'+esc(encodeURIComponent(x.id))+\'">\'+(I18n.language===\'tr\'?\'Düzeni incele\':\'View layout\')+\'</a>'));
   const content = await readFile(join(source, 'site-content.js'), 'utf8');
   await writeFile(join(web, 'site-content.js'), content.replace(
     'https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site/api/content', '/api/content'
@@ -71,7 +72,7 @@ try {
         });
         return open.replace('class="filters"', 'class="filters castle-filters"') + all + levels.join('') + close;
       }).replace('</head>', '<link rel="stylesheet" href="/th-filters.css?v=1"></head>')
-        .replace(/src="app\.js\?[^"]+"/, 'src="app.js?v=th19"');
+        .replace(/src="app\.js\?[^"]+"/, 'src="app.js?v=base-details"');
       html = html.replace(/(<div\b[^>]*\bid="publicGallery"[^>]*>)<div class="empty">.*?<\/div>/s,
         '$1<!-- MAHANPRO_CONTENT -->');
     }
