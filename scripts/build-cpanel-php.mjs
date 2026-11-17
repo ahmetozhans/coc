@@ -65,15 +65,16 @@ try {
       html = html.replace(filterGroup, (_, open, children, close) => {
         const all = children.match(/<button\b[^>]*data-public-th="all"[^>]*>[\s\S]*?<\/button>/)?.[0];
         if (!all) throw new Error('All Town Halls control missing');
-        const levels = Array.from({length: 17}, (_, index) => {
+        const castleLevelsByTownHall = [1, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+        const levels = castleLevelsByTownHall.map((castleLevel, index) => {
           const level = index + 3;
           const latest = level === 19 ? ' castle-filter--latest' : '';
           return '<button type="button" class="filter castle-filter' + latest + '" data-public-th="' + level +
-            '" aria-pressed="false"><span class="castle-filter__icon" aria-hidden="true"><i></i></span><span>TH' +
-            level + '</span></button>';
+            '" aria-pressed="false"><span class="castle-filter__icon"><img src="/assets/clan-castles/level-' + castleLevel +
+            '.webp" width="32" height="32" alt=""></span><span>TH' + level + '</span></button>';
         });
         return open.replace('class="filters"', 'class="filters castle-filters"') + all + levels.join('') + close;
-      }).replace('</head>', '<link rel="stylesheet" href="/th-filters.css?v=1"></head>')
+      }).replace('</head>', '<link rel="stylesheet" href="/th-filters.css?v=2"></head>')
         .replace(/src="app\.js\?[^"]+"/, 'src="app.js?v=base-seo"');
       html = html.replace(/(<div\b[^>]*\bid="publicGallery"[^>]*>)<div class="empty">.*?<\/div>/s,
         '$1<!-- MAHANPRO_CONTENT -->');

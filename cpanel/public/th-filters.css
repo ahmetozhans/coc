@@ -52,65 +52,25 @@
 }
 
 .castle-filter__icon {
-  --flag: #945341;
-  position: relative;
   display: inline-grid;
   place-items: center;
-  flex: 0 0 27px;
-  width: 27px;
-  height: 27px;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  padding: 2px;
   border-radius: 50%;
-  background: linear-gradient(145deg, #e8e6dc, #a6b6c2);
-  box-shadow: inset 0 0 0 1px #faf2e99c;
+  background: linear-gradient(145deg, #ebecf1, #a9b8cf);
+  box-shadow: inset 0 0 0 1px #f1f3ff9c;
 }
-.castle-filter:nth-of-type(n+6) .castle-filter__icon { --flag: #317e6f; }
-.castle-filter:nth-of-type(n+10) .castle-filter__icon { --flag: #3d61a8; }
-.castle-filter:nth-of-type(n+14) .castle-filter__icon { --flag: #7b498e; }
-.castle-filter--latest .castle-filter__icon { --flag: #af5524; }
 
-.castle-filter__icon::before {
-  content: "";
-  position: absolute;
-  width: 19px;
-  height: 7px;
-  bottom: 4px;
-  border-radius: 45%;
-  background: #6d7962;
-  box-shadow: 0 1px #35433c;
-}
-.castle-filter__icon i {
-  position: relative;
-  width: 18px;
-  height: 15px;
-  margin-top: 2px;
-  background: linear-gradient(110deg, #e7d7ba 12%, #b7ab96 65%, #827b7c 66%);
-  clip-path: polygon(0 0, 21% 0, 21% 20%, 39% 20%, 39% 0, 60% 0, 60% 20%, 79% 20%, 79% 0, 100% 0, 100% 82%, 73% 100%, 0 92%);
-}
-.castle-filter__icon i::before {
-  content: "";
-  position: absolute;
-  bottom: 1px;
-  left: 6px;
-  width: 6px;
-  height: 7px;
-  border: 1px solid #6d5549;
-  border-bottom: 0;
-  border-radius: 4px 4px 0 0;
-  background: #3c333a;
-}
-.castle-filter__icon i::after {
-  content: "";
-  position: absolute;
-  top: 4px;
-  left: 6px;
-  width: 6px;
-  height: 5px;
-  background: var(--flag);
-  clip-path: polygon(0 0, 100% 0, 90% 70%, 50% 100%, 10% 70%);
+.castle-filter__icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 @media (max-width: 480px) {
   #publicFilters.castle-filters { gap: 6px; }
   #publicFilters.castle-filters .filter { gap: 5px; min-width: 69px; padding-inline: 7px; }
-  .castle-filter__icon { width: 25px; height: 25px; flex-basis: 25px; }
+  .castle-filter__icon { width: 32px; height: 32px; flex-basis: 32px; }
 }

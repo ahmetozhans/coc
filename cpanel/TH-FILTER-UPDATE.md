@@ -1,12 +1,11 @@
 # Mahanpro köy filtreleri
 
-ZIP'teki dosyaları cPanel'de aynı konumlara yükle:
+Mevcut TH3–TH19 filtrelerine görselleri eklemek için paketteki dosyaları cPanel'de şu konumlara yükle.
 
-1. public_html/th-filters.css
-2. public_html/app.js ve public_html/admin.js
-3. mahanpro-private/cms.php
-4. mahanpro-private/templates/bases.html ve mahanpro-private/templates/studio.html
+1. `public_html/assets/clan-castles/` klasörü
+2. `public_html/th-filters.css`
+3. `mahanpro-private/templates/bases.html`
 
-Mevcut dosyaları değiştirmeden önce yedekle. Ardından https://mahanpro.fun/bases sayfasında Tümü, TH12 ve TH19 filtrelerini dene. Yeni düğmeler mobilde alt satıra dizilir. Klan Kalesi ikonları sayfanın CSS’iyle çizilir.
+Ardından https://mahanpro.fun/bases sayfasında Tümü, TH12 ve TH19 filtrelerini dene. Her düğme ilgili belediye binasında ulaşılabilen en yüksek Klan Kalesi seviyesini gösterir. TH4 ve TH5 kale seviyesi 2'yi, TH6 ve TH7 kale seviyesi 3'ü paylaşır. Düğmeler mobilde alt satıra dizilir.
 
-TH19 bu sürümde köy galerisi ve Studio köy düzeni editöründe desteklenir. Galeride sonuç olması için gerçek ve doğrulanmış bir TH19 düzeninin mevcut yayın akışından geçmesi gerekir. ZIP içerik veya veritabanı güncellemesi içermez.
+Görseller ve seviye eşlemesi [ClashPerk Klan Kalesi sayfasından](https://wiki.clashperk.com/army/clan-castle) alınmıştır. Clash of Clans görselleri Supercell'e aittir. Mahanpro, Supercell ile bağlantısı olmayan bir hayran projesidir. [Supercell Hayran İçeriği Politikası](https://supercell.com/en/fan-content-policy/)
