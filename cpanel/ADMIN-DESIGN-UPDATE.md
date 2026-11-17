@@ -4,7 +4,7 @@ MySQL yönetici kurulumu yapılmışsa SQL çalıştırmana gerek yok. İlk kez 
 
 1. public_html/admin-access.css dosyasını cPanel'de aynı konuma yükle.
 2. Mevcut mahanpro-private/reviews.php dosyasını yedekle ve paketteki dosyayla değiştir.
-3. https://mahanpro.fun/admin adresini aç. Varsayılan kullanıcı adı admin. Daha önce oluşturduğun parola geçerli.
+3. https://mahanpro.fun/admin adresini aç. Varsayılan kullanıcı adı admin. Daha önce oluşturduğun parola geçerli. Girişten sonra mevcut tam yönetim paneli, İçerik Stüdyosu açılır. Öneri kartlarına panelin İçerik önerileri menüsünden ulaşabilirsin.
 
 Kullanıcı adını değiştirmek istersen özel mahanpro-private/config.php dosyasının return dizisine şu satırı ekle:
 

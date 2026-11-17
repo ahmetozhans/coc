@@ -209,7 +209,11 @@ function studio_route(): never
     header('Cache-Control: no-store');
     header('X-Robots-Tag: noindex, nofollow');
     header("Content-Security-Policy: default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'");
-    echo str_replace('<!-- STUDIO_CSRF -->', '<meta name="mahanpro-csrf" content="' . h($_SESSION['csrf']) . '">', $template);
+    echo str_replace(
+        ['<!-- STUDIO_CSRF -->', 'href="/admin">Önerileri incele', 'href="admin.html"'],
+        ['<meta name="mahanpro-csrf" content="' . h($_SESSION['csrf']) . '">', 'href="/admin?view=reviews">Önerileri incele', 'href="/studio"'],
+        $template
+    );
     exit;
 }
 
@@ -218,6 +222,10 @@ function admin_route(): never
     $authenticated = admin_session();
     if (session_status() !== PHP_SESSION_ACTIVE) {
         admin_page('<p>Yönetim paneli için HTTPS ve çalışan bir PHP oturumu gerekiyor.</p>', 503);
+    }
+    if ($authenticated && $_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['view'] ?? '') !== 'reviews') {
+        header('Location: /studio', true, 303);
+        exit;
     }
     $hash = admin_hash();
     $setupCode = config()['admin_setup_code'] ?? '';
@@ -260,7 +268,7 @@ function admin_route(): never
             if (admin_login_matches($_POST['username'] ?? null, $_POST['password'] ?? null, $username, $hash)) {
                 session_regenerate_id(true);
                 $_SESSION = ['admin_until' => time() + 3600, 'csrf' => bin2hex(random_bytes(32)), 'admin_proof' => hash('sha256', $hash)];
-                header('Location: /admin', true, 303);
+                header('Location: /studio', true, 303);
                 exit;
             }
         } elseif ($authenticated && $action === 'logout') {
@@ -286,7 +294,7 @@ function admin_route(): never
             }
             $write = $db->prepare('INSERT INTO content_reviews (proposal_id, fingerprint, decision, reviewer_id, reviewed_at) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE fingerprint = ?, decision = ?, reviewer_id = ?, reviewed_at = ?');
             $write->execute([$id, $fingerprint, $action, 'cpanel-admin', $now, $fingerprint, $action, 'cpanel-admin', $now]);
-            header('Location: /admin', true, 303);
+            header('Location: /admin?view=reviews', true, 303);
             exit;
         } else {
             admin_page('<p>İşlem geçersiz.</p>', 400);
