@@ -5,6 +5,7 @@ require dirname(__DIR__) . '/mahanpro-private/content.php';
 require dirname(__DIR__) . '/mahanpro-private/stats.php';
 require dirname(__DIR__) . '/mahanpro-private/reviews.php';
 require dirname(__DIR__) . '/mahanpro-private/cms.php';
+require dirname(__DIR__) . '/mahanpro-private/layout-detail.php';
 
 const PAGES = [
     '/' => ['index', 'Mahanpro | Clash of Clans Tools', 'Browse Clash of Clans village layouts, army builds and attack guides.'],
@@ -28,7 +29,7 @@ function cards(array $items, string $page): string
                 . ($image ? '<img src="' . h($image) . '" alt="' . $title . '" loading="lazy">' : '')
                 . '</div><div class="content-body"><h2>' . $title . '</h2><p>TH ' . $townHall
                 . ' · ' . h($item['type']) . '</p>'
-                . '<a href="/bases/' . h(rawurlencode($item['id'])) . '">Düzeni incele</a> '
+                . '<a href="' . h(layout_detail_url($item)) . '">Düzeni incele</a> '
                 . ($url ? '<a href="' . h($url) . '" class="button">Open in game</a>' : '')
                 . '</div></article>';
             continue;
@@ -71,7 +72,7 @@ function not_found(): never
 }
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-$detailId = preg_match('~^/bases/([A-Za-z0-9_-]{1,100})$~D', $path, $matches) === 1 ? $matches[1] : null;
+$detailId = preg_match('~^/bases/([A-Za-z0-9_-]{1,100})/?$~D', $path, $matches) === 1 ? $matches[1] : null;
 $normalized = $path === '/index.php' || $path === '/index.html'
     ? '/' : preg_replace('~(?:\.html|/)$~', '', $path);
 if (isset(PAGES[$normalized]) && $path !== $normalized) {
@@ -107,9 +108,23 @@ try {
         exit;
     }
     if ($path === '/sitemap.xml') {
+        $pdo = db();
+        $doc = cms_state($pdo)['document'];
+        if (!empty($doc->site->maintenance)) {
+            http_response_code(503);
+            header('Retry-After: 300');
+            exit;
+        }
+        $routes = array_filter(array_keys(PAGES), static function (string $route) use ($doc): bool {
+            $key = $route === '/' ? 'home' : ltrim($route, '/');
+            return ($doc->site->pages->$key->enabled ?? true) !== false;
+        });
+        if (in_array('/bases', $routes, true)) {
+            $routes = array_merge($routes, array_map('layout_detail_url', content($pdo, 'layout', $doc)));
+        }
         header('Content-Type: application/xml; charset=UTF-8');
         echo '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-        foreach (array_keys(PAGES) as $route) {
+        foreach ($routes as $route) {
             echo '<url><loc>' . h($base . ltrim($route, '/')) . '</loc></url>';
         }
         echo '</urlset>';
@@ -124,11 +139,13 @@ try {
         $pdo = db();
         $state = cms_state($pdo);
         $doc = $state['document'];
+        $layouts = array_map(static fn (array $item): array => array_replace($item, ['detailUrl' => layout_detail_url($item)]),
+            content($pdo, 'layout', $doc));
         $data = json_encode([
             'version' => 1,
             'revision' => $state['revision'],
             'site' => $doc->site,
-            'layouts' => content($pdo, 'layout', $doc),
+            'layouts' => $layouts,
             'guides' => content($pdo, 'guide', $doc),
         ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
         header('Content-Type: application/json; charset=UTF-8');
@@ -156,8 +173,7 @@ try {
         exit;
     }
     if ($detailId !== null) {
-        require dirname(__DIR__) . '/mahanpro-private/layout-detail.php';
-        render_layout_detail($detailId, content($pdo, 'layout', $doc), $base);
+        render_layout_detail($detailId, content($pdo, 'layout', $doc), $base, $path);
     }
     $title = ($settings->seoTitle ?? '') ?: $title;
     $description = ($settings->seoDescription ?? '') ?: $description;

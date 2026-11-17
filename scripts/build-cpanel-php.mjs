@@ -29,7 +29,8 @@ try {
   await writeFile(join(web, 'app.js'), app
     .replaceAll('attacks.html#guide-', '/attacks#guide-')
     .replace('Number(x.th)>18', 'Number(x.th)>19')
-    .replace('<div class="layout-actions">', '<div class="layout-actions"><a class="button small" href="/bases/\'+esc(encodeURIComponent(x.id))+\'">\'+(I18n.language===\'tr\'?\'Düzeni incele\':\'View layout\')+\'</a>'));
+    .replace('return {...provenance(x),id:', 'return {...provenance(x),detailUrl:x.detailUrl,id:')
+    .replace('<div class="layout-actions">', '<div class="layout-actions"><a class="button small" href="\'+esc(/^\\/bases\\/[a-z0-9-]+--[a-f0-9]{12}$/.test(x.detailUrl||\'\')?x.detailUrl:\'/bases/\'+encodeURIComponent(x.id))+\'">\'+(I18n.language===\'tr\'?\'Düzeni incele\':\'View layout\')+\'</a>'));
   const content = await readFile(join(source, 'site-content.js'), 'utf8');
   await writeFile(join(web, 'site-content.js'), content.replace(
     'https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site/api/content', '/api/content'
@@ -45,12 +46,13 @@ try {
     .replace(/<section data-panel="suggestions"[\s\S]*?<\/section>/,
       '<section data-panel="suggestions" id="suggestions" hidden><h1>İçerik önerileri</h1><p><a class="button primary" href="/admin">Önerileri incele</a></p></section>')
     .replace(/<script src="review-inbox\.js[^"]*" defer><\/script>/, '')
-    .replace(/src="admin\.js\?[^"]+"/, 'src="admin.js?v=th19"')
+    .replace(/src="admin\.js\?[^"]+"/, 'src="admin.js?v=base-seo"')
     .replace(/href="index\.html"/g, 'href="/"'));
   const admin = await readFile(join(source, 'admin.js'), 'utf8');
   await writeFile(join(web, 'admin.js'), admin
     .replace('https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site', '')
     .replace('Array.from({length:16},', 'Array.from({length:17},')
+    .replace("area('editDescription','Açıklama',x.description,160,2)", "area('editDescription','Detay sayfası açıklaması ve savunma notları',x.description,1200,5)")
     .replace("headers:{'Content-Type':'application/json'}", "headers:{'Content-Type':'application/json','X-Mahanpro-CSRF':document.querySelector('meta[name=mahanpro-csrf]').content}"));
   for (const name of ['index', 'bases', 'clan', 'attacks', 'armies', 'upgrade']) {
     let html = await readFile(join(source, name + '.html'), 'utf8');
@@ -72,7 +74,7 @@ try {
         });
         return open.replace('class="filters"', 'class="filters castle-filters"') + all + levels.join('') + close;
       }).replace('</head>', '<link rel="stylesheet" href="/th-filters.css?v=1"></head>')
-        .replace(/src="app\.js\?[^"]+"/, 'src="app.js?v=base-details"');
+        .replace(/src="app\.js\?[^"]+"/, 'src="app.js?v=base-seo"');
       html = html.replace(/(<div\b[^>]*\bid="publicGallery"[^>]*>)<div class="empty">.*?<\/div>/s,
         '$1<!-- MAHANPRO_CONTENT -->');
     }

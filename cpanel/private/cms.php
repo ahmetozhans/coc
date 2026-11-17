@@ -23,7 +23,7 @@ function check_record(mixed $item, string $kind): void
         require_cms(is_int($th) && $th >= 3 && $th <= 19 &&
             in_array($item->type ?? null, ['War', 'Farming', 'Trophy', 'Hybrid'], true) &&
             bounded_text($item->title ?? null, 70, true) &&
-            bounded_text($item->description ?? '', 160) &&
+            bounded_text($item->description ?? '', 1200) &&
             (($item->image ?? '') === '' || https_link($item->image) !== '') &&
             game_link($item->url ?? null, 'OpenLayout', 'id', '/^TH' . $th . ':[A-Za-z0-9:_-]+$/D') !== '');
         return;

@@ -7,6 +7,7 @@
   const share = document.getElementById('shareLink');
   const message = document.getElementById('detailMessage');
   const pageUrl = share.value;
+  share.hidden = true;
   const record = (...args) => window.MahanStats?.record(id, ...args);
   detail.querySelector('[data-game-open]')?.addEventListener('click', () => record('copy'));
 
@@ -16,12 +17,14 @@
       const isGame = button.dataset.copy === 'game';
       const value = isGame ? gameUrl : pageUrl;
       share.value = pageUrl;
+      share.hidden = true;
       try {
         await navigator.clipboard.writeText(value);
         if (isGame) record('copy');
         message.textContent = 'Bağlantı kopyalandı.';
       } catch {
         share.value = value;
+        share.hidden = false;
         share.focus();
         share.select();
         message.textContent = 'Bağlantıyı seçtim. Tarayıcının kopyalama komutunu kullanabilirsin.';
