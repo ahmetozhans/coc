@@ -120,8 +120,18 @@ try {
         exit;
     }
     if (!isset(PAGES[$path])) {
+        if ($path === '/api' || str_starts_with($path, '/api/')) {
+            json_response(['error' => 'not_found'], 404);
+        }
         http_response_code(404);
-        echo 'Page not found';
+        header('Content-Type: text/html; charset=UTF-8');
+        header('X-Robots-Tag: noindex, follow');
+        $notFound = dirname(__DIR__) . '/mahanpro-private/page-not-found.html';
+        if (is_readable($notFound)) {
+            readfile($notFound);
+        } else {
+            echo 'Sayfa bulunamadı.';
+        }
         exit;
     }
     [$file, $title, $description] = PAGES[$path];
