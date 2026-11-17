@@ -22,4 +22,15 @@ ensure(!initialize_admin_password($db, 'different-local-password'));
 $hash = $db->query('SELECT password_hash FROM admin_credentials WHERE id = 1')->fetchColumn();
 ensure(is_string($hash) && $hash !== 'local-test-password' && password_verify('local-test-password', $hash));
 ensure(!password_verify('different-local-password', $hash));
+ensure(admin_username() === 'admin' && admin_username('Mahan.Pro') === 'mahan.pro');
+ensure(admin_login_matches('ADMIN', 'local-test-password', 'admin', $hash));
+ensure(!admin_login_matches('guest', 'local-test-password', 'admin', $hash));
+ensure(!admin_login_matches('admin', 'different-local-password', 'admin', $hash));
+ensure(!admin_login_matches(['admin'], 'local-test-password', 'admin', $hash));
+try {
+    admin_username('<script>');
+    ensure(false);
+} catch (RuntimeException $error) {
+    ensure($error->getMessage() === 'Invalid configured administrator username');
+}
 echo "Admin password hashing and one-time initialization passed.\n";
