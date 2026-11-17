@@ -26,7 +26,9 @@ try {
     await cp(join(source, file), join(privateDir, file));
   }
   const app = await readFile(join(source, 'app.js'), 'utf8');
-  await writeFile(join(web, 'app.js'), app.replaceAll('attacks.html#guide-', '/attacks#guide-'));
+  await writeFile(join(web, 'app.js'), app
+    .replaceAll('attacks.html#guide-', '/attacks#guide-')
+    .replace('Number(x.th)>18', 'Number(x.th)>19'));
   const content = await readFile(join(source, 'site-content.js'), 'utf8');
   await writeFile(join(web, 'site-content.js'), content.replace(
     'https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site/api/content', '/api/content'
@@ -42,10 +44,12 @@ try {
     .replace(/<section data-panel="suggestions"[\s\S]*?<\/section>/,
       '<section data-panel="suggestions" id="suggestions" hidden><h1>İçerik önerileri</h1><p><a class="button primary" href="/admin">Önerileri incele</a></p></section>')
     .replace(/<script src="review-inbox\.js[^"]*" defer><\/script>/, '')
+    .replace(/src="admin\.js\?[^"]+"/, 'src="admin.js?v=th19"')
     .replace(/href="index\.html"/g, 'href="/"'));
   const admin = await readFile(join(source, 'admin.js'), 'utf8');
   await writeFile(join(web, 'admin.js'), admin
     .replace('https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site', '')
+    .replace('Array.from({length:16},', 'Array.from({length:17},')
     .replace("headers:{'Content-Type':'application/json'}", "headers:{'Content-Type':'application/json','X-Mahanpro-CSRF':document.querySelector('meta[name=mahanpro-csrf]').content}"));
   for (const name of ['index', 'bases', 'clan', 'attacks', 'armies', 'upgrade']) {
     let html = await readFile(join(source, name + '.html'), 'utf8');
@@ -53,6 +57,21 @@ try {
       .replace(/href="(index|bases|clan|attacks|armies|upgrade)\.html(?=["?#])/g,
         (_, page) => 'href="/' + (page === 'index' ? '' : page));
     if (name === 'bases') {
+      const filterGroup = /(<div class="filters" id="publicFilters"[^>]*>)([\s\S]*?)(<\/div>)/;
+      if (!filterGroup.test(html)) throw new Error('Town Hall filter region missing');
+      html = html.replace(filterGroup, (_, open, children, close) => {
+        const all = children.match(/<button\b[^>]*data-public-th="all"[^>]*>[\s\S]*?<\/button>/)?.[0];
+        if (!all) throw new Error('All Town Halls control missing');
+        const levels = Array.from({length: 17}, (_, index) => {
+          const level = index + 3;
+          const latest = level === 19 ? ' castle-filter--latest' : '';
+          return '<button type="button" class="filter castle-filter' + latest + '" data-public-th="' + level +
+            '" aria-pressed="false"><span class="castle-filter__icon" aria-hidden="true"><i></i></span><span>TH' +
+            level + '</span></button>';
+        });
+        return open.replace('class="filters"', 'class="filters castle-filters"') + all + levels.join('') + close;
+      }).replace('</head>', '<link rel="stylesheet" href="/th-filters.css?v=1"></head>')
+        .replace(/src="app\.js\?[^"]+"/, 'src="app.js?v=th19"');
       html = html.replace(/(<div\b[^>]*\bid="publicGallery"[^>]*>)<div class="empty">.*?<\/div>/s,
         '$1<!-- MAHANPRO_CONTENT -->');
     }

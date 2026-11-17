@@ -20,7 +20,7 @@ function check_record(mixed $item, string $kind): void
     require_cms(is_object($item) && content_id($item->id ?? null) && is_bool($item->hidden ?? null));
     if ($kind === 'layout') {
         $th = $item->th ?? null;
-        require_cms(is_int($th) && $th >= 3 && $th <= 18 &&
+        require_cms(is_int($th) && $th >= 3 && $th <= 19 &&
             in_array($item->type ?? null, ['War', 'Farming', 'Trophy', 'Hybrid'], true) &&
             bounded_text($item->title ?? null, 70, true) &&
             bounded_text($item->description ?? '', 160) &&
