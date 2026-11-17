@@ -65,6 +65,10 @@ if (isset(PAGES[$normalized]) && $path !== $normalized) {
 
 try {
     $base = config()['base_url'];
+    if ($path === '/api/clan') {
+        require dirname(__DIR__) . '/mahanpro-private/clan.php';
+        clan_route();
+    }
     if ($path === '/admin.html') {
         header('Location: /admin', true, 301);
         exit;

@@ -54,6 +54,10 @@ try {
       html = html.replace(/(<div\b[^>]*\bid="publicGallery"[^>]*>)<div class="empty">.*?<\/div>/s,
         '$1<!-- MAHANPRO_CONTENT -->');
     }
+    if (name === 'clan') {
+      html = html.replace(' Live statistics are not connected.</p>', '</p>')
+        .replace('</body>', '<script src="/clan-live.js?v=1" defer></script></body>');
+    }
     if (name === 'attacks' || name === 'armies') {
       html = html.replace(/(<div class="guide-grid" id="guideGallery">).*?(<\/div>(?:<section class="panel practice-panel">|<\/div><\/main>))/s,
         '$1<!-- MAHANPRO_CONTENT -->$2');
