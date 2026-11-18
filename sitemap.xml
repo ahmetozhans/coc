@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://ahmetozhans.github.io/coc/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url><url><loc>https://ahmetozhans.github.io/coc/clan.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url><url><loc>https://ahmetozhans.github.io/coc/bases.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url><url><loc>https://ahmetozhans.github.io/coc/attacks.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url><url><loc>https://ahmetozhans.github.io/coc/upgrade.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url><url><loc>https://ahmetozhans.github.io/coc/armies.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url></urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://mahanpro.fun/</loc></url>
+  <url><loc>https://mahanpro.fun/bases.html</loc></url>
+  <url><loc>https://mahanpro.fun/attacks.html</loc></url>
+  <url><loc>https://mahanpro.fun/armies.html</loc></url>
+  <url><loc>https://mahanpro.fun/clan.html</loc></url>
+  <url><loc>https://mahanpro.fun/upgrade.html</loc></url>
+</urlset>

@@ -6,8 +6,8 @@
     "home": {
       "label": "Ana sayfa",
       "file": "index.html",
-      "seoTitle": "Night Village | Mahanpro",
-      "seoDescription": "Free unofficial Clash of Clans base layouts, clan tools, attack guides and builder planner.",
+      "seoTitle": "Clash of Clans Base Layouts & Attack Guides | Mahanpro",
+      "seoDescription": "Explore Clash of Clans base layouts, Town Hall war and farming bases, army setups and attack guides on Mahanpro, an independent fan-made toolkit.",
       "texts": [
         {
           "id": "home-0",
@@ -128,8 +128,8 @@
     "bases": {
       "label": "Köyler",
       "file": "bases.html",
-      "seoTitle": "Find your next fortress. | Mahanpro",
-      "seoDescription": "Browse admin-published layouts and save your favorites.",
+      "seoTitle": "Clash of Clans Base Layouts by Town Hall | Mahanpro",
+      "seoDescription": "Browse Clash of Clans base layouts by Town Hall. Compare war, farming, trophy and hybrid bases, preview designs and open available in-game layout links.",
       "texts": [
         {
           "id": "bases-0",
@@ -172,8 +172,8 @@
     "clan": {
       "label": "Klanlar",
       "file": "clan.html",
-      "seoTitle": "Every clan has a story. | Mahanpro",
-      "seoDescription": "Create an official in-game clan profile link.",
+      "seoTitle": "Clash of Clans Clan Profile Link Tool | Mahanpro",
+      "seoDescription": "Find a Clash of Clans clan profile using its clan tag and open the official in-game link. Mahanpro does not provide live clan statistics.",
       "texts": [
         {
           "id": "clan-0",
@@ -234,8 +234,8 @@
     "attacks": {
       "label": "Rehberler",
       "file": "attacks.html",
-      "seoTitle": "A good attack starts here. | Mahanpro",
-      "seoDescription": "Practical guides to improve your battle planning.",
+      "seoTitle": "Clash of Clans Attack Strategies & Guides | Mahanpro",
+      "seoDescription": "Explore Clash of Clans attack strategies, funneling tips and Town Hall guides to plan your attacks and improve your in-game decision-making.",
       "texts": [
         {
           "id": "attacks-0",
@@ -272,8 +272,8 @@
     "upgrade": {
       "label": "Yükseltmeler",
       "file": "upgrade.html",
-      "seoTitle": "Keep your village growing. | Mahanpro",
-      "seoDescription": "Estimate builder time and resources with your own values.",
+      "seoTitle": "Clash of Clans Upgrade & Builder Planner | Mahanpro",
+      "seoDescription": "Plan Clash of Clans upgrades with builder scheduling and estimated finish times. Enter your own costs and durations to manage your upgrade queue.",
       "texts": [
         {
           "id": "upgrade-0",
