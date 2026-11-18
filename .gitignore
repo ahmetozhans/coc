@@ -1,3 +1,5 @@
 node_modules/
 __pycache__/
 *.pyc
+/cpanel/private/config.php
+/cpanel/private/collector-images/

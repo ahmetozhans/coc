@@ -1,0 +1,80 @@
+{
+  "finder": [
+    {
+      "key": "yt-31EHvKbl7B4-b3",
+      "th": 19,
+      "type": "Trophy",
+      "url": "https://link.clashofclans.com/en?action=OpenLayout&id=TH19%3AHV%3AAAAAKAAAAAK-E3Pc0jlp0xCgmuBJnkhw",
+      "gameId": "TH19:HV:AAAAKAAAAAK-E3Pc0jlp0xCgmuBJnkhw",
+      "imageUrl": "https://img.cocbasefinder.com/yt-31EHvKbl7B4-b3.webp?v=112",
+      "sourceUrl": "https://cocbasefinder.com/base/yt-31EHvKbl7B4-b3",
+      "sourcePublishedAt": "2026-11-16",
+      "sourceTitle": "TH19 trophy yt-31EHvKbl7B4-b3",
+      "sourceUpdatedAt": null
+    },
+    {
+      "key": "yt-96Z1_McPR30-b1",
+      "th": 19,
+      "type": "War",
+      "url": "https://link.clashofclans.com/en?action=OpenLayout&id=TH19%3AWB%3AAAAAOQAAAAKC-2NKlMSkjU8RXBJxSEXZ",
+      "gameId": "TH19:WB:AAAAOQAAAAKC-2NKlMSkjU8RXBJxSEXZ",
+      "imageUrl": "https://img.cocbasefinder.com/yt-96Z1_McPR30-b1.webp?v=112",
+      "sourceUrl": "https://cocbasefinder.com/base/yt-96Z1_McPR30-b1",
+      "sourcePublishedAt": "2026-11-16",
+      "sourceTitle": "TH19 war yt-96Z1_McPR30-b1",
+      "sourceUpdatedAt": null
+    }
+  ],
+  "loot": [
+    {
+      "key": "03ee235c-ada3-4093-855e-aa560ee5efe7",
+      "th": 19,
+      "type": "Farming",
+      "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH19%3AHV%3AAAAAKAAAAAK-FdBxVwb1HOXrlxw3bO4z",
+      "gameId": "TH19:HV:AAAAKAAAAAK-FdBxVwb1HOXrlxw3bO4z",
+      "imageUrl": "https://assets.clashloot.gg/base-screens/398a791e-72ec-48a2-83b6-b991a3023927.webp",
+      "sourceUrl": "https://clashloot.gg/coc/bases/th19-farming-th19-farming-base-with-central-town-hall-core-and-layered-resource-protection-layout-clash-of-clans-03ee235c-ada3-4093-855e-aa560ee5efe7",
+      "sourcePublishedAt": "2026-11-17T07:28:09.620124+00:00",
+      "sourceTitle": "TH19 Farming Base with Central Town Hall Core and Layered Resource Protection Layout – Clash of Clans",
+      "sourceUpdatedAt": "2026-11-17T07:28:09.620124+00:00"
+    },
+    {
+      "key": "07d76e1d-e18e-4310-bf22-1a4753de7d16",
+      "th": 19,
+      "type": "Farming",
+      "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH19%3AHV%3AAAAAKAAAAAK-FcGEpqznYX3GXws3-I3Z",
+      "gameId": "TH19:HV:AAAAKAAAAAK-FcGEpqznYX3GXws3-I3Z",
+      "imageUrl": "https://assets.clashloot.gg/base-screens/6295e10f-673a-4d4e-b710-23a097b9d6c4.webp",
+      "sourceUrl": "https://clashloot.gg/coc/bases/th19-farming-th19-farming-base-with-dense-inner-compartments-and-protected-storage-ring-design-clash-of-clans-07d76e1d-e18e-4310-bf22-1a4753de7d16",
+      "sourcePublishedAt": "2026-11-17T07:27:44.473993+00:00",
+      "sourceTitle": "TH19 Farming Base with Dense Inner Compartments and Protected Storage Ring Design – Clash of Clans",
+      "sourceUpdatedAt": "2026-11-17T07:27:44.473993+00:00"
+    }
+  ],
+  "clashly": [
+    {
+      "key": "GCGfY3Beup",
+      "th": 19,
+      "type": "Trophy",
+      "url": "https://link.clashofclans.com/en?action=OpenLayout&id=TH19%3AWB%3AAAAAPAAAAAJp8ERsH4rrZ6BKwRD_YOya",
+      "gameId": "TH19:WB:AAAAPAAAAAJp8ERsH4rrZ6BKwRD_YOya",
+      "imageUrl": "https://storage.clashly.app/97121e1819d62812074745e0f6bd52a7_image.jpg",
+      "sourceUrl": "https://clashly.app/layout/GCGfY3Beup",
+      "sourcePublishedAt": "2026-11-16T13:54:00.302Z",
+      "sourceTitle": "TH19 legend GCGfY3Beup",
+      "sourceUpdatedAt": null
+    },
+    {
+      "key": "VMSIiTpomZ",
+      "th": 19,
+      "type": "War",
+      "url": "https://link.clashofclans.com/en/?action=OpenLayout&id=TH19%3AHV%3AAAAAVgAAAAH9iZ_3rEMzuUwkznm1elhr",
+      "gameId": "TH19:HV:AAAAVgAAAAH9iZ_3rEMzuUwkznm1elhr",
+      "imageUrl": "https://storage.clashly.app/72ee3d6e875e79a6cc42f71595674782_image.jpg",
+      "sourceUrl": "https://clashly.app/layout/VMSIiTpomZ",
+      "sourcePublishedAt": "2026-11-16T14:47:45.257Z",
+      "sourceTitle": "TH19 war VMSIiTpomZ",
+      "sourceUpdatedAt": null
+    }
+  ]
+}

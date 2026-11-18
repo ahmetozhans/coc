@@ -205,6 +205,8 @@ function studio_route(): never
     if ($template === false) {
         throw new RuntimeException('Studio template missing');
     }
+    $template = preg_replace('~(<nav\b[^>]*aria-label="Yönetim"[^>]*>)~',
+        '$1<a class="button small" href="/admin/collector">Otomatik Köy Toplama</a>', $template, 1);
     header('Content-Type: text/html; charset=UTF-8');
     header('Cache-Control: no-store');
     header('X-Robots-Tag: noindex, nofollow');

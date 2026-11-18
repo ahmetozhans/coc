@@ -14,17 +14,17 @@ function layout_detail_url(array $layout): string
 
 function layout_category_label(string $category): string
 {
-    return ['War' => 'Savaş', 'Farming' => 'Ganimet', 'Trophy' => 'Kupa', 'Hybrid' => 'Karma'][$category] ?? $category;
+    return $category;
 }
 
 function layout_detail_selection(string $id, array $catalog): ?array
 {
-    $catalog = array_values(array_filter($catalog, static fn (array $item): bool => empty($item['hidden'])));
+    $catalog = array_values(array_filter($catalog, static fn (array $item): bool => empty($item['hidden']) || !empty($item['archived'])));
     foreach ($catalog as $index => $layout) {
         if ($layout['id'] !== $id) {
             continue;
         }
-        $related = array_values(array_filter($catalog, static fn (array $item): bool => $item['id'] !== $id));
+        $related = array_values(array_filter($catalog, static fn (array $item): bool => $item['id'] !== $id && empty($item['hidden']) && empty($item['archived'])));
         $score = static fn (array $item): int => ((int) $item['th'] === (int) $layout['th'] ? 2 : 0)
             + ($item['type'] === $layout['type'] ? 1 : 0);
         usort($related, static fn (array $a, array $b): int => $score($b) <=> $score($a));
@@ -40,7 +40,7 @@ function layout_detail_request(string $segment, array $catalog): ?array
         return $selected;
     }
     $matches = array_values(array_filter($catalog, static fn (array $layout): bool =>
-        empty($layout['hidden']) && str_ends_with(layout_detail_url($layout), '--' . $match[1])));
+        (empty($layout['hidden']) || !empty($layout['archived'])) && str_ends_with(layout_detail_url($layout), '--' . $match[1])));
     return count($matches) === 1 ? layout_detail_selection($matches[0]['id'], $catalog) : null;
 }
 
@@ -48,20 +48,20 @@ function layout_notes(string $type, int $townHall): array
 {
     return match ($type) {
         'War' => [
-            "Bu düzen TH$townHall için savaş kategorisinde listeleniyor. Oyunda kurduktan sonra bir dostluk mücadelesiyle farklı giriş yönlerini dene.",
-            ['Belediye binasına en kısa giriş yollarını karşılaştır.', 'Rakibin tek bir girişten birden çok önemli savunmaya ulaşıp ulaşmadığını kontrol et.'],
+            "This layout is listed as a TH$townHall war base. Import it into the game and test different entry points in a friendly challenge.",
+            ['Compare the shortest routes to the Town Hall.', 'Check whether a single entry exposes several important defenses.'],
         ],
         'Farming' => [
-            "Bu düzen TH$townHall için ganimet kategorisinde listeleniyor. Kullanırken korumak istediğin depoların konumuna öncelik ver.",
-            ['Depolardan kaçına dış çeperden ulaşılabildiğine bak.', 'Birden fazla deponun aynı saldırıyla kolayca erişilebilir olup olmadığını kontrol et.'],
+            "This layout is listed as a TH$townHall farming base. Focus on the placement of the resource storages you want to protect.",
+            ['Check how many storages can be reached from the outer edge.', 'Look for routes that expose several storages to the same attack.'],
         ],
         'Trophy' => [
-            "Bu düzen TH$townHall için kupa kategorisinde listeleniyor. Savunma tekrarlarında rakibin ilk yıldızını hangi yoldan aldığını gözlemle.",
-            ['Rakibin dış binalardan ne kadar hızlı yıkım yüzdesi topladığını izle.', 'Belediye binasına giden yaklaşımları hava ve kara ordularıyla ayrı ayrı dene.'],
+            "This layout is listed as a TH$townHall trophy base. Use defense replays to see how attackers reach their first star.",
+            ['Watch how quickly attackers gain destruction from outside buildings.', 'Test air and ground approaches to the Town Hall separately.'],
         ],
         default => [
-            "Bu düzen TH$townHall için karma kategoride listeleniyor. Önceliğinin ganimet korumak mı, kupa savunmak mı olduğuna göre test et.",
-            ['Belediye binası ve depolara giden yolları ayrı ayrı izle.', 'Önce bir dostluk mücadelesiyle dene, sonra tuzak ve dış bina yerleşimine karar ver.'],
+            "This layout is listed as a TH$townHall hybrid base. Test it against your trophy and resource protection priorities.",
+            ['Review routes to the Town Hall and storages separately.', 'Try a friendly challenge before adjusting traps and outside buildings.'],
         ],
     };
 }
@@ -90,19 +90,10 @@ function layout_detail_shell(string $galleryTemplate): array
         $fragments[$name] = $match[0];
     }
     $fragments['theme'] = str_replace('href="mahanpro-night.css', 'href="/mahanpro-night.css', $fragments['theme']);
-    // Detail pages are rendered in Turkish and do not use the gallery's language switcher.
+    // Detail pages use English and share the gallery navigation.
     $fragments['header'] = preg_replace('~<div class="header-actions">.*?</div>~s', '', $fragments['header']);
-    $translations = [
-        'Mahanpro home' => 'Mahanpro ana sayfa', 'Main navigation' => 'Ana menü', 'Mobile navigation' => 'Mobil menü',
-        '>Home<' => '>Ana sayfa<', '>Bases<' => '>Köyler<', '>Clans<' => '>Klanlar<',
-        '>Armies<' => '>Ordular<', '>Guides<' => '>Rehberler<', '>Upgrades<' => '>Yükseltmeler<',
-        '>Base Gallery<' => '>Köy düzenleri<', '>Attack Academy<' => '>Saldırı rehberleri<',
-        'YOUR NEXT ADVENTURE' => 'KEŞFET', 'Fan Content Policy' => 'Hayran İçeriği Politikası',
-        'Unofficial fan project. Not affiliated with Supercell.' => 'Supercell ile bağlantısı olmayan bir hayran projesi.',
-        '<span>Built for the love of the village.</span>' => '', 'aria-current="page"' => 'aria-current="location"',
-    ];
     foreach (['header', 'footer', 'mobile'] as $name) {
-        $fragments[$name] = strtr($fragments[$name], $translations);
+        $fragments[$name] = str_replace('aria-current="page"', 'aria-current="location"', $fragments[$name]);
     }
     return $fragments;
 }
@@ -127,22 +118,31 @@ function render_layout_detail(string $segment, array $catalog, string $base, ?st
     $image = https_link($layout['image'] ?? null);
     $game = game_link($layout['url'] ?? null, 'OpenLayout', 'id', '/^TH' . $townHall . ':[A-Za-z0-9:_-]+$/D');
     $description = trim((string) ($layout['description'] ?? ''));
+    $verification = !empty($layout['inGameVerifiedAt']) && hash_equals(
+        $layout['verificationHash'] ?? '', hash('sha256', canonical_json((object) ['url' => $layout['url'], 'image' => $layout['image']])))
+        ? $layout['inGameVerifiedAt'] : null;
     $canonical = rtrim($base, '/') . $path;
-    $summary = layout_meta_summary($description, "$title. Clash of Clans TH$townHall $category düzeninin önizlemesini, oyun bağlantısını ve savunma notlarını incele.");
+    $summary = layout_meta_summary($description, "$title. Clash of Clans TH$townHall $category base layout preview, official game link and defense notes.");
     [$defaultDescription, $tips] = layout_notes($layout['type'], $townHall);
     $trail = [
-        ['name' => 'Ana sayfa', 'url' => $base],
-        ['name' => 'Köy düzenleri', 'url' => $base . 'bases'],
+        ['name' => 'Home', 'url' => $base],
+        ['name' => 'Base layouts', 'url' => $base . 'bases'],
         ['name' => $title, 'url' => $canonical],
     ];
     $breadcrumbs = ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList',
         'itemListElement' => array_map(static fn (array $item, int $index): array =>
             ['@type' => 'ListItem', 'position' => $index + 1, 'name' => $item['name'], 'item' => $item['url']],
             $trail, array_keys($trail))];
+    $pageSchema = ['@context' => 'https://schema.org', '@type' => 'WebPage', '@id' => $canonical,
+        'url' => $canonical, 'name' => $title, 'description' => $summary, 'inLanguage' => 'en',
+        'isPartOf' => ['@type' => 'WebSite', 'name' => 'Mahanpro', 'url' => $base]];
+    if ($image) {
+        $pageSchema['primaryImageOfPage'] = ['@type' => 'ImageObject', 'contentUrl' => $image];
+    }
     header('Content-Type: text/html; charset=UTF-8');
     ?>
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -150,7 +150,7 @@ function render_layout_detail(string $segment, array $catalog, string $base, ?st
   <meta name="description" content="<?= h($summary) ?>">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mahanpro">
-  <meta property="og:locale" content="tr_TR">
+  <meta property="og:locale" content="en_US">
   <meta property="og:title" content="<?= h($title) ?> | Mahanpro">
   <meta property="og:description" content="<?= h($summary) ?>">
   <meta property="og:url" content="<?= h($canonical) ?>">
@@ -160,19 +160,21 @@ function render_layout_detail(string $segment, array $catalog, string $base, ?st
   <?= $shell['theme'] ?>
   <link rel="stylesheet" href="/layout-detail.css?v=3">
   <script src="/metrics.js?v=detail-1" defer></script>
-  <script src="/layout-detail.js?v=2" defer></script>
+  <script src="/layout-detail.js?v=collector-en-1" defer></script>
   <script type="application/ld+json"><?= json_encode($breadcrumbs, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
-  <title><?= h($title) ?> | Clash of Clans Köy Düzenleri – Mahanpro</title>
+  <script type="application/ld+json"><?= json_encode($pageSchema, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
+  <title><?= h($title) ?> | Clash of Clans Base Layouts – Mahanpro</title>
 </head>
 <body class="layout-detail-page">
-  <a class="skip-link" href="#layoutDetail">İçeriğe geç</a>
+  <a class="skip-link" href="#layoutDetail">Skip to content</a>
   <?= $shell['header'] ?>
   <main id="layoutDetail" data-id="<?= h($id) ?>" data-game-url="<?= h($game) ?>">
     <div class="page-banner">
       <div class="container banner-content detail-heading">
-        <nav class="detail-crumb" aria-label="Gezinme yolu"><a href="/">Ana sayfa</a><span aria-hidden="true">/</span><a href="/bases">Köy düzenleri</a></nav>
+        <nav class="detail-crumb" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/bases">Base layouts</a></nav>
         <h1><?= h($title) ?></h1>
         <div class="detail-chips"><span class="chip">TH<?= $townHall ?></span><span class="chip"><?= h($category) ?></span></div>
+        <p><?= !empty($layout['archived']) ? 'Archived layout · ' : '' ?><?= $verification ? 'Verified in game · ' . h($verification) : 'Unverified' ?></p>
       </div>
     </div>
     <div class="container page-content">
@@ -180,57 +182,59 @@ function render_layout_detail(string $segment, array $catalog, string $base, ?st
         <div class="detail-main">
           <figure class="detail-preview layout-card" data-layout-id="<?= h($id) ?>">
             <?php if ($image): ?>
-              <a href="<?= h($image) ?>" target="_blank" rel="noopener noreferrer" aria-label="Düzen görselini tam boy aç">
+              <a href="<?= h($image) ?>" target="_blank" rel="noopener noreferrer" aria-label="Open the full-size layout image">
                 <img src="<?= h($image) ?>" alt="<?= h($title) ?>" fetchpriority="high">
-                <span class="zoom-label chip" aria-hidden="true">↗ Tam boy</span>
+                <span class="zoom-label chip" aria-hidden="true">↗ Full size</span>
               </a>
             <?php else: ?>
-              <p class="hero-empty">Bu düzen için önizleme bulunmuyor.</p>
+              <p class="hero-empty">No preview is available for this layout.</p>
             <?php endif; ?>
           </figure>
           <?php if ($game): ?>
             <div class="action-row layout-controls">
-              <a class="button primary" data-game-open href="<?= h($game) ?>" target="_blank" rel="noopener noreferrer">Oyunda aç ↗</a>
-              <button class="button" type="button" data-copy="game" hidden>Bağlantıyı kopyala</button>
-              <button class="button" type="button" data-favorite data-favorite-url="<?= h($game) ?>" aria-pressed="false" hidden>♡ Favoriye ekle</button>
+              <a class="button primary" data-game-open href="<?= h($game) ?>" target="_blank" rel="noopener noreferrer">Open in game ↗</a>
+              <button class="button" type="button" data-copy="game" hidden>Copy game link</button>
+              <button class="button" type="button" data-favorite data-favorite-url="<?= h($game) ?>" aria-pressed="false" hidden>♡ Add to favorites</button>
             </div>
           <?php endif; ?>
           <section class="panel layout-notes">
-            <h2>Düzen açıklaması</h2>
+            <h2>About this layout</h2>
             <p class="description"><?= h($description === '' ? $defaultDescription : $description) ?></p>
-            <h3>Savunma notları</h3>
+            <h3>Defense notes</h3>
             <ul><?php foreach ($tips as $tip): ?><li><?= h($tip) ?></li><?php endforeach; ?></ul>
           </section>
           <section class="panel share">
-            <h2>Bu düzeni paylaş</h2>
+            <h2>Share this layout</h2>
             <div class="action-row">
               <a class="button" href="<?= h('https://wa.me/?text=' . rawurlencode($title . ' ' . $canonical)) ?>" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-              <button class="button" type="button" data-copy="page" hidden>Sayfa bağlantısını kopyala</button>
+              <button class="button" type="button" data-copy="page" hidden>Copy page link</button>
             </div>
-            <input id="shareLink" class="share-link" aria-label="Bu düzenin sayfa bağlantısı" type="url" value="<?= h($canonical) ?>" readonly>
+            <input id="shareLink" class="share-link" aria-label="Layout page URL" type="url" value="<?= h($canonical) ?>" readonly>
           </section>
           <p class="message" id="detailMessage" aria-live="polite"></p>
           <?php if ($previous || $next): ?>
-            <nav class="directions" aria-label="Komşu düzenler">
-              <?php if ($previous): ?><a href="<?= h(layout_detail_url($previous)) ?>">← Önceki düzen</a><?php endif; ?>
-              <?php if ($next): ?><a class="next" href="<?= h(layout_detail_url($next)) ?>">Sonraki düzen →</a><?php endif; ?>
+            <nav class="directions" aria-label="More layouts">
+              <?php if ($previous): ?><a href="<?= h(layout_detail_url($previous)) ?>">← Previous layout</a><?php endif; ?>
+              <?php if ($next): ?><a class="next" href="<?= h(layout_detail_url($next)) ?>">Next layout →</a><?php endif; ?>
             </nav>
           <?php endif; ?>
         </div>
         <aside class="detail-side">
           <section class="panel">
-            <h2>Düzen bilgileri</h2>
+            <h2>Layout details</h2>
             <dl class="specs" data-stat-layout="<?= h($id) ?>">
-              <div><dt>Belediye binası</dt><dd>TH<?= $townHall ?></dd></div>
-              <div><dt>Tür</dt><dd><?= h($category) ?></dd></div>
-              <div><dt>Görüntülenme</dt><dd data-stat="views">—</dd></div>
-              <div><dt>Oyuna açma / kopyalama</dt><dd data-stat="downloads">—</dd></div>
-              <div><dt>Aktif favori</dt><dd data-stat="favorites">—</dd></div>
+              <div><dt>Town Hall</dt><dd>TH<?= $townHall ?></dd></div>
+              <div><dt>Category</dt><dd><?= h($category) ?></dd></div>
+              <div><dt>Last checked</dt><dd><?= h($layout['lastCheckedAt'] ?? 'Not recorded') ?></dd></div>
+              <div><dt>In-game verification</dt><dd><?= $verification ? h($verification) : 'Unverified' ?></dd></div>
+              <div><dt>Views</dt><dd data-stat="views">—</dd></div>
+              <div><dt>Game opens / copies</dt><dd data-stat="downloads">—</dd></div>
+              <div><dt>Active favorites</dt><dd data-stat="favorites">—</dd></div>
             </dl>
             <p class="message" id="statsStatus" aria-live="polite"></p>
           </section>
           <?php if ($related): ?>
-            <section class="panel"><h2>Benzer köy düzenleri</h2><div class="related">
+            <section class="panel"><h2>Similar base layouts</h2><div class="related">
               <?php foreach ($related as $item): $thumb = https_link($item['image'] ?? null); ?>
                 <a class="related-card layout-card" href="<?= h(layout_detail_url($item)) ?>">
                   <?php if ($thumb): ?><img src="<?= h($thumb) ?>" alt="" loading="lazy" width="180" height="120"><?php endif; ?>

@@ -1,0 +1,27 @@
+.collector-page h1 { font-size: clamp(1.8rem, 4vw, 3rem); }
+.collector-tabs, .collector-counts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.collector-counts { margin: 16px 0; }
+.collector-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+.collector-grid .panel { margin: 0; }
+.collector-card img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: contain; margin-block: 16px; background: var(--bg); border-radius: 12px; }
+.collector-card h2 { font-size: 1.4rem; }
+.collector-card p, .collector-card a { overflow-wrap: anywhere; }
+.collector-card p { margin-block: 12px; white-space: pre-line; }
+.collector-card p a { color: var(--purple); text-decoration: underline; }
+.collector-form { display: grid; gap: 16px; margin-block: 20px; }
+.collector-form label { display: grid; gap: 6px; }
+.collector-form label:has(input[type=checkbox]) { display: flex; align-items: center; gap: 12px; }
+.collector-form input:not([type=checkbox]), .collector-form textarea { width: 100%; min-height: 44px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); padding: 10px; color: var(--text); }
+.collector-form textarea { resize: vertical; }
+.collector-form .button { justify-self: start; }
+.collector-page input[type=checkbox] { width: 20px; height: 20px; flex: 0 0 auto; accent-color: var(--purple); }
+.collector-notice { padding: 16px; border: 1px solid var(--gold); border-radius: 10px; margin-bottom: 20px; }
+.collector-confirm { display: flex; align-items: start; gap: 10px; margin-bottom: 16px; }
+#collector-review { margin-bottom: 24px; }
+#collector-review .button { margin: 0 8px 8px 0; }
+.collector-archive { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; border-bottom: 1px solid var(--border); }
+.collector-archive a { overflow-wrap: anywhere; }
+@media (max-width: 760px) {
+  .collector-grid { grid-template-columns: minmax(0, 1fr); }
+  .collector-archive { align-items: start; flex-direction: column; }
+}

@@ -43,5 +43,5 @@ $shell = layout_detail_shell($galleryTemplate);
 confirm_detail(str_contains($shell['theme'], 'href="/mahanpro-night.css'));
 confirm_detail(str_contains($shell['header'], 'class="top-nav"') && !str_contains($shell['header'], 'id="language"'));
 confirm_detail(str_contains($shell['mobile'], 'aria-current="location"'));
-confirm_detail(str_contains($shell['footer'], 'Hayran İçeriği Politikası'));
+confirm_detail(str_contains($shell['footer'], 'Fan Content Policy'));
 render_layout_detail('test-layout', $catalog, 'https://mahanpro.fun/', galleryTemplate: $galleryTemplate);

@@ -29,7 +29,7 @@ function cards(array $items, string $page): string
                 . ($image ? '<img src="' . h($image) . '" alt="' . $title . '" loading="lazy">' : '')
                 . '</div><div class="content-body"><h2>' . $title . '</h2><p>TH ' . $townHall
                 . ' · ' . h($item['type']) . '</p>'
-                . '<a href="' . h(layout_detail_url($item)) . '">Düzeni incele</a> '
+                . '<a href="' . h(layout_detail_url($item)) . '">View layout</a> '
                 . ($url ? '<a href="' . h($url) . '" class="button">Open in game</a>' : '')
                 . '</div></article>';
             continue;
@@ -82,6 +82,10 @@ if (isset(PAGES[$normalized]) && $path !== $normalized) {
 
 try {
     $base = config()['base_url'];
+    if ($path === '/admin/collector') {
+        require dirname(__DIR__) . '/mahanpro-private/collector-admin.php';
+        collector_admin_route();
+    }
     if ($path === '/api/clan') {
         require dirname(__DIR__) . '/mahanpro-private/clan.php';
         clan_route();
@@ -173,7 +177,7 @@ try {
         exit;
     }
     if ($detailId !== null) {
-        render_layout_detail($detailId, content($pdo, 'layout', $doc), $base, $path);
+        render_layout_detail($detailId, content($pdo, 'layout', $doc, true), $base, $path);
     }
     $title = ($settings->seoTitle ?? '') ?: $title;
     $description = ($settings->seoDescription ?? '') ?: $description;

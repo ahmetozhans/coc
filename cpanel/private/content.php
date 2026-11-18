@@ -53,7 +53,7 @@ function content(PDO $db, string $kind, ?object $document = null, bool $includeH
     }
     $rows = [];
     foreach ($records as $row) {
-        if (!$includeHidden && !empty($row['hidden'])) {
+        if (!$includeHidden && (!empty($row['hidden']) || !empty($row['archived']))) {
             continue;
         }
         if ($kind === 'layout' && isset($row['image'])) {
