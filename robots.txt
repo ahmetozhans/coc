@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://ahmetozhans.github.io/coc/sitemap.xml
+
+Sitemap: https://mahanpro.fun/sitemap.xml
