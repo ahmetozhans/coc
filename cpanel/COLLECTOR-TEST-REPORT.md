@@ -58,3 +58,9 @@ Installer tests verified unique-context three-way application with an unrelated 
 ## Studio integration follow-up
 
 Setup and collector management now render inside the existing Studio workspace, reached through its native Otomatik Köy Toplama navigation item. Forms and queue tabs load into the same workspace. The existing administrator script receives bounded integration hooks, preserving its other navigation, dirty-form confirmation and save handlers. The easy package can be built from an inspected live administrator JavaScript snapshot to retain current changes. Existing private files still go through the installer merge checks. The setup PHP address is used as an internal authenticated handler.
+
+## English-only public site follow-up
+
+The public website now ignores stored Turkish language preferences and browser locale, removes language controls and keeps its interface in English. Admin/Studio remains Turkish. English CMS fields are used and standard legacy Turkish layout titles are projected into English while retaining the original canonical paths and stored source data.
+
+Tests cover all six public page types with Turkish browser/storage settings, the translated 404 page, English CMS/layout rendering and unchanged administrator localization. Chromium exercised seven public routes at 1440px and 390px with no Turkish UI text, language selector or horizontal overflow. Existing regression assertions were updated for the new English-only behavior. PHP tests verify stable layout identities, approval metadata and canonical URLs. Installer receipts now identify the release so this update can be applied through an already installed Studio.

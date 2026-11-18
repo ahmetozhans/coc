@@ -54,7 +54,19 @@ function collector_setup_plan(string $target, string $package): array
                 continue;
             }
             try {
-                $next = collector_setup_merge($current, $file['edits'] ?? []);
+                $candidates = array_merge([$file['edits'] ?? []], $file['alternateEdits'] ?? []);
+                $next = null;
+                foreach ($candidates as $edits) {
+                    try {
+                        $next = collector_setup_merge($current, $edits);
+                        break;
+                    } catch (RuntimeException) {
+                        // Try the next known installed release without changing the live bytes.
+                    }
+                }
+                if ($next === null) {
+                    throw new RuntimeException('Canlı değişiklikler bilinen sürümlerle çakışıyor.');
+                }
                 $merged = true;
             } catch (RuntimeException) {
                 $conflicts[] = $file['path'];

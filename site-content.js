@@ -6,7 +6,7 @@ window.MahanContent=(()=>{
  const local=v=>typeof v==='string'?v:v?.[(typeof I18n!=='undefined'?I18n.language:'en')]||v?.en||'';
  function apply(){
   if(!current)return;const s=current.site||{},page=document.body.dataset.page;
-  if(s.name)document.querySelectorAll('.brand>span:last-child').forEach(el=>{el.dataset.noI18n='';el.textContent=s.name;const small=document.createElement('small');small.textContent=s.tagline||'NIGHT VILLAGE';el.append(small);});
+  if(s.name)document.querySelectorAll('.brand>span:last-child').forEach(el=>{el.dataset.noI18n='';el.textContent=s.name;const small=document.createElement('small');small.textContent=typeof I18n!=='undefined'?I18n.t(s.tagline||'NIGHT VILLAGE'):(s.tagline||'NIGHT VILLAGE');el.append(small);});
   if(s.logo)document.querySelectorAll('.brand-crest').forEach(el=>{const img=document.createElement('img');img.src=s.logo;img.alt='';img.style.cssText='width:100%;height:100%;object-fit:contain';el.replaceChildren(img);});
   if(/^#[\da-f]{6}$/i.test(s.accent||''))document.documentElement.style.setProperty('--purple',s.accent);
   if(s.heroImage){const hero=document.querySelector('.hero-art');if(hero)hero.src=s.heroImage;}

@@ -3,6 +3,11 @@ declare(strict_types=1);
 
 function layout_detail_url(array $layout): string
 {
+    $canonical = $layout['canonicalPath'] ?? '';
+    if (is_string($canonical) && preg_match('~^/bases/[a-z0-9-]+--[a-f0-9]{12}$~D', $canonical)
+        && str_ends_with($canonical, '--' . substr(hash('sha256', $layout['id']), 0, 12))) {
+        return $canonical;
+    }
     $title = strtr($layout['title'], [
         'ş' => 's', 'Ş' => 's', 'ç' => 'c', 'Ç' => 'c', 'ğ' => 'g', 'Ğ' => 'g',
         'ü' => 'u', 'Ü' => 'u', 'ö' => 'o', 'Ö' => 'o', 'ı' => 'i', 'İ' => 'i',
