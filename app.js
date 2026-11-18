@@ -10,7 +10,7 @@ function armyURL(value){try{if(typeof value!=='string'||value.length>3000)return
 function provenance(x) { return {sourceName:String(x.sourceName||'').slice(0,80),sourceUrl:typeof x.sourceUrl==='string'&&imageURL(x.sourceUrl)?x.sourceUrl:'',sourceDate:/^\d{4}-\d{2}-\d{2}$/.test(x.sourceDate||'')?x.sourceDate:'',retrieved:/^\d{4}-\d{2}-\d{2}$/.test(x.retrieved||'')?x.retrieved:'',creator:String(x.creator||'').slice(0,80)}; }
 function layout(x) {
   if (!x || typeof x !== 'object' || !valid(x.url) || !Number.isInteger(Number(x.th)) || Number(x.th)<3 || Number(x.th)>18 || !['War','Farming','Trophy','Hybrid'].includes(x.type)) return null;
-  const name = typeof x.title==='string'?x.title.replace(/Savaş Düzeni|Kupa Düzeni|Ganimet Düzeni|Kaynak Düzeni|Karma Düzeni|Hibrit Düzeni/g,value=>({'Savaş Düzeni':'War Base','Kupa Düzeni':'Trophy Base','Ganimet Düzeni':'Farming Base','Kaynak Düzeni':'Farming Base','Karma Düzeni':'Hybrid Base','Hibrit Düzeni':'Hybrid Base'}[value])):x.title;
+  const name = x.title;
   if (typeof name !== 'string' || !name.trim() || name.length > 70) return null;
   const image = typeof x.image === 'string' && imageURL(x.image) ? x.image : '';
   return {...provenance(x),id: String(x.id || x.url), name:name.trim(), title:name.trim(), th:Number(x.th), type:x.type, url:new URL(x.url).href, image, description:String(x.description || '').slice(0,160), checked: /^\d{4}-\d{2}-\d{2}$/.test(x.checked || '') ? x.checked : ''};

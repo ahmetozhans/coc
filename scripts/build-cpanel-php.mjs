@@ -55,7 +55,7 @@ try {
     .replace('Array.from({length:16},', 'Array.from({length:17},')
     .replace("area('editDescription','Açıklama',x.description,160,2)", "area('editDescription','Detay sayfası açıklaması ve savunma notları',x.description,1200,5)")
     .replace("headers:{'Content-Type':'application/json'}", "headers:{'Content-Type':'application/json','X-Mahanpro-CSRF':document.querySelector('meta[name=mahanpro-csrf]').content}"), await readFile(join(source, 'cpanel/studio-collector.js'), 'utf8')));
-  for (const name of ['index', 'bases', 'clan', 'attacks', 'armies', 'upgrade']) {
+  for (const name of ['index', 'bases', 'attacks', 'armies']) {
     let html = await readFile(join(source, name + '.html'), 'utf8');
     html = html
       .replace(/href="(index|bases|clan|attacks|armies|upgrade)\.html(?=["?#])/g,

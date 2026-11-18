@@ -36,8 +36,6 @@ try {
   await cp(join(root, 'cpanel/collector-setup.css'), join(web, 'mahanpro-setup.css'));
   const sql = await readFile(join(payload, '20261118-layout-collector.sql'));
   await writeFile(join(setup, 'payload/migration.sha256'), createHash('sha256').update(sql).digest('hex') + '\n');
-  const manifest = await readFile(join(setup, 'payload/manifest.json'));
-  await writeFile(join(setup, 'payload/release.sha256'), createHash('sha256').update(manifest).update(sql).digest('hex') + '\n');
   await cp(join(root, 'cpanel/COLLECTOR-EASY-INSTALL.md'), join(output, 'BASLA.md'));
 } finally {
   await rm(stage, {recursive: true, force: true});

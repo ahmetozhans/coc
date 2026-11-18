@@ -118,6 +118,7 @@ function cms_route(): never
             $counts += stats($db, $ids);
         }
         $defaults = json_decode(file_get_contents(__DIR__ . '/site-defaults.json'), false, 64, JSON_THROW_ON_ERROR);
+        unset($defaults->pages->clan, $defaults->pages->upgrade);
         json_response($state + ['version' => 1, 'layouts' => $layouts, 'guides' => content($db, 'guide', $doc, true),
             'defaults' => $defaults, 'stats' => (object) $counts]);
     }

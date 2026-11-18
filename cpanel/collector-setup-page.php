@@ -42,9 +42,7 @@ try {
     if (!function_exists('imagewebp')) {
         throw new RuntimeException('Hosting PHP ayarlarında GD WebP desteğini aç.');
     }
-    $release = trim(file_get_contents($package . '/release.sha256'));
-    $receipt = is_file(__DIR__ . '/installed.json') ? json_decode(file_get_contents(__DIR__ . '/installed.json'), true) : [];
-    if (($receipt['release'] ?? '') === $release) {
+    if (is_file(__DIR__ . '/installed.json')) {
         collector_setup_page('<p data-collector-installed>Kurulum tamamlandı.</p><a class="button primary" href="/admin/collector">Otomatik Köy Toplama’yı aç</a>');
     }
     $plan = collector_setup_plan($target, $package);
@@ -77,7 +75,7 @@ try {
         }
         $pdo->exec($sql);
         $backup = collector_setup_apply($target, $fresh);
-        $receipt = ['installedAt' => gmdate('c'), 'plan' => $planHash, 'backup' => $backup, 'release' => $release];
+        $receipt = ['installedAt' => gmdate('c'), 'plan' => $planHash, 'backup' => $backup];
         if (file_put_contents(__DIR__ . '/installed.json', json_encode($receipt, JSON_THROW_ON_ERROR), LOCK_EX) === false) {
             throw new RuntimeException('Dosyalar kuruldu. Kurulum kaydı yazılamadı, klasör yazma iznini kontrol et.');
         }

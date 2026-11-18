@@ -64,3 +64,9 @@ Setup and collector management now render inside the existing Studio workspace, 
 The public website now ignores stored Turkish language preferences and browser locale, removes language controls and keeps its interface in English. Admin/Studio remains Turkish. English CMS fields are used and standard legacy Turkish layout titles are projected into English while retaining the original canonical paths and stored source data.
 
 Tests cover all six public page types with Turkish browser/storage settings, the translated 404 page, English CMS/layout rendering and unchanged administrator localization. Chromium exercised seven public routes at 1440px and 390px with no Turkish UI text, language selector or horizontal overflow. Existing regression assertions were updated for the new English-only behavior. PHP tests verify stable layout identities, approval metadata and canonical URLs. Installer receipts now identify the release so this update can be applied through an already installed Studio.
+
+## Shared detail-page shell and retired tools
+
+The layout detail page now loads the same CMS branding, logo, accent, announcement and footer behavior as the gallery. Its detail-specific title and canonical metadata are retained. A shared navigation projection removes Clans and Upgrades from existing templates, including the home cards and mobile menu. Four-item navigation and two remaining home tools use the existing design styles.
+
+Chromium compared gallery/detail branding, logo URLs, footer text and menu destinations at 1440px and 390px with the actual inspected site settings. Detail metadata stayed specific when gallery SEO settings were present. The home page exposed two remaining tools without overflow. PHP checks confirmed HTTP 410 for /clan, /upgrade, their .html/trailing-slash forms and the retired clan API. The public route list excludes both tools. Administrator defaults omit their page editors while retaining stored settings for compatibility.

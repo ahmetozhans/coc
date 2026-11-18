@@ -49,7 +49,7 @@ function collector_setup_plan(string $target, string $package): array
         $next = file_get_contents($source);
         $merged = false;
         if ($hash !== $file['before']) {
-            if ($hash === null || $file['before'] === null) {
+            if ($hash === null || ($file['before'] === null && empty($file['alternateEdits']))) {
                 $conflicts[] = $file['path'];
                 continue;
             }
@@ -127,7 +127,8 @@ function collector_setup_apply(string $target, array $plan): ?string
                 throw new RuntimeException('Dosya hazırlanamadı: ' . $file['path']);
             }
         }
-        usort($pending, static fn ($a, $b) => ($a['path'] === 'public_html/index.php') <=> ($b['path'] === 'public_html/index.php'));
+        $priority = static fn (array $file): int => $file['path'] === 'public_html/index.php' ? 2 : ($file['before'] === null ? 0 : 1);
+        usort($pending, static fn ($a, $b) => $priority($a) <=> $priority($b));
         foreach ($pending as $file) {
             $destination = $target . '/' . $file['path'];
             clearstatcache(true, $destination);

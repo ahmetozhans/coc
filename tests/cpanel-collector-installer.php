@@ -41,7 +41,7 @@ setup_expect(is_dir($backup), 'Private backup must exist');
 setup_expect(str_contains(file_get_contents($custom), '// existing hosting customization'), 'Hosting customization retained');
 setup_expect(collector_setup_plan($home, $package)['pending'] === [], 'Applied merge should be idempotent');
 $changed = file_get_contents($custom);
-file_put_contents($custom, str_replace('collector_check_capacity(', 'live_capacity_override(', $changed));
+file_put_contents($custom, str_replace(['collector_check_capacity(', 'unset($defaults->pages->clan, $defaults->pages->upgrade);'], ['live_capacity_override(', '// live navigation override'], $changed));
 $conflict = collector_setup_plan($home, $package);
 setup_expect(in_array('mahanpro-private/cms.php', $conflict['conflicts'], true), 'Same-line live changes must stop');
 setup_expect(file_get_contents($custom) !== $changed, 'Preflight must not rewrite a conflict');

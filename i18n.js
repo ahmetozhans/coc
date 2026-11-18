@@ -340,10 +340,8 @@ Object.assign(dictionary, {'Enlarge layout':'Düzeni büyüt','Close preview':'�
 Object.assign(dictionary, {'No guides match these filters.':'Bu filtrelere uygun rehber bulunamadı.'});
 Object.assign(dictionary, {'Content suggestions':'İçerik önerileri','Review content suggestions':'İçerik önerilerini incele'});
 const reverse = Object.fromEntries(Object.entries(dictionary).map(([en,tr])=>[tr,en]));
-const publicOnly = document.documentElement.dataset?.publicLanguage === 'en'
- || ['home','bases','clan','armies','attacks','upgrade'].includes(document.body.dataset?.page);
 let language = 'en';
-try { if (!publicOnly) { const saved=localStorage.getItem('vf-language'); language=['en','tr'].includes(saved)?saved:(navigator.language||'en').startsWith('tr')?'tr':'en'; } } catch {}
+try { const saved=localStorage.getItem('vf-language'); language=['en','tr'].includes(saved)?saved:(navigator.language||'en').startsWith('tr')?'tr':'en'; } catch {}
 const originals=new WeakMap(), attributes=new WeakMap();
 function t(key,values={}) { const english=reverse[key]||key; let text=language==='tr'?(dictionary[english]||key):english;return text.replace(/\{(\w+)\}/g,(match,k)=>values[k]??match); }
 function text(key) {
@@ -370,14 +368,7 @@ function translate() {
  document.documentElement.lang=language;
  const select=document.getElementById('language');if(select)select.value=language;
 }
-function setLanguage(next){if(publicOnly){language='en';translate();return;}if(!['en','tr'].includes(next))return;language=next;try{localStorage.setItem('vf-language',language);}catch{}translate();document.dispatchEvent(new Event('languagechange'));}
-if(publicOnly){
- const select=document.getElementById('language');
- const actions=select?.closest('.header-actions');
- document.querySelectorAll('label[for="language"]').forEach(label=>label.remove());
- select?.remove();
- if(actions&&!actions.children.length)actions.remove();
-}
+function setLanguage(next){if(!['en','tr'].includes(next))return;language=next;try{localStorage.setItem('vf-language',language);}catch{}translate();document.dispatchEvent(new Event('languagechange'));}
 const select=document.getElementById('language');if(select)select.addEventListener('change',e=>setLanguage(e.target.value));
 translate();
 let queued=false;

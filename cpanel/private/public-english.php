@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+require_once __DIR__ . '/site-shell.php';
 
 function public_english_text(string $value, string $fallback = ''): string
 {
@@ -40,6 +41,10 @@ function public_english_site(object $site): object
 
 function public_english_template(string $template): string
 {
+    $template = site_navigation_template($template);
+    if (!str_contains($template, 'site-navigation.css')) {
+        $template = str_replace('</head>', '<link rel="stylesheet" href="/site-navigation.css?v=1"></head>', $template);
+    }
     $template = preg_replace('~<label\b[^>]*for="language"[^>]*>.*?</label>~s', '', $template);
     $template = preg_replace('~<select\b[^>]*id="language"[^>]*>.*?</select>~s', '', $template);
     $template = preg_replace('~<div class="header-actions">\s*</div>~', '', $template);

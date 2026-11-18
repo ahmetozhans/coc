@@ -26,25 +26,27 @@ try {
   execFileSync(process.execPath, [join(root, 'scripts/build-cpanel-php.mjs'), newSite]);
   const payload = join(output, 'mahanpro-private/collector-setup/payload');
   const manifest = JSON.parse(await readFile(join(payload, 'manifest.json'), 'utf8'));
-  for (const entry of manifest.filter(item => item.before !== null)) {
+  for (const entry of manifest) {
     const sourcePath = entry.path.replace('public_html/', 'cpanel/public/').replace('mahanpro-private/', 'cpanel/private/');
-    let previous;
-    try {
-      previous = execFileSync('git', ['show', '529d064cff5fdaf8eafdb346eb978902052278f0:' + sourcePath], {cwd: root});
-    } catch {
-      continue;
+    for (const baseline of ['529d064cff5fdaf8eafdb346eb978902052278f0', 'd4be383e7d8f20abbe697afa7a39e2dd788af4bd']) {
+      let previous;
+      try {
+        previous = execFileSync('git', ['show', baseline + ':' + sourcePath], {cwd: root, stdio: ['ignore', 'pipe', 'ignore']});
+      } catch {
+        continue;
+      }
+      const reference = join(stage, 'installed-reference');
+      await writeFile(reference, previous);
+      let diff;
+      try {
+        diff = execFileSync('git', ['diff', '--no-index', '--unified=3', '--', reference, join(payload, 'files', entry.path)], {encoding: 'utf8'});
+      } catch (error) {
+        if (error.status !== 1) throw error;
+        diff = error.stdout;
+      }
+      const edits = editsFromDiff(diff);
+      if (edits.length) (entry.alternateEdits ??= []).push(edits);
     }
-    const reference = join(stage, 'installed-reference');
-    await writeFile(reference, previous);
-    let diff;
-    try {
-      diff = execFileSync('git', ['diff', '--no-index', '--unified=3', '--', reference, join(payload, 'files', entry.path)], {encoding: 'utf8'});
-    } catch (error) {
-      if (error.status !== 1) throw error;
-      diff = error.stdout;
-    }
-    const edits = editsFromDiff(diff);
-    if (edits.length) entry.alternateEdits = [edits];
   }
   for (const name of ['i18n.js', 'site-content.js', 'app.js']) {
     const before = await readFile(join(live, name), 'utf8');

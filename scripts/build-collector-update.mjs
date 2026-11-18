@@ -11,10 +11,11 @@ await mkdir(output);
 const root = resolve(new URL('..', import.meta.url).pathname);
 const base = 'a9734253859c3f7143c59555c3007a96d5ba39b3';
 const shared = [
-  'cpanel/public/index.php', 'cpanel/public/layout-detail.js', 'cpanel/private/cms.php', 'cpanel/private/content.php',
+  'cpanel/public/index.php', 'cpanel/public/layout-detail.js', 'cpanel/public/layout-detail.css', 'cpanel/private/cms.php', 'cpanel/private/content.php',
   'cpanel/private/page-not-found.html', 'cpanel/private/reviews.php', 'cpanel/private/layout-detail.php', 'cpanel/private/publish-approved.php',
 ];
 const added = [
+  'cpanel/private/site-shell.php', 'cpanel/private/page-retired.html', 'cpanel/public/site-navigation.css',
   'cpanel/private/public-english.php', 'cpanel/private/public-english.json', 'cpanel/public/collector-admin.css', 'cpanel/public/studio-collector.css', 'cpanel/private/collector.php', 'cpanel/private/collector-sources.php',
   'cpanel/private/collector-admin.php', 'cpanel/private/collector-cron.php',
 ];

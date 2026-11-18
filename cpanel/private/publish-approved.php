@@ -8,8 +8,6 @@ require __DIR__ . '/content.php';
 require __DIR__ . '/stats.php';
 require __DIR__ . '/reviews.php';
 require __DIR__ . '/cms.php';
-require __DIR__ . '/layout-detail.php';
-require __DIR__ . '/public-english.php';
 
 function get_https(string $url, int $limit): string
 {
@@ -147,7 +145,7 @@ try {
         $value['id'] === $item->id && ($value['approvalFingerprint'] ?? '') === $proposal->fingerprint);
     $gallery = $kind === 'layout' ? 'bases' : 'attacks';
     $page = get_https(config()['base_url'] . $gallery, 4000000);
-    $title = $kind === 'layout' ? public_english_layout((array) $item)['title'] : $item->title->en;
+    $title = $kind === 'layout' ? $item->title : $item->title->en;
     if (count($matches) !== 1 || !str_contains($page, h($title)) ||
         ($kind === 'layout' && (!str_contains($page, h($item->image)) ||
             !hash_equals($proposal->imageSha256, hash('sha256', get_https($item->image, 10000000)))))) {

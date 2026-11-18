@@ -13,8 +13,6 @@ const PAGES = [
     '/bases' => ['bases', 'Clash of Clans Base Layouts | Mahanpro', 'Find Clash of Clans village layouts by Town Hall level and category.'],
     '/attacks' => ['attacks', 'Clash of Clans Attack Guides | Mahanpro', 'Explore attack guides and plan your next Clash of Clans attack.'],
     '/armies' => ['armies', 'Clash of Clans Army Layouts | Mahanpro', 'Find published army layouts and open their official Clash of Clans share links.'],
-    '/clan' => ['clan', 'Clash of Clans Clan Finder | Mahanpro', 'Find your clan using its Clash of Clans clan tag.'],
-    '/upgrade' => ['upgrade', 'Clash of Clans Builder Planner | Mahanpro', 'Plan Clash of Clans upgrades and organize your builders.'],
 ];
 
 function cards(array $items, string $page): string
@@ -58,12 +56,12 @@ function cards(array $items, string $page): string
     return $html ?: '<p class="empty">No published records are available yet.</p>';
 }
 
-function not_found(): never
+function not_found(int $status = 404): never
 {
-    http_response_code(404);
+    http_response_code($status);
     header('Content-Type: text/html; charset=UTF-8');
     header('X-Robots-Tag: noindex, follow');
-    $template = dirname(__DIR__) . '/mahanpro-private/page-not-found.html';
+    $template = dirname(__DIR__) . '/mahanpro-private/' . ($status === 410 ? 'page-retired.html' : 'page-not-found.html');
     if (is_readable($template)) {
         readfile($template);
     } else {
@@ -87,9 +85,11 @@ try {
         require dirname(__DIR__) . '/mahanpro-private/collector-admin.php';
         collector_admin_route();
     }
+    if (in_array($normalized, ['/clan', '/upgrade'], true)) {
+        not_found(410);
+    }
     if ($path === '/api/clan') {
-        require dirname(__DIR__) . '/mahanpro-private/clan.php';
-        clan_route();
+        json_response(['error' => 'This feature has been retired.'], 410);
     }
     if ($path === '/admin.html') {
         header('Location: /admin', true, 301);

@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+require_once __DIR__ . '/site-shell.php';
 
 function layout_detail_url(array $layout): string
 {
@@ -82,6 +83,7 @@ function layout_meta_summary(string $description, string $fallback): string
 
 function layout_detail_shell(string $galleryTemplate): array
 {
+    $galleryTemplate = site_navigation_template($galleryTemplate);
     $fragments = [];
     foreach ([
         'theme' => '~<link rel="stylesheet" href="/?mahanpro-night\.css(?:\?[^"<>]*)?">~',
@@ -147,7 +149,7 @@ function render_layout_detail(string $segment, array $catalog, string $base, ?st
     header('Content-Type: text/html; charset=UTF-8');
     ?>
 <!doctype html>
-<html lang="en">
+<html lang="en" data-public-language="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -163,14 +165,17 @@ function render_layout_detail(string $segment, array $catalog, string $base, ?st
   <link rel="canonical" href="<?= h($canonical) ?>">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <?= $shell['theme'] ?>
-  <link rel="stylesheet" href="/layout-detail.css?v=3">
+  <link rel="stylesheet" href="/site-navigation.css?v=1">
+  <link rel="stylesheet" href="/layout-detail.css?v=shared-site-4">
+  <script src="/site-content.js?v=shared-detail-2" defer></script>
+  <script src="/i18n.js?v=shared-detail-2" defer></script>
   <script src="/metrics.js?v=detail-1" defer></script>
   <script src="/layout-detail.js?v=collector-en-1" defer></script>
   <script type="application/ld+json"><?= json_encode($breadcrumbs, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
   <script type="application/ld+json"><?= json_encode($pageSchema, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
   <title><?= h($title) ?> | Clash of Clans Base Layouts – Mahanpro</title>
 </head>
-<body class="layout-detail-page">
+<body class="layout-detail-page" data-page="layout-detail">
   <a class="skip-link" href="#layoutDetail">Skip to content</a>
   <?= $shell['header'] ?>
   <main id="layoutDetail" data-id="<?= h($id) ?>" data-game-url="<?= h($game) ?>">
