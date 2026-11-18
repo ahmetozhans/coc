@@ -11,6 +11,7 @@ $old = "before\nold line\nafter\n";
 $new = "before\nnew line\nafter\n";
 $edit = [['old' => $old, 'new' => $new]];
 setup_expect(collector_setup_merge("live customization\n" . $old, $edit) === "live customization\n" . $new, 'Unrelated live changes must survive');
+setup_expect(collector_setup_merge(str_replace("\n", "\r\n", $old), $edit) === str_replace("\n", "\r\n", $new), 'CRLF input must merge while retaining CRLF');
 setup_expect(collector_setup_merge("live customization\n" . $new, $edit) === "live customization\n" . $new, 'Partially applied updates must be idempotent');
 foreach (["before\nlive change\nafter\n", $old . $old] as $conflict) {
     try {
@@ -36,6 +37,14 @@ file_put_contents($custom, "\n// existing hosting customization\n", FILE_APPEND)
 $plan = collector_setup_plan($home, $package);
 setup_expect(!$plan['conflicts'], 'Unrelated real CMS customization should merge');
 setup_expect(count(array_filter($plan['pending'], fn ($f) => $f['merged'])) === 1, 'One real file should be merged');
+if (isset($argv[2])) {
+    copy($argv[2], $home . '/mahanpro-private/reviews.php');
+    $plan = collector_setup_plan($home, $package);
+    setup_expect(!$plan['conflicts'], 'Uploaded earlier reviews release with CRLF must upgrade');
+    $reviewEdits = array_values(array_filter($plan['pending'], fn ($f) => $f['path'] === 'mahanpro-private/reviews.php'));
+    setup_expect(count($reviewEdits) === 1, 'Earlier reviews must be included in the upgrade');
+    setup_expect(str_replace("\r\n", "\n", $reviewEdits[0]['bytes']) === file_get_contents(dirname(__DIR__) . '/cpanel/private/reviews.php'), 'Only the obsolete standalone collector link must change');
+}
 $backup = collector_setup_apply($home, $plan);
 setup_expect(is_dir($backup), 'Private backup must exist');
 setup_expect(str_contains(file_get_contents($custom), '// existing hosting customization'), 'Hosting customization retained');

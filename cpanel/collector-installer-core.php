@@ -3,12 +3,16 @@ declare(strict_types=1);
 
 function collector_setup_merge(string $current, array $edits): string
 {
+    // cPanel editors can save CRLF without changing PHP code. Compare logical
+    // lines while retaining the hosting file's newline convention in output.
+    $crlf = str_contains($current, "\r\n") && !str_contains(str_replace("\r\n", '', $current), "\n");
+    $current = str_replace("\r\n", "\n", $current);
     if (!$edits) {
         throw new RuntimeException('Bu dosya için güvenli birleştirme bilgisi bulunmuyor.');
     }
     foreach ($edits as $edit) {
-        $old = $edit['old'];
-        $new = $edit['new'];
+        $old = str_replace("\r\n", "\n", $edit['old']);
+        $new = str_replace("\r\n", "\n", $edit['new']);
         $oldCount = $old === '' ? 0 : substr_count($current, $old);
         $newCount = $new === '' ? 0 : substr_count($current, $new);
         if ($newCount === 1 && $oldCount === 0) {
@@ -20,7 +24,7 @@ function collector_setup_merge(string $current, array $edits): string
         $position = strpos($current, $old);
         $current = substr_replace($current, $new, $position, strlen($old));
     }
-    return $current;
+    return $crlf ? str_replace("\n", "\r\n", $current) : $current;
 }
 
 function collector_setup_plan(string $target, string $package): array
