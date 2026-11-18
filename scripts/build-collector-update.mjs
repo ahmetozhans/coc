@@ -20,21 +20,50 @@ const added = [
 const targetPath = path => path.replace('cpanel/public/', 'public_html/').replace('cpanel/private/', 'mahanpro-private/');
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const manifest = [];
+const editsFromDiff = diff => {
+  const edits = [];
+  let entry;
+  for (const line of diff.split('\n')) {
+    if (line.startsWith('@@ ')) {
+      entry = {old: '', new: ''};
+      edits.push(entry);
+    } else if (entry && line.startsWith(' ')) {
+      entry.old += line.slice(1) + '\n';
+      entry.new += line.slice(1) + '\n';
+    } else if (entry && line.startsWith('-')) {
+      entry.old += line.slice(1) + '\n';
+    } else if (entry && line.startsWith('+')) {
+      entry.new += line.slice(1) + '\n';
+    }
+  }
+  return edits;
+};
 for (const path of [...shared, ...added]) {
   const next = await readFile(join(root, path));
   const prior = shared.includes(path) ? execFileSync('git', ['show', base + ':' + path], {cwd: root}) : null;
   const target = targetPath(path);
   await mkdir(join(output, 'files', target, '..'), {recursive: true});
   await writeFile(join(output, 'files', target), next);
-  manifest.push({path: target, before: prior ? sha(prior) : null, after: sha(next)});
+  const entry = {path: target, before: prior ? sha(prior) : null, after: sha(next)};
   if (prior) {
     await mkdir(join(output, 'reference', target, '..'), {recursive: true});
     await writeFile(join(output, 'reference', target), prior);
+    let diff;
+    try {
+      diff = execFileSync('git', ['diff', '--no-index', '--unified=3', '--', join(output, 'reference', target), join(root, path)],
+        {encoding: 'utf8'});
+    } catch (error) {
+      if (error.status !== 1) throw error;
+      diff = error.stdout;
+    }
+    entry.edits = editsFromDiff(diff);
   }
+  manifest.push(entry);
 }
 await writeFile(join(output, 'manifest.json'), JSON.stringify(manifest, null, 2));
 await cp(join(root, 'cpanel/database/migrations/20261118-layout-collector.sql'), join(output, '20261118-layout-collector.sql'));
 await cp(join(root, 'cpanel/COLLECTOR-INSTALL.md'), join(output, 'KURULUM.md'));
 await cp(join(root, 'cpanel/COLLECTOR-TEST-REPORT.md'), join(output, 'TEST-REPORT.md'));
+await cp(join(root, 'cpanel/collector-installer-core.php'), join(output, 'collector-installer-core.php'));
 await cp(join(root, 'cpanel/collector-install.php'), join(output, 'collector-install.php'));
 console.log(output);

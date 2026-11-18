@@ -48,3 +48,9 @@ Browser requests were served from captured/generated test HTML and local assets.
 ## Remaining host checks before enabling automation
 
 Run the package preflight against the real private PHP files, apply the additive migration to a staging clone, test HTTPS sessions and image previews, run one authorized scan from cPanel, approve a reviewed staging example, then inspect its public endpoint, image, canonical URL and sitemap. Enable the hourly cron only after these checks.
+
+## Browser installer follow-up
+
+A simpler upload package now contains public_html/mahanpro-setup.php and a private collector-setup payload. Existing administrator authentication and same-origin CSRF validation protect the setup action. The installer applies the additive migration, privately backs up affected files and installs the update from one button. A receipt locks a completed installation.
+
+Installer tests verified unique-context three-way application with an unrelated live customization, overlapping and ambiguous edit rejection, idempotency, private backups and preservation of existing favorite rows in MariaDB. The authenticated GET/POST setup flow and rejection of a foreign Origin were exercised with the real PHP handler. Shared-row conflicts stop before installation. No production installation was performed.

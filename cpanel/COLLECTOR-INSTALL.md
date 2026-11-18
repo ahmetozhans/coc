@@ -12,7 +12,13 @@ CONTENT_AUTOMATION.md GitHub Pages/D1 akışını tanımlar. Bu cPanel özelliğ
 
 PHP 8.2+, PDO MySQL, cURL, GD (WebP), DOM, fileinfo, InnoDB ve HTTPS kaynak erişimi. API anahtarı gerekmez.
 
-## Adım adım kurulum
+## Kolay kurulum
+
+Kolay kurulum paketi için BASLA.md içindeki üç adımı kullan. ZIP'i cPanel ana dizininde çıkar, /mahanpro-setup.php adresini aç, mevcut yönetici hesabınla giriş yapıp Kurulumu tamamla düğmesine bas. Ekran dosya yedeğini ve ek SQL tablolarını hazırlar. Aynı satırlarda çakışma varsa ilgili dosyaları gösterir. Dosyanın diğer alanlarındaki özel değişiklikler korunarak birleştirilir.
+
+Kaynak depodan kolay paketi üretmek için node scripts/build-collector-easy-update.mjs /tmp/mahanpro-easy-update çalıştırılabilir.
+
+## Terminal üzerinden kurulum
 
 1. cPanel'den mevcut public_html, mahanpro-private ve veritabanının tam yedeğini al. Önce deneme kopyasında kur.
 2. Kaynak depoda şu komutla güncelleme paketi üret. Paketi cPanel ana dizininde public_html dışında collector-update klasörüne aç.
