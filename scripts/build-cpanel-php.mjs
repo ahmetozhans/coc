@@ -1,3 +1,4 @@
+import { integrateStudioCollector } from './studio-collector-integration.mjs';
 import { cp, mkdir, mkdtemp, readFile, rename, rm, rmdir, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -49,11 +50,11 @@ try {
     .replace(/src="admin\.js\?[^"]+"/, 'src="admin.js?v=base-seo"')
     .replace(/href="index\.html"/g, 'href="/"'));
   const admin = await readFile(join(source, 'admin.js'), 'utf8');
-  await writeFile(join(web, 'admin.js'), admin
+  await writeFile(join(web, 'admin.js'), integrateStudioCollector(admin
     .replace('https://mahanpro-layout-stats.aerialmandrill32.chatgpt.site', '')
     .replace('Array.from({length:16},', 'Array.from({length:17},')
     .replace("area('editDescription','Açıklama',x.description,160,2)", "area('editDescription','Detay sayfası açıklaması ve savunma notları',x.description,1200,5)")
-    .replace("headers:{'Content-Type':'application/json'}", "headers:{'Content-Type':'application/json','X-Mahanpro-CSRF':document.querySelector('meta[name=mahanpro-csrf]').content}"));
+    .replace("headers:{'Content-Type':'application/json'}", "headers:{'Content-Type':'application/json','X-Mahanpro-CSRF':document.querySelector('meta[name=mahanpro-csrf]').content}"), await readFile(join(source, 'cpanel/studio-collector.js'), 'utf8')));
   for (const name of ['index', 'bases', 'clan', 'attacks', 'armies', 'upgrade']) {
     let html = await readFile(join(source, name + '.html'), 'utf8');
     html = html

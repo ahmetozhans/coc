@@ -54,3 +54,7 @@ Run the package preflight against the real private PHP files, apply the additive
 A simpler upload package now contains public_html/mahanpro-setup.php and a private collector-setup payload. Existing administrator authentication and same-origin CSRF validation protect the setup action. The installer applies the additive migration, privately backs up affected files and installs the update from one button. A receipt locks a completed installation.
 
 Installer tests verified unique-context three-way application with an unrelated live customization, overlapping and ambiguous edit rejection, idempotency, private backups and preservation of existing favorite rows in MariaDB. The authenticated GET/POST setup flow and rejection of a foreign Origin were exercised with the real PHP handler. Shared-row conflicts stop before installation. No production installation was performed.
+
+## Studio integration follow-up
+
+Setup and collector management now render inside the existing Studio workspace, reached through its native Otomatik Köy Toplama navigation item. Forms and queue tabs load into the same workspace. The existing administrator script receives bounded integration hooks, preserving its other navigation, dirty-form confirmation and save handlers. The easy package can be built from an inspected live administrator JavaScript snapshot to retain current changes. Existing private files still go through the installer merge checks. The setup PHP address is used as an internal authenticated handler.

@@ -1,8 +1,8 @@
 # Mahanpro kolay kurulum
 
 1. cPanel Dosya Yöneticisi'nde public_html ve mahanpro-private klasörlerinin bulunduğu ana dizini aç. ZIP'i bu dizine yükleyip Çıkart düğmesine bas.
-2. https://mahanpro.fun/mahanpro-setup.php adresini aç. İstenirse mevcut yönetici hesabınla giriş yapıp aynı adrese dön.
-3. Kurulumu tamamla düğmesine bas. Ardından Otomatik Köy Toplama'yı aç.
+2. https://mahanpro.fun/studio#collector adresini aç. Mevcut yönetici hesabınla giriş yaptıktan sonra Studio menüsündeki Otomatik Köy Toplama bölümünü seç. Menü görünmezse Ctrl+F5 ile yenile.
+3. Studio içindeki Kurulumu tamamla düğmesine bas. Onay kuyruğu ve tarama ayarları aynı bölümde açılır.
 
 Kurulum ekranı dosyaları karşılaştırır, uyumlu değişiklikleri birleştirir, değişecek dosyaları özel klasöre yedekler ve ek veritabanı tablolarını oluşturur. Aynı satırlarda farklı canlı değişiklikler varsa ilgili dosyaları listeler. Yeni kayıtlar yönetici onay kuyruğuna düşer. İlk taramayı Kaynaklar ve ayarlar bölümünden başlatabilirsin.
 

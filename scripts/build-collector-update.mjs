@@ -14,7 +14,7 @@ const shared = [
   'cpanel/private/reviews.php', 'cpanel/private/layout-detail.php', 'cpanel/private/publish-approved.php',
 ];
 const added = [
-  'cpanel/public/collector-admin.css', 'cpanel/private/collector.php', 'cpanel/private/collector-sources.php',
+  'cpanel/public/collector-admin.css', 'cpanel/public/studio-collector.css', 'cpanel/private/collector.php', 'cpanel/private/collector-sources.php',
   'cpanel/private/collector-admin.php', 'cpanel/private/collector-cron.php',
 ];
 const targetPath = path => path.replace('cpanel/public/', 'public_html/').replace('cpanel/private/', 'mahanpro-private/');

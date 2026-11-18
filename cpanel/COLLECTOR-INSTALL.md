@@ -14,7 +14,7 @@ PHP 8.2+, PDO MySQL, cURL, GD (WebP), DOM, fileinfo, InnoDB ve HTTPS kaynak eri�
 
 ## Kolay kurulum
 
-Kolay kurulum paketi için BASLA.md içindeki üç adımı kullan. ZIP'i cPanel ana dizininde çıkar, /mahanpro-setup.php adresini aç, mevcut yönetici hesabınla giriş yapıp Kurulumu tamamla düğmesine bas. Ekran dosya yedeğini ve ek SQL tablolarını hazırlar. Aynı satırlarda çakışma varsa ilgili dosyaları gösterir. Dosyanın diğer alanlarındaki özel değişiklikler korunarak birleştirilir.
+Kolay kurulum paketi için BASLA.md içindeki üç adımı kullan. ZIP'i cPanel ana dizininde çıkar, Studio içindeki Otomatik Köy Toplama bölümünü aç, mevcut yönetici hesabınla giriş yapıp Kurulumu tamamla düğmesine bas. Ekran dosya yedeğini ve ek SQL tablolarını hazırlar. Aynı satırlarda çakışma varsa ilgili dosyaları gösterir. Dosyanın diğer alanlarındaki özel değişiklikler korunarak birleştirilir.
 
 Kaynak depodan kolay paketi üretmek için node scripts/build-collector-easy-update.mjs /tmp/mahanpro-easy-update çalıştırılabilir.
 

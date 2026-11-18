@@ -43,7 +43,7 @@ try {
         throw new RuntimeException('Hosting PHP ayarlarında GD WebP desteğini aç.');
     }
     if (is_file(__DIR__ . '/installed.json')) {
-        collector_setup_page('<p>Kurulum tamamlandı.</p><a class="button primary" href="/admin/collector">Otomatik Köy Toplama’yı aç</a>');
+        collector_setup_page('<p data-collector-installed>Kurulum tamamlandı.</p><a class="button primary" href="/admin/collector">Otomatik Köy Toplama’yı aç</a>');
     }
     $plan = collector_setup_plan($target, $package);
     $sql = file_get_contents($package . '/20261118-layout-collector.sql');
@@ -82,7 +82,7 @@ try {
         chmod(__DIR__ . '/installed.json', 0600);
         $pdo->query("SELECT RELEASE_LOCK('mahanpro-collector-setup')");
         $locked = false;
-        collector_setup_page('<p>Kurulum tamamlandı. Dosya yedeği özel klasöre kaydedildi.</p>'
+        collector_setup_page('<p data-collector-installed>Kurulum tamamlandı. Dosya yedeği özel klasöre kaydedildi.</p>'
             . '<a class="button primary" href="/admin/collector">Otomatik Köy Toplama’yı aç</a>'
             . '<p>Kaynaklar ve ayarlar bölümünden ilk taramayı başlatabilirsin. Günlük zamanlama adımı paket içindeki kısa rehberde yer alıyor.</p>');
     }
