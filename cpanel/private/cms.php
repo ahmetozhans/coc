@@ -75,7 +75,7 @@ function check_document(mixed $document): void
     require_cms(is_object($document) && is_object($document->layoutOverrides ?? null) &&
         is_object($document->guideOverrides ?? null));
     check_site($document->site ?? null);
-    foreach (['layout' => 300, 'guide' => 100] as $kind => $limit) {
+    foreach (['layout' => 5000, 'guide' => 100] as $kind => $limit) {
         $key = $kind . 'Overrides';
         require_cms(count(get_object_vars($document->$key)) <= $limit);
         foreach ($document->$key as $id => $item) {
@@ -88,7 +88,9 @@ function check_document(mixed $document): void
 function check_collection(PDO $db, object $document): void
 {
     $layouts = content($db, 'layout', $document, true);
-    require_cms(count($layouts) <= 300 && count(content($db, 'guide', $document, true)) <= 100);
+    require_cms(count(content($db, 'guide', $document, true)) <= 100);
+    require_once __DIR__ . '/collector.php';
+    collector_check_capacity(content($db, 'layout', cms_state($db)['document'], true), $layouts);
     $ids = [];
     foreach ($layouts as $item) {
         if ($item['hidden']) {
@@ -116,6 +118,7 @@ function cms_route(): never
             $counts += stats($db, $ids);
         }
         $defaults = json_decode(file_get_contents(__DIR__ . '/site-defaults.json'), false, 64, JSON_THROW_ON_ERROR);
+        unset($defaults->pages->clan, $defaults->pages->upgrade);
         json_response($state + ['version' => 1, 'layouts' => $layouts, 'guides' => content($db, 'guide', $doc, true),
             'defaults' => $defaults, 'stats' => (object) $counts]);
     }
@@ -147,6 +150,11 @@ function cms_route(): never
             $item = $request->item ?? null;
             check_record($item, $action);
             $key = $action . 'Overrides';
+            if ($action === 'layout' && !empty($item->archived) && !$item->hidden) {
+                // Existing Studio publish controls also restore an archived record.
+                $item->archived = false;
+                unset($item->archivedAt);
+            }
             $item->updated = $now;
             $doc->$key->{$item->id} = $item;
             $label = $action === 'layout' ? 'Köy düzeni güncellendi' : 'Saldırı rehberi güncellendi';

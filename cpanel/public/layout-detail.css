@@ -223,10 +223,6 @@
   margin-inline-start: auto;
 }
 
-.layout-detail-page .footer-bottom {
-  justify-content: flex-end;
-}
-
 @media (max-width: 760px) {
   .detail-grid {
     grid-template-columns: minmax(0, 1fr);

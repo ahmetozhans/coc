@@ -6,14 +6,13 @@ require dirname(__DIR__) . '/mahanpro-private/stats.php';
 require dirname(__DIR__) . '/mahanpro-private/reviews.php';
 require dirname(__DIR__) . '/mahanpro-private/cms.php';
 require dirname(__DIR__) . '/mahanpro-private/layout-detail.php';
+require dirname(__DIR__) . '/mahanpro-private/public-english.php';
 
 const PAGES = [
     '/' => ['index', 'Mahanpro | Clash of Clans Tools', 'Browse Clash of Clans village layouts, army builds and attack guides.'],
     '/bases' => ['bases', 'Clash of Clans Base Layouts | Mahanpro', 'Find Clash of Clans village layouts by Town Hall level and category.'],
     '/attacks' => ['attacks', 'Clash of Clans Attack Guides | Mahanpro', 'Explore attack guides and plan your next Clash of Clans attack.'],
     '/armies' => ['armies', 'Clash of Clans Army Layouts | Mahanpro', 'Find published army layouts and open their official Clash of Clans share links.'],
-    '/clan' => ['clan', 'Clash of Clans Clan Finder | Mahanpro', 'Find your clan using its Clash of Clans clan tag.'],
-    '/upgrade' => ['upgrade', 'Clash of Clans Builder Planner | Mahanpro', 'Plan Clash of Clans upgrades and organize your builders.'],
 ];
 
 function cards(array $items, string $page): string
@@ -29,7 +28,7 @@ function cards(array $items, string $page): string
                 . ($image ? '<img src="' . h($image) . '" alt="' . $title . '" loading="lazy">' : '')
                 . '</div><div class="content-body"><h2>' . $title . '</h2><p>TH ' . $townHall
                 . ' · ' . h($item['type']) . '</p>'
-                . '<a href="' . h(layout_detail_url($item)) . '">Düzeni incele</a> '
+                . '<a href="' . h(layout_detail_url($item)) . '">View layout</a> '
                 . ($url ? '<a href="' . h($url) . '" class="button">Open in game</a>' : '')
                 . '</div></article>';
             continue;
@@ -57,16 +56,16 @@ function cards(array $items, string $page): string
     return $html ?: '<p class="empty">No published records are available yet.</p>';
 }
 
-function not_found(): never
+function not_found(int $status = 404): never
 {
-    http_response_code(404);
+    http_response_code($status);
     header('Content-Type: text/html; charset=UTF-8');
     header('X-Robots-Tag: noindex, follow');
-    $template = dirname(__DIR__) . '/mahanpro-private/page-not-found.html';
+    $template = dirname(__DIR__) . '/mahanpro-private/' . ($status === 410 ? 'page-retired.html' : 'page-not-found.html');
     if (is_readable($template)) {
         readfile($template);
     } else {
-        echo 'Sayfa bulunamadı.';
+        echo 'Page not found.';
     }
     exit;
 }
@@ -82,9 +81,15 @@ if (isset(PAGES[$normalized]) && $path !== $normalized) {
 
 try {
     $base = config()['base_url'];
+    if ($path === '/admin/collector') {
+        require dirname(__DIR__) . '/mahanpro-private/collector-admin.php';
+        collector_admin_route();
+    }
+    if (in_array($normalized, ['/clan', '/upgrade'], true)) {
+        not_found(410);
+    }
     if ($path === '/api/clan') {
-        require dirname(__DIR__) . '/mahanpro-private/clan.php';
-        clan_route();
+        json_response(['error' => 'This feature has been retired.'], 410);
     }
     if ($path === '/admin.html') {
         header('Location: /admin', true, 301);
@@ -139,12 +144,12 @@ try {
         $pdo = db();
         $state = cms_state($pdo);
         $doc = $state['document'];
-        $layouts = array_map(static fn (array $item): array => array_replace($item, ['detailUrl' => layout_detail_url($item)]),
+        $layouts = array_map(static fn (array $item): array => array_replace(public_english_layout($item), ['detailUrl' => layout_detail_url($item)]),
             content($pdo, 'layout', $doc));
         $data = json_encode([
             'version' => 1,
             'revision' => $state['revision'],
-            'site' => $doc->site,
+            'site' => public_english_site($doc->site),
             'layouts' => $layouts,
             'guides' => content($pdo, 'guide', $doc),
         ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
@@ -169,18 +174,19 @@ try {
         if (!empty($doc->site->maintenance)) {
             header('Retry-After: 300');
         }
-        echo '<!doctype html><html lang="tr"><meta charset="utf-8"><title>Mahanpro</title><h1>Sayfa geçici olarak kullanılamıyor.</h1><p>' . h($doc->site->maintenanceText->tr ?? '') . '</p>';
+        echo '<!doctype html><html lang="en"><meta charset="utf-8"><title>Mahanpro</title><h1>This page is temporarily unavailable.</h1><p>' . h($doc->site->maintenanceText->en ?? '') . '</p>';
         exit;
     }
     if ($detailId !== null) {
-        render_layout_detail($detailId, content($pdo, 'layout', $doc), $base, $path);
+        render_layout_detail($detailId, array_map('public_english_layout', content($pdo, 'layout', $doc, true)), $base, $path);
     }
-    $title = ($settings->seoTitle ?? '') ?: $title;
-    $description = ($settings->seoDescription ?? '') ?: $description;
+    $title = public_english_text((string) ($settings->seoTitle ?? ''), $title) ?: $title;
+    $description = public_english_text((string) ($settings->seoDescription ?? ''), $description) ?: $description;
     $template = file_get_contents(dirname(__DIR__) . '/mahanpro-private/templates/' . $file . '.html');
     if ($template === false) {
         throw new RuntimeException('Page template is missing');
     }
+    $template = public_english_template($template);
     $template = preg_replace_callback('~<title>.*?</title>~s', fn () => '<title>' . h($title) . '</title>', $template, 1);
     $template = preg_replace_callback('~<meta name="description" content="[^"]*">~',
         fn () => '<meta name="description" content="' . h($description) . '">', $template, 1);
@@ -188,17 +194,22 @@ try {
         '<link rel="canonical" href="' . h($base . ltrim($path, '/')) . '">', $template, 1);
     if (in_array($path, ['/bases', '/attacks', '/armies'], true)) {
         $records = content($pdo, $path === '/bases' ? 'layout' : 'guide', $doc);
+        if ($path === '/bases') {
+            $records = array_map('public_english_layout', $records);
+        }
         $template = str_replace('<!-- MAHANPRO_CONTENT -->', cards($records, $path), $template);
     }
     header('Content-Type: text/html; charset=UTF-8');
     echo $template;
 } catch (Throwable $error) {
     error_log('Mahanpro: request failed (' . get_class($error) . ')');
+    $adminRequest = in_array($path, ['/admin', '/studio'], true)
+        || str_starts_with($path, '/admin/') || str_starts_with($path, '/api/admin/');
     if (str_starts_with($path, '/api/')) {
-        json_response(['error' => 'Hizmet geçici olarak kullanılamıyor.'], 503);
+        json_response(['error' => $adminRequest ? 'Hizmet geçici olarak kullanılamıyor.' : 'Service temporarily unavailable.'], 503);
     }
     http_response_code(503);
     header('Retry-After: 300');
     header('Content-Type: text/plain; charset=UTF-8');
-    echo 'Mahanpro geçici olarak kullanılamıyor.';
+    echo $adminRequest ? 'Mahanpro geçici olarak kullanılamıyor.' : 'Mahanpro is temporarily unavailable.';
 }

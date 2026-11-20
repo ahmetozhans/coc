@@ -21,13 +21,13 @@
       try {
         await navigator.clipboard.writeText(value);
         if (isGame) record('copy');
-        message.textContent = 'Bağlantı kopyalandı.';
+        message.textContent = 'Link copied.';
       } catch {
         share.value = value;
         share.hidden = false;
         share.focus();
         share.select();
-        message.textContent = 'Bağlantıyı seçtim. Tarayıcının kopyalama komutunu kullanabilirsin.';
+        message.textContent = 'The link is selected. Use your browser’s copy command.';
       }
     });
   }
@@ -41,7 +41,7 @@
   }
   function paint(active) {
     favorite.setAttribute('aria-pressed', String(active));
-    favorite.textContent = active ? '♥ Favoriden çıkar' : '♡ Favoriye ekle';
+    favorite.textContent = active ? '♥ Remove favorite' : '♡ Add to favorites';
   }
   try {
     paint(favorites().includes(normalizedGameUrl));
@@ -58,7 +58,7 @@
       paint(active);
       record('favorite', active);
     } catch {
-      message.textContent = 'Favori kaydedilemedi.';
+      message.textContent = 'Could not save this favorite.';
     }
   });
 })();

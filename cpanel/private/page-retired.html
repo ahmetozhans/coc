@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#0a1020">
+  <title>This page is no longer available | Mahanpro</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <style>
+    :root { color-scheme: dark; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; min-height: 100svh; display: grid;
+      align-items: center; padding: clamp(20px, 5vw, 64px);
+      color: #f6f1ff; background: #0a1020;
+      font: 400 1rem/1.6 system-ui, sans-serif;
+    }
+    main {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      width: min(100%, 1040px); margin-inline: auto; overflow: hidden;
+      border: 1px solid #706198; border-radius: 24px; background: #17172b;
+      box-shadow: 0 28px 90px #030611a8;
+    }
+    .illustration {
+      background: linear-gradient(180deg, #0a102020 32%, #0a1020a0),
+        #211d37 url('/assets/night-village.webp') center / cover no-repeat;
+      min-height: 370px;
+    }
+    .content { padding: clamp(25px, 5vw, 62px); align-self: center; }
+    .status { margin: 0 0 14px; color: #ffd290; font-size: .8rem; font-weight: 700; letter-spacing: .11em; }
+    h1 { margin: 0; font: 700 clamp(2.05rem, 5vw, 3.7rem)/1.05 Georgia, serif; letter-spacing: -.035em; }
+    .description { max-width: 34ch; margin: 16px 0 26px; color: #cbc4db; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    a {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 44px;
+      padding: 9px 15px; border-radius: 9px; border: 1px solid transparent;
+      background: #ffd290; color: #261830; font-weight: 750; text-decoration: none;
+    }
+    a:hover { background: #ffe2b5; }
+    a.secondary { background: #26233e; color: #f6f1ff; border-color: #706198; }
+    a.secondary:hover { background: #3a3351; }
+    a:focus-visible { outline: 2px solid #ffd290; outline-offset: 4px; }
+    @media (max-width: 700px) {
+      main { grid-template-columns: minmax(0, 1fr); max-width: 490px; }
+      .illustration { min-height: clamp(125px, 32vw, 210px); background-position: center 55%; }
+    }
+    @media (max-width: 370px) {
+      .actions a { flex: 1 1 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="illustration" aria-hidden="true"></div>
+    <div class="content">
+      <p class="status">410 · PAGE RETIRED</p>
+      <h1>This page is no longer available</h1>
+      <p class="description">Explore base layouts, army builds and attack guides.</p>
+      <nav class="actions" aria-label="Site links">
+        <a href="/">Back to home <span aria-hidden="true">&nbsp;→</span></a>
+        <a class="secondary" href="/bases">Browse base layouts</a>
+      </nav>
+    </div>
+  </main>
+</body>
+</html>

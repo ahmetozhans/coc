@@ -117,7 +117,7 @@ try {
         get_https($item->armyUrl, 1000000);
     }
     if (!$alreadyWritten) {
-        if (!$existing && count(content($pdo, $kind, $doc, true)) >= ($kind === 'layout' ? 299 : 99)) {
+        if (!$existing && $kind === 'guide' && count(content($pdo, $kind, $doc, true)) >= 99) {
             throw new RuntimeException('Catalog publication limit reached');
         }
         if ($existing) {
@@ -130,6 +130,13 @@ try {
             $write->execute([$kind, $item->id, (int) $position->fetchColumn(), json_encode($item, JSON_THROW_ON_ERROR)]);
         }
         check_collection($pdo, $doc);
+        if ($kind === 'layout') {
+            // The legacy approval publisher must obey the same TH cap.
+            $counts = collector_counts(content($pdo, 'layout', $doc));
+            if (($counts[$item->th] ?? 0) > 20) {
+                throw new RuntimeException('Town Hall active-layout limit reached');
+            }
+        }
     }
     $pdo->commit();
 
